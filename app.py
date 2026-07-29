@@ -1,10 +1,9 @@
 from flask import Flask, url_for, render_template
 from datetime import timedelta, datetime
+from flask_wtf import CSRFProtect
 from flask_session import Session
 from dotenv import load_dotenv
 import os
-
-from flask_wtf import CSRFProtect
 
 load_dotenv()
 
