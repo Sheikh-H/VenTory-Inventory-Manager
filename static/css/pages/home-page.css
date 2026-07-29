@@ -1,0 +1,18 @@
+.hero-intro{
+    border: 1px solid black;
+    height: 100vh;
+    display: flex;
+}
+
+
+/* Tablet */
+
+@media screen and (min-width: 700px) and (max-width: 999px) {
+    
+}
+
+/* Desktop */
+
+@media screen and (min-width: 700px) and (max-width: 999px) {
+
+}

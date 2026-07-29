@@ -5,11 +5,23 @@
     margin: 0;
 }
 
-body{
-    overflow-x: hidden;
+html {
+    font-size: 1rem;
+    line-height: 1.6;
+    font-family: 'Google sans';
 }
 
-h1{
+body{
+    overflow-x: hidden;
+    font-size: 16px;
+    background-color: #ffdb9796;
+}
+
+main{
+    margin: 0 7rem;
+}
+
+h1,h2,h3,h4,h5,h6{
     font-family: 'Varela Round', sans-serif;
 }
 
@@ -17,4 +29,19 @@ p{
     font-family: 'Google Sans', sans-serif;
 }
 
+a{
+    text-decoration: none;
+    color: black;
+}
 
+
+
+/* Tablet */
+
+@media screen and (min-width: 700px) and (max-width: 999px) {}
+
+/* Desktop */
+
+@media screen and (min-width: 1000px) {
+
+}
