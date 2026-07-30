@@ -1,7 +1,5 @@
 from dotenv import load_dotenv
 import secrets
-from flask_sqlalchemy import SQLAlchemy,
-from sqlalchemy import Integer, String
 import os
 
 load_dotenv()
@@ -34,7 +32,4 @@ def initialise_env():
                         updated_contents += line + "\n"
                 with open(".env", "w") as f:
                     f.write(updated_contents)
-                    
-                    
-def initialise_database():
-    
+

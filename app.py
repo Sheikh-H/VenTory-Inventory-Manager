@@ -10,13 +10,22 @@ from flask import (
 )
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from datetime import timedelta, datetime
+from database.db import database
 from flask_session import Session
 from dotenv import load_dotenv
+from .config import initialise_env
 import os
 
-load_dotenv()
+
+initialise_env()
 
 app = Flask(__name__)
+
+app.config["SQL_ALCHEMY_DATABASE_URI"] = "sqlite:///ventory.db"
+database.init_app(app)
+
+with app.app_context():
+    database.create_all()
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -33,6 +42,8 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 Session(app)
 
 csrf = CSRFProtect(app)
+
+load_dotenv()
 
 
 @app.route("/")
