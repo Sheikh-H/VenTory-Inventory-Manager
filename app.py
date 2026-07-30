@@ -25,6 +25,8 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ventory.db"
 database.init_app(app)
 
+from database.models import *
+
 with app.app_context():
     database.create_all()
 
@@ -43,6 +45,17 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 Session(app)
 
 csrf = CSRFProtect(app)
+
+
+@app.after_request
+def security_headers(response):
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self'; "
+        "style-src 'self' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com;"
+    )
+    return response
 
 
 @app.route("/")
@@ -104,6 +117,11 @@ def not_found(error):
 @app.errorhandler(400)
 def bad_request(error):
     return render_template("pages/error/400.html"), 400
+
+
+@app.errorhandler(405)
+def not_allowed(error):
+    return render_template("pages/error/405.html"), 405
 
 
 @app.errorhandler(500)
