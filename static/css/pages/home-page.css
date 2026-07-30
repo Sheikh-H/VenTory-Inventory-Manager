@@ -1,9 +1,16 @@
 .hero-intro{
-    border: 1px solid black;
-    height: 200vh;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
+.hero-inner{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 /* Tablet */
 

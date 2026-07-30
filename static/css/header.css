@@ -36,8 +36,8 @@
     width: 95%;
     height: 3px;
     background: orangered;
-    display: block;
-    transition: all ease-in-out .5s;
+    position: relative;
+    transition: all ease-in-out .2s;
 }
 
 .mobile-nav-button span:nth-child(1){
@@ -52,36 +52,63 @@
     transform: translateY(20px);
 }
 
-
-/* .mobile-nav-button.active span:nth-child(1) { */
-    /* transform: translateY(12.5px); */
-    /* transform: rotate(135deg); */
-/* } */
-/*  */
-/* .mobile-nav-button.active span:nth-child(2) { */
-    /* opacity: 0; */
-/* } */
-/*  */
-/* .mobile-nav-button.active span:nth-child(3) { */
-    /* transform: translateY(12.5px); */
-    /* transform: rotate(45deg); */
-/* } */
-
-
-.navigation-bar p{
-
+.mobile-nav-button.active span:nth-child(1) {
+    transform: translateY(15px) rotate(45deg);
+    background: black;
 }
 
-.nav-item{
+.mobile-nav-button.active span:nth-child(2) {
+    opacity: 0;
+}
 
+.mobile-nav-button.active span:nth-child(3) {
+    transform: translateY(10px) rotate(-45deg);
+    background: black;
+}
+
+.navigation-bar.active{
+    background-color: white;
+    position: fixed;
+    top: 80px;
+    left:0px;
+    width: 100vw;
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+}
+
+@keyframes swaying {
+    0%{
+        width: 70%;
+    }
+    50%{
+        width: 85%;
+    }
+    100%{
+        width: 70%;
+    }
 }
 
 .nav-item-bottom{
-
+    width: 70%;
+    border: 1.5px solid black;
+    height: 1px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    animation: swaying infinite ease-in-out 2.5s;
+    transition: width .7s ease-in-out, opacity .7s ease-in-out;
 }
 
-.nav-item:hover .nav-item-bottom{
-
+.navigation-bar.active > .nav-item{
+    font-weight: bold;
+    color: orangered;
+    display: flex;
+    gap: 5px;
+    align-items: center;
 }
 
 
@@ -94,6 +121,11 @@
 /* Desktop */
 
 @media screen and (min-width: 1000px){
+
+    .mobile-menu-span{
+        display: none;
+    }
+
     .mobile-nav-button{
         display: none;
     }
@@ -140,6 +172,7 @@
         width: 1px;
         opacity: 0;
         border: 1px solid orangered;
+        animation: none;
         transition: width .7s ease-in-out, opacity .7s ease-in-out;
     }
 
