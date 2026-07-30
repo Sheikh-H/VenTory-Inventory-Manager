@@ -1,0 +1,6 @@
+{% extends 'layout.html' %} {% block content %}
+<section id="error-section" class="error-section">
+  <h2>403 - Forbidden Request!</h2>
+  <a href="{{url_for('home_page')}}">Return Home</a>
+</section>
+{% endblock content %}

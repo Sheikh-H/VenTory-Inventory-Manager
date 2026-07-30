@@ -15,22 +15,24 @@
       <span></span>
     </div>
     <div class="navigation-bar">
+      <!-- if logged out -->
       <div class="nav-item">
         <a href="{{ url_for('home_page') }}"><p>Home</p></a>
         <span class="nav-item-bottom"></span>
       </div>
       <div class="nav-item">
-        <a href="{{ url_for('home_page') }}"><p>About</p></a>
+        <a href="{{ url_for('about_page') }}"><p>About</p></a>
         <span class="nav-item-bottom"></span>
       </div>
       <div class="nav-item">
-        <a href="{{ url_for('home_page') }}"><p>Features</p></a>
+        <a href="{{ url_for('home_page') }}#home-features"><p>Features</p></a>
         <span class="nav-item-bottom"></span>
       </div>
       <div class="nav-item">
         <a href="{{ url_for('home_page') }}"><p>Login</p></a>
         <span class="nav-item-bottom"></span>
       </div>
+      <!--  -->
     </div>
   </nav>
 </div>

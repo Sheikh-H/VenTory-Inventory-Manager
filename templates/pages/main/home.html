@@ -9,17 +9,20 @@
   <div>
     <h2>About VenTory</h2>
   </div>
-  <div>
+  <div class="home-about-right">
     <p>
       VenTory is a non-commercial Flask web application built to showcase my
       current development skills and document my progress as I continue
       learning. Discover more about the project and its purpose.
     </p>
+    <a href="{{ url_for('about_page') }}" class="home-learn-more-button">
+      <p>Learn More</p>
+    </a>
   </div>
 </section>
 <section class="home-features" id="home-features">
   <h2>Why VenTory?</h2>
-  <div class="feature">
+  <div class="feature hidden-left">
     <div class="show-on-desktop">
       <img
         src="{{ url_for('static', filename='media/pexels-1.png') }}"
@@ -36,7 +39,7 @@
       </p>
     </div>
   </div>
-  <div class="feature">
+  <div class="feature hidden-right">
     <div>
       <h3>Feature 2</h3>
       <p>
@@ -53,7 +56,7 @@
       />
     </div>
   </div>
-  <div class="feature">
+  <div class="feature hidden-left">
     <div class="show-on-desktop">
       <img
         src="{{ url_for('static', filename='media/pexels-3.png') }}"
@@ -71,7 +74,7 @@
     </div>
   </div>
 </section>
-<section class="home-contact" id="home-contact">
+<section class="home-contact hidden-up" id="home-contact">
   <h2>Contact Us!</h2>
   <p>Get in touch</p>
 

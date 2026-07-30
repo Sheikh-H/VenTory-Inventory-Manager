@@ -4,14 +4,12 @@
       <img
         src="{{ url_for('static', filename='media/logo.png') }}"
         alt="VenTory Logo"
-      />
-      <div>
-        <h1>VenTory</h1>
-        <p>Online Inventory Management</p>
-      </div>
-    </a>
+    /></a>
+    <div>
+      <h1>VenTory</h1>
+      <p class="show-on-desktop show-on-tablet">Online Inventory Management</p>
+    </div>
   </div>
-  <div class="footer-middle"></div>
   <div class="footer-right">
     <table>
       <caption>
@@ -22,24 +20,30 @@
           <td><a href="{{ url_for('home_page') }}">Home</a></td>
         </tr>
         <tr>
-          <td>About</td>
+          <td><a href="{{ url_for('about_page') }}">About</a></td>
         </tr>
         <tr>
-          <td>Features</td>
+          <td>
+            <a href="{{ url_for('home_page') }}#home-features">Features</a>
+          </td>
         </tr>
         <tr>
-          <td>Contact</td>
+          <td><a href="{{ url_for('home_page') }}#home-contact">Contact</a></td>
         </tr>
+
+        <!-- if logged out -->
         <tr>
           <td>Login</td>
         </tr>
         <tr>
           <td>Register</td>
         </tr>
+        <!--  -->
       </tbody>
     </table>
   </div>
 </div>
 <div class="footer-bottom">
-  <p>&COPY;Sheikh | Portfolio Purposes Only | Non-Commercial</p>
+  <p>&COPY;</p>
+  <p>Portfolio Purposes Only | Non-Commercial | Made with Flask</p>
 </div>

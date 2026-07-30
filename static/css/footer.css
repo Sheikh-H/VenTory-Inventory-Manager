@@ -2,7 +2,8 @@
     background-color: white;
     padding: 1rem;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
 }
 
 .footer-left a {
@@ -33,30 +34,30 @@
     background-color: white;
     width: 100%;
     text-align: center;
-    font-size: .7rem;;
+    font-size: .7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
 }
 
-.footer-bottom p{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+.footer-bottom p:nth-child(1){
+    font-size: 1.5rem;
 }
 
 /* Tablet */
 
 @media screen and (min-width: 700px) and (max-width: 999px) {
-
+    .footer-main {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* Desktop */
 
 @media screen and (min-width: 1000px){
     .footer-main {
-        background-color: white;
-        padding: 1rem;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .footer-left a {

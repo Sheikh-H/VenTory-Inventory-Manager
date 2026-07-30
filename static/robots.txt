@@ -1,0 +1,4 @@
+User-Agent@ *
+Allow: /
+Disallowed: /user/
+Sitemap: https:ventory.onrender.com
