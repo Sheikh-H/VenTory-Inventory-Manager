@@ -1,7 +1,10 @@
 @import url('base.css');
 
 
+@import url('pages/contact-page.css');
+@import url('pages/about-page.css');
 @import url('pages/home-page.css');
 @import url('pages/error-pages.css');
+
 @import url('header.css');
 @import url('footer.css');

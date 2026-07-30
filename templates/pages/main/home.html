@@ -107,7 +107,7 @@
     </div>
   </div>
 
-  <form action="" method="post" class="home-contact-form">
+  <form action="/" method="post" class="home-contact-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <div class="contact-form-input">
       <p><strong>Name</strong></p>
@@ -138,5 +138,6 @@
       <input type="submit" value="Send" />
     </div>
   </form>
+  <div class="space"></div>
 </section>
 {% endblock content %}

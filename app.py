@@ -9,11 +9,13 @@ from flask import (
     abort,
 )
 from flask_wtf.csrf import CSRFProtect, CSRFError
-from datetime import timedelta, datetime
-from database.db import database
-from flask_session import Session
-from dotenv import load_dotenv
 from services.config import initialise_env
+from datetime import timedelta, datetime
+from flask_session import Session
+from database.db import database
+from dotenv import load_dotenv
+import cloudinary.uploader
+import cloudinary
 import os
 
 load_dotenv()
@@ -39,6 +41,14 @@ app.config.update(
     PERMANENT_SESSION_LIFETIME=timedelta(hours=1),
 )
 
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
+
+
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
@@ -58,9 +68,14 @@ def security_headers(response):
     return response
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home_page():
     title = "Online Stock Management System"
+    if request.method == "POST":
+        name = request.form.get("name", "").strip().lower()
+        subject = request.form.get("subject", "").strip().lower()
+        message = request.form.get("message", "").strip().lower()
+        return render_template("pages/main/confirm.html", title="Demo Only")
     return render_template("pages/main/home.html", title=title)
 
 
