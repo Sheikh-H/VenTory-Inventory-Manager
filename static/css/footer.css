@@ -21,6 +21,28 @@
     width: 50px;
 }
 
+.footer-right > table{
+    width: 100%;
+}
+
+.footer-right > table > caption{
+    color: orangered;
+}
+
+.footer-bottom{
+    background-color: white;
+    width: 100%;
+    text-align: center;
+    font-size: .7rem;;
+}
+
+.footer-bottom p{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Tablet */
 
 @media screen and (min-width: 700px) and (max-width: 999px) {

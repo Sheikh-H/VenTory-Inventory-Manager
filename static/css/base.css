@@ -21,7 +21,7 @@ body{
 }
 
 main{
-    margin: 0 .1rem;
+    margin: 0 0;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -37,7 +37,27 @@ a{
     color: black;
 }
 
+.show-on-desktop{
+    display: none;
+}
 
+.show-on-mobile{
+    display: flex;
+}
+
+.show-on-tablet{
+    display: none;
+}
+
+input{
+    font-family: 'Google Sans', sans-serif;
+    padding: 2px;
+}
+
+textarea{
+    font-family: 'Google Sans', sans-serif;
+    padding: 2px;
+}
 
 /* Tablet */
 
@@ -45,6 +65,15 @@ a{
     main {
             margin: 0 1rem;
         }
+
+    .show-on-tablet {
+        display: flex;
+    }
+
+        .show-on-mobile {
+            display: none;
+        }
+
 }
 
 /* Desktop */
@@ -53,4 +82,13 @@ a{
     main {
             margin: 0 7rem;
         }
+
+    .show-on-desktop {
+        display: flex;
+    }
+
+        .show-on-mobile {
+            display: none;
+        }
+
 }

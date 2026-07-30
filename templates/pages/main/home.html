@@ -1,10 +1,138 @@
 {% extends 'layout.html' %} {% block content %}
 <section class="hero-intro" id="hero-intro">
-  <div id="">
-    <div class="hero-inner">
-      <h1>VenTory</h1>
-      <p>Manage Your Inventory Online</p>
+  <div class="hero-inner">
+    <h1>VenTory</h1>
+    <p>Online Stock Management</p>
+  </div>
+</section>
+<section class="home-about">
+  <div>
+    <h2>About VenTory</h2>
+  </div>
+  <div>
+    <p>
+      VenTory is a non-commercial Flask web application built to showcase my
+      current development skills and document my progress as I continue
+      learning. Discover more about the project and its purpose.
+    </p>
+  </div>
+</section>
+<section class="home-features" id="home-features">
+  <h2>Why VenTory?</h2>
+  <div class="feature">
+    <div class="show-on-desktop">
+      <img
+        src="{{ url_for('static', filename='media/pexels-1.png') }}"
+        alt="Pexels-image"
+      />
+    </div>
+    <div>
+      <h3>Feature 1</h3>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus
+        ipsa pariatur tempore provident ipsam amet voluptates tenetur quisquam
+        totam vero? Repellendus est maiores, voluptatibus nobis alias
+        necessitatibus ad veritatis totam!
+      </p>
     </div>
   </div>
+  <div class="feature">
+    <div>
+      <h3>Feature 2</h3>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus
+        ipsa pariatur tempore provident ipsam amet voluptates tenetur quisquam
+        totam vero? Repellendus est maiores, voluptatibus nobis alias
+        necessitatibus ad veritatis totam!
+      </p>
+    </div>
+    <div class="show-on-desktop">
+      <img
+        src="{{ url_for('static', filename='media/pexels-2.png') }}"
+        alt="Pexels-image"
+      />
+    </div>
+  </div>
+  <div class="feature">
+    <div class="show-on-desktop">
+      <img
+        src="{{ url_for('static', filename='media/pexels-3.png') }}"
+        alt="Pexels-image"
+      />
+    </div>
+    <div>
+      <h3>Feature 3</h3>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus
+        ipsa pariatur tempore provident ipsam amet voluptates tenetur quisquam
+        totam vero? Repellendus est maiores, voluptatibus nobis alias
+        necessitatibus ad veritatis totam!
+      </p>
+    </div>
+  </div>
+</section>
+<section class="home-contact" id="home-contact">
+  <h2>Contact Us!</h2>
+  <p>Get in touch</p>
+
+  <div class="home-contact-icons">
+    <div class="svg-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#ff4500"
+      >
+        <path
+          d="M680-200h80v-560h-80v560ZM308.5-411.5Q320-423 320-440t-11.5-28.5Q297-480 280-480t-28.5 11.5Q240-457 240-440t11.5 28.5Q263-400 280-400t28.5-11.5Zm0 120Q320-303 320-320t-11.5-28.5Q297-360 280-360t-28.5 11.5Q240-337 240-320t11.5 28.5Q263-280 280-280t28.5-11.5ZM280-520h240q17 0 28.5-11.5T560-560v-80q0-17-11.5-28.5T520-680H280q-17 0-28.5 11.5T240-640v80q0 17 11.5 28.5T280-520Zm148.5 108.5Q440-423 440-440t-11.5-28.5Q417-480 400-480t-28.5 11.5Q360-457 360-440t11.5 28.5Q383-400 400-400t28.5-11.5Zm0 120Q440-303 440-320t-11.5-28.5Q417-360 400-360t-28.5 11.5Q360-337 360-320t11.5 28.5Q383-280 400-280t28.5-11.5Zm120-120Q560-423 560-440t-11.5-28.5Q537-480 520-480t-28.5 11.5Q480-457 480-440t11.5 28.5Q503-400 520-400t28.5-11.5Zm0 120Q560-303 560-320t-11.5-28.5Q537-360 520-360t-28.5 11.5Q480-337 480-320t11.5 28.5Q503-280 520-280t28.5-11.5ZM680-120q-23 0-40.5-11T611-160H200q-33 0-56.5-23.5T120-240v-480q0-33 23.5-56.5T200-800h411q11-18 28.5-29t40.5-11h80q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120h-80Z"
+        />
+      </svg>
+    </div>
+    <div class="svg-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#ff4500"
+      >
+        <path
+          d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm330.5-288.5Q496-450 501-453l283-177q8-5 12-12.5t4-16.5q0-20-17-30t-35 1L480-520 212-688q-18-11-35-.5T160-659q0 10 4 17.5t12 11.5l283 177q5 3 10.5 4.5T480-447q5 0 10.5-1.5Z"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <form action="" method="post" class="home-contact-form">
+    <div class="contact-form-input">
+      <p><strong>Name</strong></p>
+      <input type="text" name="name" id="name" placeholder="Full Name" />
+    </div>
+
+    <div class="contact-form-input-email">
+      <p><strong>Email Address</strong></p>
+      <input
+        type="email"
+        name="contact"
+        id="contact"
+        placeholder="john-doe@email.com"
+      />
+    </div>
+    <div class="contact-form-input-subject">
+      <input type="text" name="subject" id="subject" placeholder="Subject" />
+    </div>
+    <div class="contact-form-input-textarea">
+      <textarea
+        name="message"
+        id="message"
+        rows="10"
+        placeholder="Enter your message"
+      ></textarea>
+    </div>
+    <div class="contact-form-input-button">
+      <input type="submit" value="Send" />
+    </div>
+  </form>
 </section>
 {% endblock content %}
