@@ -11,6 +11,6 @@ class User(database.Model):
     first_name: Mapped[str] = mapped_column(String(100))
     last_name: Mapped[str] = mapped_column(String(100))
     role: Mapped[str] = mapped_column(String(25))
-    email: Mapped[str] = mapped_column(String(100))
+    email: Mapped[str] = mapped_column(String(100), unique=True)
     password: Mapped[str] = mapped_column(String())
     created: Mapped[str] = mapped_column(String())

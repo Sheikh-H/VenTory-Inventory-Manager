@@ -7,5 +7,6 @@ class Business(database.Model):
     __tablename__ = "business_table"
     business_id: Mapped[int] = mapped_column(primary_key=True)
     business_name: Mapped[str] = mapped_column(String(), unique=True)
+    image_url: Mapped[str] = mapped_column(String())
     address: Mapped[str] = mapped_column(String())
     created: Mapped[str] = mapped_column(String())

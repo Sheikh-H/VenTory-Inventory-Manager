@@ -9,5 +9,6 @@ class Stock(database.Model):
     business_id: Mapped[int] = mapped_column(ForeignKey=True)
     description: Mapped[str] = mapped_column(String(), unique=True)
     quantity: Mapped[int] = mapped_column(Integer())
+    image_url: Mapped[str] = mapped_column(String())
     updated: Mapped[str] = mapped_column(String())
     created: Mapped[str] = mapped_column(String())

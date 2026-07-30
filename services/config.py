@@ -4,6 +4,7 @@ import os
 
 load_dotenv()
 
+
 def initialise_env():
     secret = secrets.token_hex(32)
     text = f"SECRET_KEY={secret}\n"
@@ -32,4 +33,3 @@ def initialise_env():
                         updated_contents += line + "\n"
                 with open(".env", "w") as f:
                     f.write(updated_contents)
-
