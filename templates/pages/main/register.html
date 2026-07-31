@@ -1,5 +1,29 @@
 {% extends 'layout.html' %} {% block content %}
-<section class="home-login-page" id="home-login-page">
-  <h2>Login Page</h2>
+<section class="register-page-intro" id="register-page-intro">
+  <h2>Sign Up Today!</h2>
+  <p>
+    Please <strong>do not</strong> use any of your own details. All information
+    is stored on GitHub and Render temporary files and is deleted on
+    refresh/reload.
+  </p>
+</section>
+<section class="register-form-section">
+  <form action="/login" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <input type="text" name="business-name" id="business-name" />
+    <input type="text" name="business-address" id="business-address" />
+    <input type="text" name="business-email" id="business-email" />
+    <hr />
+    <input type="text" name="fname" id="fname" />
+    <input type="text" name="sname" id="sname" />
+    <input type="email" name="email" id="email" />
+    <select name="role" id="role">
+      <option value="owner">Business Owner</option>
+      <option value="employee">Employee</option>
+    </select>
+    <input type="password" name="password" id="password" />
+    <input type="password" name="confirm" id="confirm" />
+    <input type="submit" value="Sign Up" />
+  </form>
 </section>
 {% endblock content %}
