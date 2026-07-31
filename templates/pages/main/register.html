@@ -8,22 +8,78 @@
   </p>
 </section>
 <section class="register-form-section">
-  <form action="/login" method="post">
+  <form action="/login" method="post" class="register-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <input type="text" name="business-name" id="business-name" />
-    <input type="text" name="business-address" id="business-address" />
-    <input type="text" name="business-email" id="business-email" />
+    <div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#ff4500"
+      >
+        <path
+          d="M80-120v-720h400v160h400v560H80Zm80-80h240v-80H160v80Zm0-160h240v-80H160v80Zm0-160h240v-80H160v80Zm0-160h240v-80H160v80Zm320 480h320v-400H480v400Zm80-240v-80h160v80H560Zm0 160v-80h160v80H560Z"
+        />
+      </svg>
+      <label for="business-name">Business Details:</label>
+    </div>
+    <input
+      type="text"
+      name="business-name"
+      id="business-name"
+      placeholder="Business Name"
+    />
+    <input
+      type="text"
+      name="business-address"
+      id="business-address"
+      placeholder="Business Address"
+    />
+    <input
+      type="text"
+      name="business-email"
+      id="business-email"
+      placeholder="Business Email"
+    />
     <hr />
-    <input type="text" name="fname" id="fname" />
-    <input type="text" name="sname" id="sname" />
-    <input type="email" name="email" id="email" />
+    <div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#ff4500"
+      >
+        <path
+          d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17-62.5t47-43.5q60-30 124.5-46T480-440q67 0 131.5 16T736-378q30 15 47 43.5t17 62.5v112H160Zm376.5-423.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM640-332v92h80v-32q0-11-5-20t-15-14q-14-8-29.5-14.5T640-332Zm-240-21v53h160v-53q-20-4-40-5.5t-40-1.5q-20 0-40 1.5t-40 5.5ZM240-240h80v-92q-15 5-30.5 11.5T260-306q-10 5-15 14t-5 20v32Zm400 0H320h320ZM480-640Z"
+        />
+      </svg>
+      <label for="fname">Your Details:</label>
+    </div>
+    <input type="text" name="fname" id="fname" placeholder="First Name" />
+    <input type="text" name="sname" id="sname" placeholder="Last Name" />
+    <input type="email" name="email" id="email" placeholder="Business Email" />
+
     <select name="role" id="role">
+      <option value="" selected>Select Role:</option>
       <option value="owner">Business Owner</option>
       <option value="employee">Employee</option>
     </select>
-    <input type="password" name="password" id="password" />
-    <input type="password" name="confirm" id="confirm" />
+    <input
+      type="password"
+      name="password"
+      id="password"
+      placeholder="Password"
+    />
+    <input
+      type="password"
+      name="confirm"
+      id="confirm"
+      placeholder="Confirm Password"
+    />
     <input type="submit" value="Sign Up" />
+    <input type="checkbox" name="terms" id="terms" required />
   </form>
 </section>
 {% endblock content %}
