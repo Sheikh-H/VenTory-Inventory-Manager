@@ -1,5 +1,11 @@
 .register-page-intro{
     text-align: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.register-form{
+    padding: 5px;
 }
 
 .register-form > div{
