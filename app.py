@@ -1,5 +1,6 @@
 from flask import (
     Flask,
+    redirect,
     url_for,
     render_template,
     Response,
@@ -7,6 +8,7 @@ from flask import (
     current_app,
     send_from_directory,
     abort,
+    session,
 )
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from services.config import initialise_env
@@ -14,6 +16,8 @@ from datetime import timedelta, datetime
 from flask_session import Session
 from database.db import database
 from dotenv import load_dotenv
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import cloudinary.uploader
 import cloudinary
 import os
@@ -56,6 +60,8 @@ Session(app)
 
 csrf = CSRFProtect(app)
 
+limiter = Limiter(key_func=get_remote_address, app=app)
+
 
 @app.after_request
 def security_headers(response):
@@ -69,12 +75,10 @@ def security_headers(response):
 
 
 @app.route("/", methods=["GET", "POST"])
+@limiter.limit("1 per minute; 10 per day", methods=["POST"])
 def home_page():
     title = "Online Stock Management System"
     if request.method == "POST":
-        name = request.form.get("name", "").strip().lower()
-        subject = request.form.get("subject", "").strip().lower()
-        message = request.form.get("message", "").strip().lower()
         return render_template("pages/main/confirm.html", title="Demo Only")
     return render_template("pages/main/home.html", title=title)
 
@@ -83,6 +87,21 @@ def home_page():
 def about_page():
     title = "SME Inventory System"
     return render_template("pages/main/about.html", title=title)
+
+
+@app.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute; 10 per day", methods=["POST"])
+def login_page():
+    if session.get("user-id"):
+        return redirect(url_for(""))
+    title = "Login to get started"
+    return render_template("pages/main/login.html", title=title)
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register_page():
+    title = "Sign up to use VenTory"
+    return render_template("pages/main/register.html", title=title)
 
 
 @app.route("/robots.txt")
@@ -142,6 +161,11 @@ def not_allowed(error):
 @app.errorhandler(500)
 def server_error(error):
     return render_template("pages/error/500.html"), 500
+
+
+@app.errorhandler(429)
+def max_requests(error):
+    return render_template("pages/error/429.html"), 429
 
 
 if __name__ == "__main__":
