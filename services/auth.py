@@ -1,7 +1,8 @@
-from argon2 import PasswordHasher
 from flask import session, redirect, url_for
-from functools import wraps
 from datetime import datetime, timedelta
+from argon2 import PasswordHasher
+from functools import wraps
+import random
 
 hasher = PasswordHasher().hash
 verifier = PasswordHasher().verify
@@ -17,17 +18,24 @@ def login_required(f):
     return decorated_function
 
 
-def create_new_user(user):
-    date = datetime.now().replace(microsecond=0).date()
-    time = datetime.now().replace(microsecond=0).time()
-    username = user["username"]
-    first_name = user["fname"]
-    last_name = user["sname"]
-    password = hasher(user["password"])
-    created = f"{date} | {time}"
+def create_new_user(data):
+    business_id = create_new_business(data)
+    
+    username = []
+
+    for _ in range(9):
+        username.append(random.randint(0, 9))
+
+    data["username"] = "".join(username)
+
+    if data["password"] == data["confirm"]:
+        data["password"] = hasher(data["confirm"])
+
+    data.discard("confirm")
+
 
 def login_user(user):
-    
+    return
 
 
 def update_daily_password():
@@ -37,3 +45,31 @@ def update_daily_password():
         password.append(random.choice(characters))
     daily = "".join(password)
     return str(daily)
+
+
+def generate_time():
+    date = datetime.now().replace(microsecond=0).date()
+    time = datetime.now().replace(microsecond=0).time()
+
+    if str(time) > "12:00":
+        suffix = "PM"
+    else:
+        suffix = "AM"
+
+    return f"{date} {time} {suffix}"
+
+
+def update_log(date, action, user, business):
+    entry = f"{date} | {user} {action}"
+    return
+
+
+def create_new_business(business):
+    # for business in businesses 
+        # if business name in the list,
+            # if business email in the list
+                # if business address in the list
+                    # if business telephone in list
+                        # reject entry
+        
+    return
