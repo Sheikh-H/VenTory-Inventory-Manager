@@ -1,6 +1,7 @@
-from dotenv import load_dotenv
-import secrets
 import os
+import secrets
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
