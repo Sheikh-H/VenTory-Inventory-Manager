@@ -1,6 +1,7 @@
-from database.db import database
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, ForeignKey, DateTime, Boolean
+
+from database.db import database
 
 
 class User(database.Model):

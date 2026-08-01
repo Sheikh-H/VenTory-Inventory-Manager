@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta, timezone
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, ForeignKey, DateTime, Boolean
+
 from database.db import database
 
 
@@ -17,6 +17,8 @@ class Business(database.Model):
     )
     created: Mapped[str] = mapped_column(String(20), nullable=False)
     updated: Mapped[str] = mapped_column(String(20), nullable=True)
+
     employees: Mapped[list["User"]] = relationship(back_populates="business")
+
     logs: Mapped[list["Log"]] = relationship(back_populates="business")
     stock: Mapped[list["Stock"]] = relationship(back_populates="business")

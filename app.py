@@ -1,28 +1,29 @@
+import os
+from datetime import timedelta
+
+import cloudinary
+from dotenv import load_dotenv
 from flask import (
     Flask,
-    redirect,
-    url_for,
-    render_template,
     Response,
-    request,
-    current_app,
-    send_from_directory,
     abort,
+    current_app,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
     session,
+    url_for,
 )
-from services.auth import *
-from flask_wtf.csrf import CSRFProtect, CSRFError
-from flask_limiter.util import get_remote_address
-from services.validators import input_validator
-from services.config import initialise_env
-from datetime import timedelta, datetime
 from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from flask_session import Session
+from flask_wtf.csrf import CSRFError, CSRFProtect
+
 from database.db import database
-from dotenv import load_dotenv
-import cloudinary.uploader
-import cloudinary
-import os
+from services.auth import *
+from services.config import initialise_env
+from services.validators import input_validator
 
 load_dotenv()
 
@@ -121,7 +122,7 @@ def register_page():
             "name": bname,
             "address": bAddress,
             "email": bemail,
-            'daily_password': update_daily_password()
+            "daily_password": update_daily_password(),
         }
 
         user = {

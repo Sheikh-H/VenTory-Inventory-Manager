@@ -1,7 +1,9 @@
-from sqlalchemy import String, Integer, ForeignKey, DateTime, Boolean, Numeric
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from database.db import database
 from decimal import Decimal
+
+from sqlalchemy import ForeignKey, Integer, Numeric, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from database.db import database
 
 
 class Stock(database.Model):
