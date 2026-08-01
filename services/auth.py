@@ -25,3 +25,15 @@ def create_new_user(user):
     last_name = user["sname"]
     password = hasher(user["password"])
     created = f"{date} | {time}"
+
+def login_user(user):
+    
+
+
+def update_daily_password():
+    characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
+    password = []
+    for i in range(10):
+        password.append(random.choice(characters))
+    daily = "".join(password)
+    return str(daily)

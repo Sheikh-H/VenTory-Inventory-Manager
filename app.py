@@ -10,6 +10,7 @@ from flask import (
     abort,
     session,
 )
+from services.auth import *
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_limiter.util import get_remote_address
 from services.validators import input_validator
@@ -120,6 +121,7 @@ def register_page():
             "name": bname,
             "address": bAddress,
             "email": bemail,
+            'daily_password': update_daily_password()
         }
 
         user = {
