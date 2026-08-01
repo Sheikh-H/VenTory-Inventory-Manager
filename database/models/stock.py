@@ -1,15 +1,25 @@
+from sqlalchemy import String, Integer, ForeignKey, DateTime, Boolean, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, ForeignKey, DateTime, Boolean, REAL
 from database.db import database
+from decimal import Decimal
 
 
 class Stock(database.Model):
     __tablename__ = "stock_table"
     stock_id: Mapped[int] = mapped_column(primary_key=True)
-    business_id: Mapped[int] = mapped_column(ForeignKey("business_table.business_id"))
-    description: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
-    quantity: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
-    price: Mapped[int] = mapped_column(REAL(), nullable=False, default=0.00)
-    image_url: Mapped[str] = mapped_column(String(255), nullable=True)
-    updated: Mapped[str] = mapped_column(String(20), nullable=True)
+    business_id: Mapped[int] = mapped_column(
+        ForeignKey("business_table.business_id"), nullable=False
+    )
+    description: Mapped[str] = mapped_column(String(255), nullable=False)
+    price: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False, default=Decimal("0.00")
+    )
+    image_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    returned: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
+    damaged: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
+    total: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
+    available: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
+    supplier: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    updated: Mapped[str | None] = mapped_column(String(20), nullable=True)
     created: Mapped[str] = mapped_column(String(20), nullable=False)
+    business: Mapped["Business"] = relationship(back_populates="stock")

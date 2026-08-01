@@ -19,3 +19,4 @@ class Business(database.Model):
     updated: Mapped[str] = mapped_column(String(20), nullable=True)
     employees: Mapped[list["User"]] = relationship(back_populates="business")
     logs: Mapped[list["Log"]] = relationship(back_populates="business")
+    stock: Mapped[list["Stock"]] = relationship(back_populates="business")
