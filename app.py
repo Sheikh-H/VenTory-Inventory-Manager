@@ -11,13 +11,14 @@ from flask import (
     session,
 )
 from flask_wtf.csrf import CSRFProtect, CSRFError
+from flask_limiter.util import get_remote_address
+from services.validators import input_validator
 from services.config import initialise_env
 from datetime import timedelta, datetime
+from flask_limiter import Limiter
 from flask_session import Session
 from database.db import database
 from dotenv import load_dotenv
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 import cloudinary.uploader
 import cloudinary
 import os
@@ -75,7 +76,7 @@ def security_headers(response):
 
 
 @app.route("/", methods=["GET", "POST"])
-@limiter.limit("1 per minute; 10 per day", methods=["POST"])
+@limiter.limit("2 per hour; 10 per day", methods=["POST"])
 def home_page():
     title = "Online Stock Management System"
     if request.method == "POST":
@@ -90,7 +91,7 @@ def about_page():
 
 
 @app.route("/login", methods=["GET", "POST"])
-@limiter.limit("5 per minute; 10 per day", methods=["POST"])
+@limiter.limit("5 per minute; 50 per day", methods=["POST"])
 def login_page():
     if session.get("user-id"):
         return redirect(url_for(""))
@@ -99,9 +100,48 @@ def login_page():
 
 
 @app.route("/register", methods=["GET", "POST"])
+@limiter.limit("2 per minute; 50 per day", methods=["POST"])
 def register_page():
     title = "Sign up to use VenTory"
-    return render_template("pages/main/register.html", title=title)
+    error = ""
+    if request.method == "POST":
+        bname = request.form.get("business-name", "").strip().lower()
+        bAddress = request.form.get("business-address", "").strip().lower()
+        bemail = request.form.get("business-email", "").strip().lower()
+        title = request.form.get("title", "").strip().lower()
+        fname = request.form.get("fname", "").strip().lower()
+        sname = request.form.get("sname", "").strip().lower()
+        email = request.form.get("email", "").strip().lower()
+        role = request.form.get("role", "").strip().lower()
+        password = request.form.get("password", "").strip()
+        confirm = request.form.get("confirm-password", "").strip()
+
+        business = {
+            "name": bname,
+            "address": bAddress,
+            "email": bemail,
+        }
+
+        user = {
+            "title": title,
+            "fname": fname,
+            "sname": sname,
+            "email": email,
+            "role": role,
+            "password": password,
+            "confirm": confirm,
+        }
+
+        new_registration = {
+            "business": business,
+            "user": user,
+        }
+
+        success, error = input_validator(new_registration, "new business")
+
+        if not success:
+            return redirect(url_for("register_page", form_error=error))
+    return render_template("pages/main/register.html", title=title, form_error=error)
 
 
 @app.route("/robots.txt")

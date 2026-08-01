@@ -29,18 +29,28 @@
       name="business-name"
       id="business-name"
       placeholder="Business Name"
+      required
     />
     <input
       type="text"
       name="business-address"
       id="business-address"
       placeholder="Business Address"
+      required
     />
     <input
-      type="text"
+      type="telephone"
+      name="business-telephone"
+      id="business-telephone"
+      placeholder="Business Telephone - main contact"
+      required
+    />
+    <input
+      type="email"
       name="business-email"
       id="business-email"
-      placeholder="Business Email"
+      placeholder="Business Email - main contact"
+      required
     />
     <hr />
     <div>
@@ -57,9 +67,35 @@
       </svg>
       <label for="fname">Your Details:</label>
     </div>
-    <input type="text" name="fname" id="fname" placeholder="First Name" />
-    <input type="text" name="sname" id="sname" placeholder="Last Name" />
-    <input type="email" name="email" id="email" placeholder="Business Email" />
+    <select name="title" id="title">
+      <option value="" selected>Select Title</option>
+      <option value="mr">Mr</option>
+      <option value="mrs">Mrs</option>
+      <option value="dr">Dr</option>
+      <option value="miss">Miss</option>
+      <option value="ms">Ms</option>
+    </select>
+    <input
+      type="text"
+      name="fname"
+      id="fname"
+      placeholder="First Name"
+      required
+    />
+    <input
+      type="text"
+      name="sname"
+      id="sname"
+      placeholder="Last Name"
+      required
+    />
+    <input
+      type="email"
+      name="email"
+      id="email"
+      placeholder="Your Email"
+      required
+    />
 
     <select name="role" id="role">
       <option value="" selected>Select Role:</option>
@@ -71,15 +107,19 @@
       name="password"
       id="password"
       placeholder="Password"
+      required
     />
     <input
       type="password"
       name="confirm"
       id="confirm"
       placeholder="Confirm Password"
+      required
     />
     <input type="submit" value="Sign Up" />
-    <input type="checkbox" name="terms" id="terms" required />
   </form>
+  <div class="form-error">
+    <p>{{ form_error }}</p>
+  </div>
 </section>
 {% endblock content %}
