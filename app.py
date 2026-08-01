@@ -23,7 +23,6 @@ from flask_wtf.csrf import CSRFError, CSRFProtect
 from database.db import database
 from services.auth import *
 from services.config import initialise_env
-from services.validators import input_validator
 
 load_dotenv()
 
