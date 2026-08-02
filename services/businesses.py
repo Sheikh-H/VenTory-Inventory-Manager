@@ -24,8 +24,8 @@ def add_new_business(data):
         )
         database.session.add(new_business)
         database.session.commit()
-        return new_business.id
+        return True, "New business added", new_business.id
     except Exception as e:
         database.session.rollback()
         print(e)
-        return False, ""
+        return False, "Unable to add business!"

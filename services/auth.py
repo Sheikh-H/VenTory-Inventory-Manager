@@ -12,8 +12,8 @@ verifier = PasswordHasher().verify
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get("user-id") is None:
-            return redirect(url_for("login"))
+        if session.get("user_id") is None:
+            return redirect(url_for("login_page"))
         return f(*args, **kwargs)
 
     return decorated_function
@@ -35,6 +35,7 @@ def generate_user_name():
         username.append(random.choice(characters))
     username = "".join(username)
     return str(username)
+
 
 def generate_password_hash(password):
     hashed = hasher(password)

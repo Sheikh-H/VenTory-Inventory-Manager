@@ -19,6 +19,11 @@ def input_validator(data, form):
         }
 
         new_business_fields = {"name", "address", "telephone", "email"}
+        if data["business"]["email"] == data["user"]["email"]:
+            return False, "Please use different emails!"
+
+        if data["user"]["role"] != "owner":
+            return False, "Please contact your business owner to register an account!"
 
         for section, fields in data.items():
             for key, value in fields.items():
