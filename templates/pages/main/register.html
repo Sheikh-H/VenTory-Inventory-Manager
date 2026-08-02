@@ -8,6 +8,9 @@
   </p>
 </section>
 <section class="register-form-section">
+  <div>
+    <p class="form-error"></p>
+  </div>
   <form action="/register" method="post" class="register-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <div>
@@ -29,25 +32,26 @@
       name="business-name"
       id="business-name"
       placeholder="Business Name"
-      min="5"
-      max="255"
+      minlength="5"
+      maxlength="255"
       required
+      value="{{ request.form.get(bname)}}"
     />
     <input
       type="text"
       name="business-address"
       id="business-address"
       placeholder="Business Address"
-      min="30"
-      max="255"
+      minlength="30"
+      maxlength="255"
       required
     />
     <input
       type="telephone"
       name="business-telephone"
       id="business-telephone"
-      min="10"
-      max="15"
+      minlength="10"
+      maxlength="15"
       placeholder="Business Telephone - main contact"
       required
     />
@@ -55,7 +59,7 @@
       type="email"
       name="business-email"
       id="business-email"
-      max="255"
+      maxlength="255"
       placeholder="Business Email - main contact"
       required
     />
@@ -86,8 +90,8 @@
       type="text"
       name="fname"
       id="fname"
-      min="1"
-      max="100"
+      minlength="5"
+      maxlength="100"
       placeholder="First Name"
       required
     />
@@ -95,8 +99,8 @@
       type="text"
       name="sname"
       id="sname"
-      min="1"
-      max="100"
+      minlength="5"
+      maxlength="100"
       placeholder="Last Name"
       required
     />
@@ -104,7 +108,7 @@
       type="email"
       name="email"
       id="email"
-      max="255"
+      maxlength="255"
       placeholder="Your Email"
       required
     />
@@ -120,23 +124,20 @@
       name="password"
       id="password"
       placeholder="Password"
-      min="15"
-      max="20"
+      minlength="10"
+      maxlength="20"
       required
     />
     <input
       type="password"
       name="confirm-password"
       id="confirm-password"
-      min="15"
-      max="20"
+      minlength="10"
+      maxlength="20"
       placeholder="Confirm Password"
       required
     />
     <input type="submit" value="Sign Up" />
   </form>
-  <div>
-    <p class="form-error"></p>
-  </div>
 </section>
 {% endblock content %}

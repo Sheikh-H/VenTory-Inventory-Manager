@@ -111,7 +111,6 @@ def register_page():
     title = "Sign up to use VenTory"
     if session.get("user_id"):
         return redirect(url_for("dashboard"))
-
     if request.method == "POST":
         bName = request.form.get("business-name", "").strip().lower()
         if len(bName) < 5 or len(bName) > 255:
@@ -169,14 +168,14 @@ def register_page():
         if role not in ["owner", "employee", "manager"]:
             role = ""
         password = request.form.get("password", "").strip()
-        if len(password) < 15 or len(password) > 20:
+        if len(password) < 10 or len(password) > 20:
             password = ""
         if password:
             valid_password = input_validator(password, "text")
             if not valid_password:
                 password = ""
         confirm_password = request.form.get("confirm-password", "").strip()
-        if len(confirm_password) < 15 or len(confirm_password) > 20:
+        if len(confirm_password) < 10 or len(confirm_password) > 20:
             confirm_password = ""
         if confirm_password:
             valid_confirm = input_validator(confirm_password, "text")
@@ -203,24 +202,29 @@ def register_page():
             session.permanent = True
             session["user_id"] = user_id
             return redirect(url_for("dashboard"))
-        flash("Unable to validate inputs, please try again!", "error")
-
     return render_template("pages/main/register.html", title=title)
 
 
 @app.route("/user/dashboard/", methods=["GET", "POST"])
 @login_required
 def dashboard():
+    title = "Welcome to your dashboard"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     business = Business.query.filter_by(business_id=user.business_id).first()
     session["role"] = user.role
     session["user-id"] = user.user_id
     session["business-id"] = business.business_id
-    title = f"{business.name}"
     username = user.username
     return render_template(
         "pages/user-pages/dashboard.html", title=title, username=username
     )
+
+
+@app.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    session.clear()
+    return redirect(url_for("home_page"))
 
 
 @app.route("/robots.txt")

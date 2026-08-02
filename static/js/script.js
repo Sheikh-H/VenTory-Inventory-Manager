@@ -170,7 +170,7 @@ if (registerForm) {
       event.preventDefault();
 
       errorMessage.textContent =
-        "First name must be greater than 5 and less than 100 characters!";
+        "First name must be greater than 1 and less than 100 characters!";
       return;
     }
 
@@ -178,7 +178,7 @@ if (registerForm) {
       event.preventDefault();
 
       errorMessage.textContent =
-        "Last name must be greater than 5 and less than 100 characters!";
+        "Last name must be greater than 1 and less than 100 characters!";
       return;
     }
 
@@ -225,7 +225,7 @@ if (registerForm) {
       return;
     }
 
-    if (password.length < 15 || password.length > 20) {
+    if (password.length < 10 || password.length > 20) {
       event.preventDefault();
 
       errorMessage.textContent =
@@ -233,7 +233,7 @@ if (registerForm) {
       return;
     }
 
-    if (confirmPassword.length < 15 || confirmPassword.length > 20) {
+    if (confirmPassword.length < 10 || confirmPassword.length > 20) {
       event.preventDefault();
 
       errorMessage.textContent =

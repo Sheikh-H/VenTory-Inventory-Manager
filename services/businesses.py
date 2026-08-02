@@ -12,9 +12,7 @@ from services.log import generate_new_log
 def new_business_registration(data):
     try:
         existing_business = Business.query.filter_by(email=data["bemail"]).first()
-        existing_user = User.query.filter_by(
-            email=data["uemail"], business_id=data["business_id"]
-        ).first()
+        existing_user = User.query.filter_by(email=data["uemail"]).first()
         if existing_business and existing_business.business_name == data["name"]:
             return (
                 None,
@@ -34,10 +32,10 @@ def new_business_registration(data):
             daily_password=update_daily_password(),
         )
         database.session.add(new_business)
-        database.session.flush()
-        business_id = new_business.business_id
+        database.session.commit()
+        _id = new_business.business_id
         new_user = User(
-            business_id=business_id,
+            business_id=_id,
             username=generate_user_name(),
             title=data["title"],
             first_name=data["fname"],
@@ -51,7 +49,7 @@ def new_business_registration(data):
         database.session.commit()
         generate_new_log(
             new_user.user_id,
-            business_id,
+            _id,
             f"New business and user created for {data['name']} by {data['fname']}!",
         )
         return new_user.user_id
