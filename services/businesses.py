@@ -54,8 +54,8 @@ def new_business_registration(data):
             business_id,
             f"New business and user created for {data['name']} by {data['fname']}!",
         )
-        return new_user.user_id, "New business and user added!"
+        return new_user.user_id
     except Exception as e:
         database.session.rollback()
         print(e)
-        return None, "Unable to make account or business, please try again!"
+        return None

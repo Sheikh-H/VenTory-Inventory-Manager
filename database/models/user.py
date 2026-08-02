@@ -21,4 +21,4 @@ class User(database.Model):
     updated: Mapped[str | None] = mapped_column(String(20), nullable=True)
     business: Mapped["Business"] = relationship(back_populates="employees")
     logs: Mapped[list["Log"]] = relationship(back_populates="user")
- 
+  

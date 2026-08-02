@@ -8,15 +8,15 @@ class Business(database.Model):
     __tablename__ = "business_table"
     business_id: Mapped[int] = mapped_column(primary_key=True)
 
-    business_name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    business_name: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
 
-    address: Mapped[str] = mapped_column(String(), nullable=False)
+    address: Mapped[str] = mapped_column(String(255), nullable=False)
 
     telephone: Mapped[str] = mapped_column(String(15), nullable=False)
 
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
 
-    logo_url: Mapped[str | None] = mapped_column(String(), unique=False, nullable=True)
+    logo_url: Mapped[str | None] = mapped_column(String(255), unique=False, nullable=True)
 
     daily_password: Mapped[str] = mapped_column(
         String(10), unique=False, nullable=False
@@ -29,3 +29,4 @@ class Business(database.Model):
     employees: Mapped[list["User"]] = relationship(back_populates="business")
     logs: Mapped[list["Log"]] = relationship(back_populates="business")
     stock: Mapped[list["Stock"]] = relationship(back_populates="business")
+ 

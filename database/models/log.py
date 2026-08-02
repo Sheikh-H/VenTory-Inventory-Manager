@@ -13,7 +13,7 @@ class Log(database.Model):
     business_id: Mapped[int] = mapped_column(
         ForeignKey("business_table.business_id"), nullable=False
     )
-    timestamp: Mapped[str] = mapped_column(String(), nullable=False)
+    timestamp: Mapped[str] = mapped_column(String(20), nullable=False)
     comment: Mapped[str] = mapped_column(String(), nullable=False)
     business: Mapped["Business"] = relationship(back_populates="logs")
     user: Mapped["User"] = relationship(back_populates="logs")

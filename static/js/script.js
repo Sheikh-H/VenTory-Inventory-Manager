@@ -16,6 +16,8 @@ mobileMenuSpans.forEach(
   (item) => (item.style.animationDelay = `${Math.random() * 0.4}s`),
 );
 
+//slider function
+
 const observer = new IntersectionObserver(
   (entries, observer) => {
     entries.forEach((entry) => {
@@ -41,3 +43,213 @@ const featureCards = document.querySelectorAll(".feature");
 featureCards.forEach((card, index) => {
   card.style.transitionDelay = `${index * 250}ms`;
 });
+
+const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+const pricePattern = /^\d+(\.\d{1,2})?$/;
+const timePattern = /^\d{2}:\d{2}:\d{2} (AM|PM)$/;
+const fullDatePattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} (AM|PM)$/;
+const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+// register form
+const errorMessage = document.querySelector(".form_error");
+const registerForm = document.querySelector("#register-form");
+
+if (registerForm) {
+  registerForm.addEventListener("submit", function (event) {
+    const businessName = document
+      .getElementById("business-name")
+      .value()
+      .trim()
+      .toLower();
+    const businessAddress = document
+      .getElementById("business-address")
+      .value()
+      .trim()
+      .toLower();
+    const businessTelephone = document
+      .getElementById("business-telephone")
+      .value()
+      .trim();
+    const businessEmail = document
+      .getElementById("business-email")
+      .value()
+      .trim()
+      .toLower();
+
+    if (!businessName) {
+      event.preventDefault();
+      errorMessage.textContent = "Please enter a business name!";
+      return;
+    }
+
+    if (businessName.length < 5) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Business name greater than 5 characters!";
+      return;
+    }
+
+    if (!businessAddress) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter a business address!";
+      return;
+    }
+
+    if (businessAddress.length < 30) {
+      event.preventDefault();
+
+      errorMessage.textContent =
+        "Business address must be greater than 30 characters!";
+      return;
+    }
+
+    if (!businessTelephone) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter a business telephone number!";
+      return;
+    }
+
+    if (businessTelephone.length < 10) {
+      event.preventDefault();
+
+      errorMessage.textContent =
+        "Business telephone number must be greater than 10 characters!";
+      return;
+    }
+
+    if (!businessEmail) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter a business email address!";
+      return;
+    }
+
+    if (!emailPattern.test(businessEmail)) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter a valid business email address!";
+      return;
+    }
+
+    const title = document.getElementById("title").value().trim().toLower();
+    const fname = document
+      .getElementById("first-name")
+      .value()
+      .trim()
+      .toLower();
+    const sname = document.getElementById("last-name").value().trim().toLower();
+    const email = document.getElementById("email").value().trim().toLower();
+    const role = document.getElementById("role").value().trim().toLower();
+    const password = document.getElementById("password").value().trim();
+    const confirmPassword = document
+      .getElementById("confirm-password")
+      .value()
+      .trim();
+
+    if (!title) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter a title";
+      return;
+    }
+
+    if (!["dr", "mrs", "miss", "ms", "mr"].includes(title)) {
+      event.preventDefault();
+
+      errorMessage.textContent =
+        "Please select a title from the list provided!";
+      return;
+    }
+
+    if (!fname) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter your first name!";
+      return;
+    }
+
+    if (fname.length < 1 || fname.length > 100) {
+      event.preventDefault();
+
+      errorMessage.textContent =
+        "First name must be greater than 5 and less than 100 characters!";
+      return;
+    }
+
+    if (sname.length < 1 || sname.length > 100) {
+      event.preventDefault();
+
+      errorMessage.textContent =
+        "Last name must be greater than 5 and less than 100 characters!";
+      return;
+    }
+
+    if (!email) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter your email address!";
+      return;
+    }
+
+    if (!emailPattern.test(email)) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter a valid email address!";
+      return;
+    }
+
+    if (email.toLower() == businessEmail.toLower()) {
+      event.preventDefault();
+
+      errorMessage.textContent =
+        "Please use an email different to the business email!";
+      return;
+    }
+
+    if (!role) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please select a valid salutation!";
+      return;
+    }
+
+    if (!["owner", "employee", "manager"].includes(role)) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please select a role from the list provided!";
+      return;
+    }
+
+    if (!password) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Please enter a password!";
+      return;
+    }
+
+    if (password.length < 15 || password.length > 25) {
+      event.preventDefault();
+
+      errorMessage.textContent =
+        "Password must be greater than 15 and less than 25 characters!";
+      return;
+    }
+
+    if (confirmPassword.length < 15 || confirmPassword.length > 25) {
+      event.preventDefault();
+
+      errorMessage.textContent =
+        "Password must be greater than 15 and less than 25 characters!";
+      return;
+    }
+
+    if (password == confirmPassword) {
+      event.preventDefault();
+
+      errorMessage.textContent = "Passwords must match!";
+      return;
+    }
+  });
+}

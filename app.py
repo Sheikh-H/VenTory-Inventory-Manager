@@ -10,6 +10,7 @@ from flask import (
     Response,
     abort,
     current_app,
+    flash,
     redirect,
     render_template,
     request,
@@ -98,8 +99,8 @@ def about_page():
 @app.route("/login", methods=["GET", "POST"])
 @limiter.limit("5 per minute; 50 per day", methods=["POST"])
 def login_page():
-    if session.get("user-id"):
-        return redirect(url_for(""))
+    if session.get("user_id"):
+        return redirect(url_for("dashboard"))
     title = "Login to get started"
     return render_template("pages/main/login.html", title=title)
 
@@ -108,96 +109,103 @@ def login_page():
 @limiter.limit("2 per minute; 50 per day", methods=["POST"])
 def register_page():
     title = "Sign up to use VenTory"
-    error = ""
-    if session.get("role") or session.get("user_id"):
+    if session.get("user_id"):
         return redirect(url_for("dashboard"))
 
     if request.method == "POST":
         bName = request.form.get("business-name", "").strip().lower()
-        success, error = input_validator(bName, "text")
-        if success and len(bName) < 10 or len(bName) > 40:
-            error = "Please enter a valid business name!"
-
+        if len(bName) < 5:
+            bName = ""
+        if bName:
+            valid_business_name = input_validator(bName, "text")
+            if not valid_business_name:
+                bName = ""
         bAddress = request.form.get("business-address", "").strip().lower()
-        success, error = input_validator(bAddress, "text")
-        if success and len(bAddress) < 1 or len(bAddress) > 255:
-            error = "Please enter a valid business address!"
-
-        bTelephone = request.form.get("business-telephone", "").strip()
-        success, error = input_validator(bTelephone, "number")
-        if success and len(bTelephone) < 10 or len(bTelephone) > 15:
-            error = "Please enter a valid business telephone number!"
+        if len(bAddress) < 30:
+            bAddress = ""
+        if bAddress:
+            valid_address = input_validator(bAddress, "text")
+            if not valid_address:
+                bAddress = ""
+        bTelephone = request.form.get("business-telepone", "").strip().lower()
+        if len(bTelephone) < 10 or len(bTelephone) > 15:
+            bTelephone = ""
+        if bTelephone:
+            valid_telephone = input_validator(bTelephone, "telephone")
+            if not valid_telephone:
+                bTelephone = ""
 
         bEmail = request.form.get("business-email", "").strip().lower()
-        success, error = input_validator(bEmail, "email")
-        if success and len(bEmail) < 1 or len(bEmail) > 255:
-            error = "Please enter a valid business telephone number!"
-
-        btitle = request.form.get("title", "").strip().lower()
-        if btitle not in ["mr", "dr", "mrs", "miss", "ms"]:
-            error = "Please select a valid title!"
-
-        fname = request.form.get("fname", "").strip().lower()
-        success, error = input_validator(fname, "text")
-        if success and len(fname) < 1 or len(fname) > 40:
-            error = "Please enter your first name again!"
-
-        sname = request.form.get("sname", "").strip().lower()
-        success, error = input_validator(sname, "text")
-        if success and len(sname) < 1 or len(sname) > 40:
-            error = "Please enter your last name again!"
-
-        email = request.form.get("email", "").strip().lower()
-        success, error = input_validator(email, "email")
-        if email == bEmail:
-            error = "Please use different email addresses!"
-        if success and len(email) < 1 or len(email) > 255:
-            error = "Please enter a valid email address!"
-
+        uEmail = request.form.get("email", "").strip().lower()
+        if bEmail:
+            valid_email = input_validator(bEmail, "email")
+            if not valid_email:
+                bEmail = ""
+        if uEmail:
+            valid_email = input_validator(uEmail, "email")
+            if not valid_email:
+                uEmail = ""
+        if uEmail == bEmail:
+            uEmail = ""
+            bEmail = ""
+        bTitle = request.form.get("title", "").strip().lower()
+        if bTitle not in ["dr", "mr", "mrs", "miss", "ms"]:
+            bTitle = ""
+        fname = request.form.get("first-name", "").strip().lower()
+        if len(fname) < 1 or len(fname) > 100:
+            fname = ""
+        if fname:
+            valid_fname = input_validator(fname, "text")
+            if not valid_fname:
+                fname = ""
+        sname = request.form.get("last-name", "").strip().lower()
+        if len(sname) < 1 or len(sname) > 100:
+            sname = ""
+        if sname:
+            valid_sname = input_validator(sname, "text")
+            if not valid_sname:
+                sname = ""
         role = request.form.get("role", "").strip().lower()
         if role not in ["owner", "employee", "manager"]:
-            error = "Please enter a valid role that matches your role in the business!"
-
-        if role != "owner":
-            error = "Please contact your business owner to register and then add employee/manager accounts!"
-
+            role = ""
         password = request.form.get("password", "").strip()
-        confirm = request.form.get("confirm-password", "").strip()
-
-        success, error = input_validator(password, "text")
-        if success:
-            success, error = input_validator(confirm, "text")
-
-        if (
-            len(password) < 10
-            or len(confirm) < 10
-            or len(password) > 20
-            or len(confirm) > 20
-        ):
-            error = "Please enter a password less than 20 characters and greater than 10 characters!"
-
-        if password != confirm:
-            error = "Password confirmation incorrect, try again!"
-
+        if len(password) < 15 or len(password) > 25:
+            password = ""
+        if password:
+            valid_password = input_validator(password, "text")
+            if not valid_password:
+                password = ""
+        confirm_password = request.form.get("confirm-password", "").strip()
+        if len(confirm_password) < 15 or len(confirm_password) > 25:
+            confirm_password = ""
+        if confirm_password:
+            valid_confirm = input_validator(confirm_password, "text")
+            if not valid_confirm:
+                confirm_password = ""
+        if password != confirm_password:
+            password = ""
+            confirm_password = ""
         data = {
             "name": bName,
             "address": bAddress,
             "telephone": bTelephone,
-            "bmail": bEmail,
-            "title": btitle,
+            "bemail": bEmail,
+            "title": bTitle,
             "fname": fname,
             "sname": sname,
-            "uemail": email,
+            "uemail": uEmail,
             "role": role,
-            "password": confirm,
+            "password": confirm_password,
         }
+        user_id = new_business_registration(data)
+        if user_id:
+            session.clear()
+            session.permanent = True
+            session["user_id"] = user_id
+            return redirect(url_for("dashboard"))
+        flash("Unable to validate inputs, please try again!", "error")
 
-        user_id, error = new_business_registration(data)
-        session.clear()
-        session["user_id"] = user_id
-        return redirect(url_for("dashboard"))
-
-    return render_template("pages/main/register.html", title=title, form_error=error)
+    return render_template("pages/main/register.html", title=title)
 
 
 @app.route("/user/dashboard/", methods=["GET", "POST"])
@@ -205,15 +213,13 @@ def register_page():
 def dashboard():
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     business = Business.query.filter_by(business_id=user.business_id).first()
-    session.clear()
-    session.permanent = True
     session["role"] = user.role
-    session['user-id'] = user.user_id
-    session['business-id'] = business.business_id
+    session["user-id"] = user.user_id
+    session["business-id"] = business.business_id
     title = f"{business.name}"
     username = user.username
     return render_template(
-        "pages/user-pages/dahboard.html", title=title, username=username
+        "pages/user-pages/dashboard.html", title=title, username=username
     )
 
 
