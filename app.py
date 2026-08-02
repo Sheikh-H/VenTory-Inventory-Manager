@@ -233,7 +233,11 @@ def dashboard():
     session["user-id"] = user.user_id
     session["business-id"] = business.business_id
     return render_template(
-        "pages/user-pages/dashboard.html", title=title, user=user, new_user=new_user
+        "pages/user-pages/dashboard.html",
+        title=title,
+        user=user,
+        new_user=new_user,
+        business=business,
     )
 
 
