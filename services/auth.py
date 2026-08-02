@@ -33,13 +33,15 @@ def update_daily_password():
 def generate_user_name():
     characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
     new_username = []
-    usernames = [username for (username,) in database.session.query(User.username).all()]
-    
+    usernames = [
+        username for (username,) in database.session.query(User.username).all()
+    ]
+
     for i in range(9):
         new_username.append(random.choice(characters))
-    
+
     new_username = "".join(new_username)
-    
+
     for users in usernames:
         if new_username == users:
             return generate_user_name()
@@ -54,20 +56,14 @@ def generate_password_hash(password):
 def generate_time():
     date = datetime.now().replace(microsecond=0).date()
     time = datetime.now().replace(microsecond=0).time()
-    if str(time) > "12:00":
-        suffix = "PM"
-    else:
-        suffix = "AM"
-    return f"{date} {time} {suffix}"
+    return f"{date} {time}"
 
-def login_user(data):
-    username = data['username']
-    password = data['password']
-    
+
+def login_user(username, password):
     user = User.query.filter_by(username=username).first()
     try:
         verifier(password=password, hash=user.password)
-        return True
+        return True, user.user_id
     except Exception as e:
         print(e)
         return False

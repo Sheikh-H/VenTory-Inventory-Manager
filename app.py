@@ -102,6 +102,22 @@ def login_page():
     if session.get("user_id"):
         return redirect(url_for("dashboard"))
     title = "Login to get started"
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        valid_username = input_validator(username, "text")
+        if not valid_username:
+            username = ""
+        valid_password = input_validator(password, "text")
+        if not valid_password:
+            password = ""
+        success, user_id = login_user(username, password)
+        if success:
+            session.clear()
+            session.permanent = True
+            session["user_id"] = user_id
+            return redirect(url_for("dashboard"))
+        return redirect(url_for("login"))
     return render_template("pages/main/login.html", title=title)
 
 
@@ -133,7 +149,6 @@ def register_page():
             valid_telephone = input_validator(bTelephone, "telephone")
             if not valid_telephone:
                 bTelephone = ""
-
         bEmail = request.form.get("business-email", "").strip().lower()
         uEmail = request.form.get("email", "").strip().lower()
         if bEmail:
@@ -210,13 +225,15 @@ def register_page():
 def dashboard():
     title = "Welcome to your dashboard"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
+    new_user = bool(
+        user.created[0:10] == str(datetime.now().replace(microsecond=0).date())
+    )
     business = Business.query.filter_by(business_id=user.business_id).first()
     session["role"] = user.role
     session["user-id"] = user.user_id
     session["business-id"] = business.business_id
-    username = user.username
     return render_template(
-        "pages/user-pages/dashboard.html", title=title, username=username
+        "pages/user-pages/dashboard.html", title=title, user=user, new_user=new_user
     )
 
 

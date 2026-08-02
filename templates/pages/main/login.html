@@ -1,5 +1,37 @@
 {% extends 'layout.html' %} {% block content %}
-<section class="home-login-page" id="home-login-page">
+<section class="login-page-intro" id="login-page-intro">
   <h2>Login Page</h2>
+  <p>
+    Please <strong>do not</strong> use any of your own details. All information
+    is stored on GitHub and Render temporary files and is deleted on
+    refresh/reload.
+  </p>
+</section>
+<section class="login-form-section hidden-right">
+  <div>
+    <p class="form-error"></p>
+  </div>
+  <form action="/login" method="post" class="login-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <input
+      type="text"
+      name="username"
+      id="username"
+      required
+      minlength="9"
+      maxlength="9"
+      placeholder="Username"
+    />
+    <input
+      type="password"
+      name="password"
+      id="password"
+      required
+      minlength="10"
+      maxlength="20"
+      placeholder="Password"
+    />
+    <input type="submit" value="Sign In" />
+  </form>
 </section>
 {% endblock content %}

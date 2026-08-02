@@ -1,13 +1,23 @@
+.login-page-intro {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.login-form {
+    padding: 5px;
+}
+
+.login-form>div {
+    display: flex;
+    gap: 10px;
+}
 
 
 /* Tablet */
 
-@media screen and (min-width: 700px) and (max-width: 999px) {
-
-}
+@media screen and (min-width: 700px) and (max-width: 999px) {}
 
 /* Desktop */
 
-@media screen and (min-width: 1000px) {
-
-}
+@media screen and (min-width: 1000px) {}

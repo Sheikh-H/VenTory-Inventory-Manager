@@ -142,6 +142,12 @@ input[type="submit"] {
     cursor: pointer;
 }
 
+.form-error {
+    color: red;
+    text-align: center;
+    width: 100%;
+}
+
 /* Tablet */
 
 @media screen and (min-width: 700px) and (max-width: 999px) {
