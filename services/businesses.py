@@ -45,7 +45,7 @@ def new_business_registration(data):
             email=data["uemail"],
             role=data["role"],
             password=generate_password_hash(data["password"]),
-            created=generate_time(),
+            created=new_business.created,
         )
         database.session.add(new_user)
         database.session.commit()

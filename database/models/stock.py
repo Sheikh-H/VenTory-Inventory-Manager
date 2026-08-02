@@ -22,6 +22,6 @@ class Stock(database.Model):
     total: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     available: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     supplier: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    updated: Mapped[str | None] = mapped_column(String(20), nullable=True)
-    created: Mapped[str] = mapped_column(String(20), nullable=False)
+    updated: Mapped[str | None] = mapped_column(String(23), nullable=True)
+    created: Mapped[str] = mapped_column(String(23), nullable=False)
     business: Mapped["Business"] = relationship(back_populates="stock")

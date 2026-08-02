@@ -134,12 +134,8 @@ if (registerForm) {
     }
 
     const title = document.getElementById("title").value().trim().toLower();
-    const fname = document
-      .getElementById("first-name")
-      .value()
-      .trim()
-      .toLower();
-    const sname = document.getElementById("last-name").value().trim().toLower();
+    const fname = document.getElementById("fname").value().trim().toLower();
+    const sname = document.getElementById("sname").value().trim().toLower();
     const email = document.getElementById("email").value().trim().toLower();
     const role = document.getElementById("role").value().trim().toLower();
     const password = document.getElementById("password").value().trim();
@@ -229,7 +225,7 @@ if (registerForm) {
       return;
     }
 
-    if (password.length < 15 || password.length > 25) {
+    if (password.length < 15 || password.length > 20) {
       event.preventDefault();
 
       errorMessage.textContent =
@@ -237,7 +233,7 @@ if (registerForm) {
       return;
     }
 
-    if (confirmPassword.length < 15 || confirmPassword.length > 25) {
+    if (confirmPassword.length < 15 || confirmPassword.length > 20) {
       event.preventDefault();
 
       errorMessage.textContent =

@@ -114,20 +114,20 @@ def register_page():
 
     if request.method == "POST":
         bName = request.form.get("business-name", "").strip().lower()
-        if len(bName) < 5:
+        if len(bName) < 5 or len(bName) > 255:
             bName = ""
         if bName:
             valid_business_name = input_validator(bName, "text")
             if not valid_business_name:
                 bName = ""
         bAddress = request.form.get("business-address", "").strip().lower()
-        if len(bAddress) < 30:
+        if len(bAddress) < 30 or len(bAddress) > 255:
             bAddress = ""
         if bAddress:
             valid_address = input_validator(bAddress, "text")
             if not valid_address:
                 bAddress = ""
-        bTelephone = request.form.get("business-telepone", "").strip().lower()
+        bTelephone = request.form.get("business-telephone", "").strip().lower()
         if len(bTelephone) < 10 or len(bTelephone) > 15:
             bTelephone = ""
         if bTelephone:
@@ -151,14 +151,14 @@ def register_page():
         bTitle = request.form.get("title", "").strip().lower()
         if bTitle not in ["dr", "mr", "mrs", "miss", "ms"]:
             bTitle = ""
-        fname = request.form.get("first-name", "").strip().lower()
+        fname = request.form.get("fname", "").strip().lower()
         if len(fname) < 1 or len(fname) > 100:
             fname = ""
         if fname:
             valid_fname = input_validator(fname, "text")
             if not valid_fname:
                 fname = ""
-        sname = request.form.get("last-name", "").strip().lower()
+        sname = request.form.get("sname", "").strip().lower()
         if len(sname) < 1 or len(sname) > 100:
             sname = ""
         if sname:
@@ -169,14 +169,14 @@ def register_page():
         if role not in ["owner", "employee", "manager"]:
             role = ""
         password = request.form.get("password", "").strip()
-        if len(password) < 15 or len(password) > 25:
+        if len(password) < 15 or len(password) > 20:
             password = ""
         if password:
             valid_password = input_validator(password, "text")
             if not valid_password:
                 password = ""
         confirm_password = request.form.get("confirm-password", "").strip()
-        if len(confirm_password) < 15 or len(confirm_password) > 25:
+        if len(confirm_password) < 15 or len(confirm_password) > 20:
             confirm_password = ""
         if confirm_password:
             valid_confirm = input_validator(confirm_password, "text")

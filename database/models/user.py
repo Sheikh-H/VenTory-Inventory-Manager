@@ -17,8 +17,7 @@ class User(database.Model):
     role: Mapped[str] = mapped_column(String(10), nullable=False)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    created: Mapped[str] = mapped_column(String(20), nullable=False)
-    updated: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    created: Mapped[str] = mapped_column(String(23), nullable=False)
+    updated: Mapped[str | None] = mapped_column(String(23), nullable=True)
     business: Mapped["Business"] = relationship(back_populates="employees")
     logs: Mapped[list["Log"]] = relationship(back_populates="user")
-  
