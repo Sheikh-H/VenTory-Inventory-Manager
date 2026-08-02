@@ -109,8 +109,8 @@ def login_page():
 def register_page():
     title = "Sign up to use VenTory"
     error = ""
-    if session['role'] or session['user_id']:
-        return redirect(url_for('dashboard'))
+    if session.get("role") or session.get("user_id"):
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         bname = request.form.get("business-name", "").strip().lower()
         bAddress = request.form.get("business-address", "").strip().lower()
@@ -128,8 +128,8 @@ def register_page():
             "name": bname,
             "address": bAddress,
             "email": bmail,
-            'telephone': bTelephone,
-            "daily_password": update_daily_password(), 
+            "telephone": bTelephone,
+            "daily_password": update_daily_password(),
         }
 
         user = {
@@ -148,20 +148,15 @@ def register_page():
         }
 
         success, error = input_validator(new_registration, "register")
-
-        if not success:
-            return redirect(url_for("register_page", form_error=error))
         
+            
         success, error, business_id = add_new_business(business)
-        
+
         if business_id:
-            user['business_id'] = business_id
+            user["business_id"] = business_id
             success, error, user_id = add_new_user(user)
-            
             session["user_id"] = user_id
-            session['role'] = user['role']
-            
-            return redirect(url_for('dashboard'))
+            session["role"] = user["role"]
     return render_template("pages/main/register.html", title=title, form_error=error)
 
 

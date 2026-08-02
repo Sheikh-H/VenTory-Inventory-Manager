@@ -13,6 +13,7 @@ def add_new_business(data):
                         return (
                             False,
                             "Existing business, please contact your administrator to login!",
+                            None,
                         )
     try:
         new_business = Business(
@@ -28,4 +29,4 @@ def add_new_business(data):
     except Exception as e:
         database.session.rollback()
         print(e)
-        return False, "Unable to add business!"
+        return False, "Unable to add business!", None
