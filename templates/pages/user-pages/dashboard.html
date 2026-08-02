@@ -1,12 +1,30 @@
 {% extends 'layout.html' %} {% block content %}
-<section>
+<section class="dashboard-page-intro">
   <h1>Dashboard</h1>
   {% if new_user %}
-  <p>{{user.username}} - Please keep a note of this to login again!</p>
+  <h2>Username Generated, please keep it safe:</h2>
+  <p><strong>{{user.username}}</strong></p>
+  <p>
+    <i
+      >Please keep a copy of your username - this message will disappear
+      tomorrow.</i
+    >
+  </p>
   {% else %}
   <p>Welcome back {{user.first_name}}!</p>
   {% endif %} {% if user.role in ['owner', 'manager'] %}
-  <p>Your daily password today is {{ business.daily_password }}</p>
+  <h2>Daily Password:</h2>
+  <p><strong>{{ business.daily_password }}</strong></p>
+  <p><i>Daily password is reset everyday.</i></p>
   {% endif %}
+</section>
+<section>
+  <p>if role is owner</p>
+</section>
+<section>
+  <p>if role is manager</p>
+</section>
+<section>
+  <p>if role is employee</p>
 </section>
 {% endblock content %}

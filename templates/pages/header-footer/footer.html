@@ -37,7 +37,11 @@
         <tr>
           <td><a href="{{ url_for('home_page') }}#home-contact">Contact</a></td>
         </tr>
-
+        {% if session.get('user_id') %}
+        <tr>
+          <td><a href="{{ url_for('logout') }}">Logout</a></td>
+        </tr>
+        {% else %}
         <!-- if logged out -->
         <tr>
           <td><a href="{{ url_for('login_page') }}">Sign In</a></td>
@@ -46,6 +50,7 @@
           <td><a href="{{ url_for('register_page') }}">Sign Up</a></td>
         </tr>
         <!--  -->
+        {% endif %}
       </tbody>
     </table>
   </div>

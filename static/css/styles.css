@@ -9,6 +9,9 @@
 @import url('pages/login-page.css');
 @import url('pages/register-page.css');
 
+/* user dashboard */
+@import url('pages/user-pages/dashboard.css');
+
 /* sections */
 @import url('header.css');
 @import url('footer.css');

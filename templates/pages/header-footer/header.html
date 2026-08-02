@@ -15,7 +15,12 @@
       <span></span>
     </div>
     <div class="navigation-bar">
-      <!-- if logged out -->
+      {% if session.get('user_id') %}
+      <div class="nav-item">
+        <a href="{{ url_for('logout') }}"><p>Logout</p></a>
+        <span class="nav-item-bottom"></span>
+      </div>
+      {% else %}
       <div class="nav-item">
         <a href="{{ url_for('home_page') }}"><p>Home</p></a>
         <span class="nav-item-bottom"></span>
@@ -32,7 +37,7 @@
         <a href="{{ url_for('login_page') }}"><p>Login</p></a>
         <span class="nav-item-bottom"></span>
       </div>
-      <!--  -->
+      {% endif %}
     </div>
   </nav>
 </div>
