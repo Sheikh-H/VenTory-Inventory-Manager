@@ -1,6 +1,8 @@
 import random
 from datetime import datetime
 from functools import wraps
+from database.db import database
+from database.models import User
 
 from argon2 import PasswordHasher
 from flask import redirect, session, url_for
@@ -30,11 +32,18 @@ def update_daily_password():
 
 def generate_user_name():
     characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
-    username = []
+    new_username = []
+    usernames = [username for (username,) in database.session.query(User.username).all()]
+    
     for i in range(9):
-        username.append(random.choice(characters))
-    username = "".join(username)
-    return str(username)
+        new_username.append(random.choice(characters))
+    
+    new_username = "".join(new_username)
+    
+    for users in usernames:
+        if new_username == users:
+            return generate_user_name()
+    return str(new_username)
 
 
 def generate_password_hash(password):
@@ -50,3 +59,15 @@ def generate_time():
     else:
         suffix = "AM"
     return f"{date} {time} {suffix}"
+
+def login_user(data):
+    username = data['username']
+    password = data['password']
+    
+    user = User.query.filter_by(username=username).first()
+    try:
+        verifier(password=password, hash=user.password)
+        return True
+    except Exception as e:
+        print(e)
+        return False

@@ -1,32 +1,61 @@
-from database.models import Business, User, Stock, Log
-from services.auth import generate_time, update_daily_password
 from database.db import database
+from database.models import Business, User
+from services.auth import (
+    generate_password_hash,
+    generate_time,
+    generate_user_name,
+    update_daily_password,
+)
+from services.log import generate_new_log
 
 
-def add_new_business(data):
-    existing = Business.query.filter_by(email=data["email"]).first()
-    if existing:
-        if existing.business_name == data["name"]:
-            if existing.telephone == data["telephone"]:
-                if existing.email == data["email"]:
-                    if existing.address == data["address"]:
-                        return (
-                            False,
-                            "Existing business, please contact your administrator to login!",
-                            None,
-                        )
+def new_business_registration(data):
     try:
+        existing_business = Business.query.filter_by(email=data["bemail"]).first()
+        existing_user = User.query.filter_by(
+            email=data["uemail"], business_id=data["business_id"]
+        ).first()
+        if existing_business and existing_business.business_name == data["name"]:
+            return (
+                None,
+                "Existing business, please contact your administrator to login/register!",
+            )
+        if existing_user and existing_user.email == data["uemail"]:
+            return (
+                None,
+                "Existing account, please login!",
+            )
         new_business = Business(
             business_name=data["name"],
             address=data["address"],
             telephone=data["telephone"],
+            email=data["bemail"],
             created=generate_time(),
             daily_password=update_daily_password(),
         )
         database.session.add(new_business)
+        database.session.flush()
+        business_id = new_business.business_id
+        new_user = User(
+            business_id=business_id,
+            username=generate_user_name(),
+            title=data["title"],
+            first_name=data["fname"],
+            last_name=data["sname"],
+            email=data["uemail"],
+            role=data["role"],
+            password=generate_password_hash(data["password"]),
+            created=generate_time(),
+        )
+        database.session.add(new_user)
         database.session.commit()
-        return True, "New business added", new_business.id
+        generate_new_log(
+            new_user.user_id,
+            business_id,
+            f"New business and user created for {data['name']} by {data['fname']}!",
+        )
+        return new_user.user_id, "New business and user added!"
     except Exception as e:
         database.session.rollback()
         print(e)
-        return False, "Unable to add business!", None
+        return None, "Unable to make account or business, please try again!"

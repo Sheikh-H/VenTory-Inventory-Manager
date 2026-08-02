@@ -1,84 +1,65 @@
 import re
 
 email_pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+price_pattern = r"^\d+(\.\d{1,2})?$"
+time_pattern = r"\d{2}:\dV{2}:\d{2} (AM|PM)$"
+full_date_pattern = r"^\d{4}-\d{2}-\d{2} \d{2}:\dV{2}:\d{2} (AM|PM)$"
+date_pattern = r"^\d{4}-\d{2}-\d{2}$"
 
 
-def input_validator(data, form):
+def input_validator(data, input_type):
     forbidden_characters = ["<", ">", "{", "}", "[", "]"]
 
-    ## Register Form
-    if form == "register":
-        new_user_fields = {
-            "title",
-            "fname",
-            "sname",
-            "email",
-            "role",
-            "password",
-            "confirm",
-        }
+    numbers = [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        0,
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "+",
+        "(",
+        ")",
+        " ",
+    ]
 
-        new_business_fields = {"name", "address", "telephone", "email"}
-        if data["business"]["email"] == data["user"]["email"]:
-            return False, "Please use different emails!"
+    if input_type == "text":
+        for char in data:
+            if char in forbidden_characters:
+                return False, "Invalid input, try again!"
 
-        if data["user"]["role"] != "owner":
-            return False, "Please contact your business owner to register an account!"
+    if input_type == "email":
+        if not re.fullmatch(email_pattern, data):
+            return False, "Please enter a valid email address!"
 
-        for section, fields in data.items():
-            for key, value in fields.items():
-                for character in value:
-                    if character in forbidden_characters:
-                        return False, "Invalid input, try again!"
-                if value.strip() == "":
-                    return False, "Please fill all fields!"
+    if input_type == "number":
+        for char in data:
+            if char not in numbers:
+                return False, "Invalid numerical input, try again!"
 
-            if section == "business":
-                received_fields = set(fields.keys())
-                missing_fields = new_business_fields - received_fields
+    if input_type == "price":
+        if not re.fullmatch(price_pattern, data):
+            return False, "Please enter a valid price!"
 
-                if len(missing_fields) > 0:
-                    return False, "Please use all fields!"
-
-                for key, value in fields.items():
-                    if key not in new_business_fields:
-                        return False, "Please use form fields only!"
-
-                if not re.fullmatch(email_pattern, fields.get("email")):
-                    return False, "Please enter a valid email address!"
-
-            if section == "user":
-                received_fields = set(fields.keys())
-                missing_fields = new_user_fields - received_fields
-
-                if len(missing_fields) > 0:
-                    return False, "Please use all fields!"
-
-                for key, value in fields.items():
-                    if key not in new_user_fields:
-                        return False, "Please use form fields only!"
-
-                    if key == "role":
-                        if value not in ["owner", "employee", "manager"]:
-                            return (
-                                False,
-                                "Please select a valid role, that best matches your position!",
-                            )
-                    if key == "title":
-                        if value not in ["dr", "mr", "mrs", "miss", "ms"]:
-                            return False, "Please use a valid title!"
-
-                if not re.fullmatch(email_pattern, fields.get("email")):
-                    return False, "Please enter a valid email address!"
-
-                if fields.get("password") != fields.get("confirm"):
-                    return False, "Please re-confirm your password!"
-
-                if len(fields.get("confirm")) > 15 or len(fields.get("password")) > 15:
-                    return False, "Password must be less than 15 characters!"
-
-                if len(fields.get("confirm")) < 10 or len(fields.get("password")) < 10:
-                    return False, "Password must be greater than 10 characters!"
-    ## register form ^
-
+    if input_type == "datetime":
+        if (
+            not re.fullmatch(full_date_pattern, data)
+            or not re.fullmatch(time_pattern, data)
+            or not re.fullmatch(date_pattern, data)
+        ):
+            return False, "Please enter a valid date/time!"
     return True, None

@@ -9,7 +9,7 @@ def add_new_user(data):
         email=data["email"], business_id=data["business_id"]
     ).first()
     if existing:
-        return False, "Unable to register user!", None
+        return 
     try:
         new_user = User(
             business_id=data["business_id"],
@@ -24,9 +24,9 @@ def add_new_user(data):
         )
         database.session.add(new_user)
         database.session.commit()
-        generate_new_log(new_user.id, data["business_id"], "New account created!")
-        return True, "New User Added!", new_user.username
+        generate_new_log(new_user.user_id, data["business_id"], "New account created!")
+        return 
     except Exception as e:
         print(e)
         database.session.rollback()
-        return None, "Unable to register user!", None
+        return 
