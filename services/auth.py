@@ -28,6 +28,19 @@ def update_daily_password():
     return str(daily)
 
 
+def generate_user_name():
+    characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
+    username = []
+    for i in range(9):
+        username.append(random.choice(characters))
+    username = "".join(username)
+    return str(username)
+
+def generate_password_hash(password):
+    hashed = hasher(password)
+    return hashed
+
+
 def generate_time():
     date = datetime.now().replace(microsecond=0).date()
     time = datetime.now().replace(microsecond=0).time()

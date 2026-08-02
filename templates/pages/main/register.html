@@ -8,7 +8,7 @@
   </p>
 </section>
 <section class="register-form-section">
-  <form action="/login" method="post" class="register-form">
+  <form action="/register" method="post" class="register-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <div>
       <svg
@@ -67,7 +67,7 @@
       </svg>
       <label for="fname">Your Details:</label>
     </div>
-    <select name="title" id="title">
+    <select name="title" id="title" required>
       <option value="" selected>Select Title</option>
       <option value="mr">Mr</option>
       <option value="mrs">Mrs</option>
@@ -97,9 +97,10 @@
       required
     />
 
-    <select name="role" id="role">
+    <select name="role" id="role" required>
       <option value="" selected>Select Role:</option>
       <option value="owner">Business Owner</option>
+      <option value="manager">Manager</option>
       <option value="employee">Employee</option>
     </select>
     <input

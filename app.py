@@ -2,6 +2,8 @@ import os
 from datetime import timedelta
 
 import cloudinary
+
+# import cloudinary.uploader
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -17,12 +19,15 @@ from flask import (
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask_session import Session
 from flask_wtf.csrf import CSRFError, CSRFProtect
 
 from database.db import database
+from flask_session import Session
 from services.auth import *
+from services.businesses import add_new_business
 from services.config import initialise_env
+from services.users import add_new_user
+from services.validators import input_validator
 
 load_dotenv()
 
@@ -30,22 +35,18 @@ initialise_env()
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ventory.db"
-database.init_app(app)
-
-from database.models import *
-
-with app.app_context():
-    database.create_all()
-
-app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 app.config.update(
+    SECRET_KEY=os.getenv("SECRET_KEY"),
+    SQLALCHEMY_DATABASE_URI="sqlite:///ventory.db",
+    SESSION_TYPE="filesystem",
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_SAMESITE="LAX",
     PERMANENT_SESSION_LIFETIME=timedelta(hours=1),
+    TEMPLATES_AUTO_RELOAD=True,
 )
+
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -54,11 +55,14 @@ cloudinary.config(
     secure=True,
 )
 
-
-app.config["SESSION_TYPE"] = "filesystem"
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+database.init_app(app)
 
 Session(app)
+
+from database.models import Business, User, Stock, Log
+
+with app.app_context():
+    database.create_all()
 
 csrf = CSRFProtect(app)
 
@@ -108,7 +112,8 @@ def register_page():
     if request.method == "POST":
         bname = request.form.get("business-name", "").strip().lower()
         bAddress = request.form.get("business-address", "").strip().lower()
-        bemail = request.form.get("business-email", "").strip().lower()
+        bTelephone = request.form.get("business-telephone", "").strip()
+        bmail = request.form.get("business-email", "").strip().lower()
         title = request.form.get("title", "").strip().lower()
         fname = request.form.get("fname", "").strip().lower()
         sname = request.form.get("sname", "").strip().lower()
@@ -120,8 +125,9 @@ def register_page():
         business = {
             "name": bname,
             "address": bAddress,
-            "email": bemail,
-            "daily_password": update_daily_password(),
+            "email": bmail,
+            'telephone': bTelephone,
+            "daily_password": update_daily_password(), 
         }
 
         user = {
@@ -139,10 +145,16 @@ def register_page():
             "user": user,
         }
 
-        success, error = input_validator(new_registration, "new business")
+        success, error = input_validator(new_registration, "register")
 
         if not success:
             return redirect(url_for("register_page", form_error=error))
+        
+        _id, error = add_new_business(business)
+        
+        if _id:
+            user['business_id'] = _id
+            success, error = add_new_user(user)
     return render_template("pages/main/register.html", title=title, form_error=error)
 
 
