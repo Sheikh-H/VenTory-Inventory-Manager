@@ -148,36 +148,84 @@ input[type="submit"] {
     width: 100%;
 }
 
+
+/* flash messages */
+
+.flash-container {
+    position: fixed;
+    top: 100px;
+    z-index: 1000;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.flash {
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: center;
+    padding: 3px;
+    align-items: center;
+}
+
+.flash.success {
+    color: green;
+    background-color: white;
+}
+
+.flash.error {
+    color: red;
+    background-color: white;
+}
+
+
 /* Tablet */
 
 @media screen and (min-width: 700px) and (max-width: 999px) {
     main {
-            margin: 0 0.5rem;
-        }
+        margin: 0 0.5rem;
+    }
 
     .show-on-tablet {
         display: flex;
     }
 
-        .show-on-mobile {
-            display: none;
-        }
+    .show-on-mobile {
+        display: none;
+    }
 
+    .flash {
+        font-size: 1rem;
+    }
+
+    .flash-container {
+        top: 70px;
+    }
 }
 
 /* Desktop */
 
 @media screen and (min-width: 1000px) {
     main {
-            margin: 0 7rem;
-        }
+        margin: 0 7rem;
+    }
 
     .show-on-desktop {
         display: flex;
     }
 
-        .show-on-mobile {
-            display: none;
-        }
+    .show-on-mobile {
+        display: none;
+    }
 
+    .flash-container {
+        top: 50px;
+    }
+
+    .flash {
+        font-size: 1rem;
+    }
 }

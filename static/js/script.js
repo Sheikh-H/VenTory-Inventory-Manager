@@ -1,3 +1,10 @@
+setTimeout(() => {
+  const flashes = document.querySelectorAll(".flash");
+  flashes.forEach((flash) => {
+    flash.remove();
+  });
+}, 3000);
+
 const menuButton = document.querySelector(".mobile-nav-button");
 const menuMobile = document.querySelector(".navigation-bar");
 menuButton.addEventListener("click", () => {

@@ -27,6 +27,15 @@
     <script src="{{url_for('static', filename='js/script.js')}}" defer></script>
   </head>
   <body>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message.upper() }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
     <header>{% include 'pages/header-footer/header.html' %}</header>
     <main>{% block content %} {% endblock content %}</main>
     <footer>{% include 'pages/header-footer/footer.html' %}</footer>

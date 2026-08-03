@@ -59,7 +59,7 @@ database.init_app(app)
 
 Session(app)
 
-from database.models import Business, User
+from database.models import *
 
 with app.app_context():
     database.create_all()
@@ -116,6 +116,7 @@ def login_page():
             session.clear()
             session.permanent = True
             session["user_id"] = user_id
+            flash("Logged in!", "success")
             return redirect(url_for("dashboard"))
         return redirect(url_for("login_page"))
     return render_template("pages/main/login.html", title=title)
@@ -459,6 +460,7 @@ def logout():
         user.user_id, business.business_id, f"{user.first_name} logged out!"
     )
     session.clear()
+    flash("Successfully logged out!", "success")
     return redirect(url_for("home_page"))
 
 
