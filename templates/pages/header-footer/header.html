@@ -17,10 +17,10 @@
     <div class="navigation-bar">
       {% if session.get('user_id') %}
       <div class="nav-item">
-        <a href="{{ url_for('logout') }}"><p>Logout</p></a>
+        <a href="{{ url_for('dashboard') }}"><p>Dashboard</p></a>
         <span class="nav-item-bottom"></span>
-        {% if user.role == 'owner' %}
       </div>
+      {% if user is defined and user.role == 'owner' %}
       <div class="nav-item">
         <a href="{{ url_for('owner_settings') }}"><p>Account Settings</p></a>
         <span class="nav-item-bottom"></span>
@@ -30,7 +30,12 @@
         <a href="{{ url_for('user_settings') }}"><p>Account Settings</p></a>
         <span class="nav-item-bottom"></span>
       </div>
-      {% endif %} {% else %}
+      {% endif %}
+      <div class="nav-item">
+        <a href="{{ url_for('logout') }}"><p>Logout</p></a>
+        <span class="nav-item-bottom"></span>
+      </div>
+      {% else %}
       <div class="nav-item">
         <a href="{{ url_for('home_page') }}"><p>Home</p></a>
         <span class="nav-item-bottom"></span>
