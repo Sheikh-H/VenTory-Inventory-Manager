@@ -19,8 +19,18 @@
       <div class="nav-item">
         <a href="{{ url_for('logout') }}"><p>Logout</p></a>
         <span class="nav-item-bottom"></span>
+        {% if user.role == 'owner' %}
+      </div>
+      <div class="nav-item">
+        <a href="{{ url_for('owner_settings') }}"><p>Account Settings</p></a>
+        <span class="nav-item-bottom"></span>
       </div>
       {% else %}
+      <div class="nav-item">
+        <a href="{{ url_for('user_settings') }}"><p>Account Settings</p></a>
+        <span class="nav-item-bottom"></span>
+      </div>
+      {% endif %} {% else %}
       <div class="nav-item">
         <a href="{{ url_for('home_page') }}"><p>Home</p></a>
         <span class="nav-item-bottom"></span>

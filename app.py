@@ -2,8 +2,7 @@ import os
 from datetime import timedelta
 
 import cloudinary
-
-# import cloudinary.uploader
+import cloudinary.uploader
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -21,14 +20,14 @@ from flask import (
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFError, CSRFProtect
-from sqlalchemy import true
-from services.validators import input_validator
 
 from database.db import database
 from flask_session import Session
 from services.auth import *
 from services.businesses import *
 from services.config import initialise_env
+from services.users import *
+from services.validators import input_validator
 
 load_dotenv()
 
@@ -60,7 +59,7 @@ database.init_app(app)
 
 Session(app)
 
-from database.models import Business, User, Stock, Log
+from database.models import Business, User
 
 with app.app_context():
     database.create_all()
@@ -220,7 +219,7 @@ def register_page():
     return render_template("pages/main/register.html", title=title)
 
 
-@app.route("/user/dashboard/", methods=["GET", "POST"])
+@app.route("/user/dashboard", methods=["GET", "POST"])
 @login_required
 def dashboard():
     title = "Welcome to your dashboard"
@@ -238,6 +237,174 @@ def dashboard():
         user=user,
         new_user=new_user,
         business=business,
+    )
+
+
+@app.route("/user/owner-settings", methods=["GET", "POST"])
+@login_required
+@limiter.limit("1 per day", methods=["POST"])
+def owner_settings():
+    title = "Update your details"
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    if user.role != "owner":
+        return redirect(url_for("user_settings"))
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    if request.method == "POST":
+        bName = request.form.get("business-name", "").strip().lower()
+        if len(bName) < 5 or len(bName) > 255:
+            bName = ""
+        if bName:
+            valid_business_name = input_validator(bName, "text")
+            if not valid_business_name:
+                bName = ""
+        bAddress = request.form.get("business-address", "").strip().lower()
+        if len(bAddress) < 30 or len(bAddress) > 255:
+            bAddress = ""
+        if bAddress:
+            valid_address = input_validator(bAddress, "text")
+            if not valid_address:
+                bAddress = ""
+        bTelephone = request.form.get("business-telephone", "").strip().lower()
+        if len(bTelephone) < 10 or len(bTelephone) > 15:
+            bTelephone = ""
+        if bTelephone:
+            valid_telephone = input_validator(bTelephone, "telephone")
+            if not valid_telephone:
+                bTelephone = ""
+        bEmail = request.form.get("business-email", "").strip().lower()
+        uEmail = request.form.get("email", "").strip().lower()
+        if bEmail:
+            valid_email = input_validator(bEmail, "email")
+            if not valid_email:
+                bEmail = ""
+        if uEmail:
+            valid_email = input_validator(uEmail, "email")
+            if not valid_email:
+                uEmail = ""
+        if uEmail == bEmail:
+            uEmail = ""
+            bEmail = ""
+        bTitle = request.form.get("title", "").strip().lower()
+        if bTitle not in ["dr", "mr", "mrs", "miss", "ms"]:
+            bTitle = ""
+        fname = request.form.get("fname", "").strip().lower()
+        if len(fname) < 1 or len(fname) > 100:
+            fname = ""
+        if fname:
+            valid_fname = input_validator(fname, "text")
+            if not valid_fname:
+                fname = ""
+        sname = request.form.get("sname", "").strip().lower()
+        if len(sname) < 1 or len(sname) > 100:
+            sname = ""
+        if sname:
+            valid_sname = input_validator(sname, "text")
+            if not valid_sname:
+                sname = ""
+        password = request.form.get("password", "").strip()
+        if len(password) < 10 or len(password) > 20:
+            password = ""
+        if password:
+            valid_password = input_validator(password, "text")
+            if not valid_password:
+                password = ""
+        image = request.files.get("image")
+        if not image:
+            image = ""
+            image_url = None
+        if image:
+            try:
+                upload = cloudinary.uploader.upload(
+                    image, folder=f"{business.business_name}"
+                )
+                image_url = upload["secure_url"]
+            except Exception as e:
+                print(e)
+        data = {
+            "user_id": user.user_id,
+            "business_id": user.business_id,
+            "name": bName,
+            "address": bAddress,
+            "telephone": bTelephone,
+            "image_url": image_url,
+            "bemail": bEmail,
+            "title": bTitle,
+            "fname": fname,
+            "sname": sname,
+            "uemail": uEmail,
+            "password": password,
+        }
+        success = update_details(data, "owner")
+        if success:
+            flash("Details have been updated successfully!", "success")
+            return redirect(url_for("dashboard"))
+        flash("Unable to update, contact admin!", "error")
+        return redirect(url_for("dashboard"))
+    return render_template(
+        "pages/user-pages/account-settings.html",
+        title=title,
+        user=user,
+        business=business,
+    )
+
+
+@app.route("/user/user-settings", methods=["GET", "POST"])
+@login_required
+@limiter.limit("1 per day", methods=["POST"])
+def user_settings():
+    title = "Update your details"
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    if user.role == "owner":
+        return redirect(url_for("owner_settings"))
+    if request.method == "POST":
+        uEmail = request.form.get("email", "").strip().lower()
+        if uEmail:
+            valid_email = input_validator(uEmail, "email")
+            if not valid_email:
+                uEmail = ""
+        bTitle = request.form.get("title", "").strip().lower()
+        if bTitle not in ["dr", "mr", "mrs", "miss", "ms"]:
+            bTitle = ""
+        fname = request.form.get("fname", "").strip().lower()
+        if len(fname) < 1 or len(fname) > 100:
+            fname = ""
+        if fname:
+            valid_fname = input_validator(fname, "text")
+            if not valid_fname:
+                fname = ""
+        sname = request.form.get("sname", "").strip().lower()
+        if len(sname) < 1 or len(sname) > 100:
+            sname = ""
+        if sname:
+            valid_sname = input_validator(sname, "text")
+            if not valid_sname:
+                sname = ""
+        password = request.form.get("password", "").strip()
+        if len(password) < 10 or len(password) > 20:
+            password = ""
+        if password:
+            valid_password = input_validator(password, "text")
+            if not valid_password:
+                password = ""
+        data = {
+            "user_id": user.user_id,
+            "business_id": user.business_id,
+            "title": bTitle,
+            "fname": fname,
+            "sname": sname,
+            "uemail": uEmail,
+            "password": password,
+        }
+        success = update_details(data, "user")
+        if success:
+            flash("Details updated successfully!", "success")
+            return redirect(url_for("dashboard"))
+        flash("Unable to update, contact admin!", "error")
+        return redirect(url_for("dashboard"))
+    return render_template(
+        "pages/user-pages/account-settings.html",
+        title=title,
+        user=user,
     )
 
 

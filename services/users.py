@@ -1,6 +1,11 @@
 from database.db import database
-from database.models import User
-from services.auth import generate_password_hash, generate_time, generate_user_name
+from database.models import Business, User
+from services.auth import (
+    generate_password_hash,
+    generate_time,
+    generate_user_name,
+    login_user,
+)
 from services.log import generate_new_log
 
 
@@ -9,7 +14,7 @@ def add_new_user(data):
         email=data["email"], business_id=data["business_id"]
     ).first()
     if existing:
-        return 
+        return
     try:
         new_user = User(
             business_id=data["business_id"],
@@ -25,8 +30,80 @@ def add_new_user(data):
         database.session.add(new_user)
         database.session.commit()
         generate_new_log(new_user.user_id, data["business_id"], "New account created!")
-        return 
+        return
     except Exception as e:
         print(e)
         database.session.rollback()
-        return 
+        return
+
+
+def update_details(data, method):
+    date = generate_time()
+    if method == "owner":
+        try:
+            user = User.query.filter_by(
+                user_id=data["user_id"], business_id=data["business_id"]
+            ).first()
+            business = Business.query.filter_by(business_id=user.business_id).first()
+            verified = login_user(user.username, data["password"])
+            if verified:
+                if data["title"]:
+                    user.title = data["title"]
+                if data["fname"]:
+                    user.first_name = data["fname"]
+                if data["sname"]:
+                    user.last_name = data["sname"]
+                if data["uemail"]:
+                    user.email = data["uemail"]
+                user.updated = date
+                database.session.commit()
+                if data["name"]:
+                    business.business_name = data["name"]
+                if data["address"]:
+                    business.address = data["address"]
+                if data["telephone"]:
+                    business.telephone = data["telephone"]
+                if data["bemail"]:
+                    business.email = data["bemail"]
+                if data["image_url"]:
+                    business.logo_url = data["image_url"]
+                business.updated = date
+                database.session.commit()
+                generate_new_log(
+                    user.user_id, business.business_id, "Account details updated!"
+                )
+                return True
+            database.session.rollback()
+            return False
+        except Exception as e:
+            database.session.rollback()
+            print(e)
+            return False
+    if method == "user":
+        try:
+            user = User.query.filter_by(
+                user_id=data["user_id"], business_id=data["business_id"]
+            ).first()
+            business = Business.query.filter_by(business_id=user.business_id).first()
+            verified = bool(data["password"] == business.daily_password)
+            if verified:
+                if data["title"]:
+                    user.title = data["title"]
+                if data["fname"]:
+                    user.first_name = data["fname"]
+                if data["sname"]:
+                    user.last_name = data["sname"]
+                if data["uemail"]:
+                    user.email = data["uemail"]
+                user.updated = date
+                database.session.commit()
+                generate_new_log(
+                    user.user_id, business.business_id, "Account details updated!"
+                )
+                return True
+            database.session.rollback()
+            return False
+        except Exception as e:
+            database.session.rollback()
+            print(e)
+            return False
