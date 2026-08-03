@@ -6,6 +6,7 @@ date_pattern = r"^\d{4}-\d{2}-\d{2}$"
 time_pattern = r"^\d{2}:\d{2}:\d{2} (AM|PM)$"
 full_date_pattern = r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} (AM|PM)$"
 
+
 def input_validator(data, input_type):
     forbidden_characters = ["<", ">", "{", "}", "[", "]"]
 
@@ -64,29 +65,33 @@ def input_validator(data, input_type):
             if char in forbidden_characters:
                 return False
 
-    if input_type == "email":
-        if not re.fullmatch(email_pattern, data):
-            return False
+    if input_type == "email" and not re.fullmatch(email_pattern, data):
+        return False
 
     if input_type == "number":
         for char in data:
             if char not in numbers:
                 return False
 
-    if input_type == "price":
-        if not re.fullmatch(price_pattern, data):
-            return False
+    if input_type == "price" and not re.fullmatch(price_pattern, data):
+        return False
 
-    if input_type == "date":
-        if (
-            not re.fullmatch(full_date_pattern, data)
-            and not re.fullmatch(time_pattern, data)
-            and not re.fullmatch(date_pattern, data)
-        ):
-            return False
-        
+    if input_type == "date" and (
+        not re.fullmatch(full_date_pattern, data)
+        and not re.fullmatch(time_pattern, data)
+        and not re.fullmatch(date_pattern, data)
+    ):
+        return False
+
     if input_type == "telephone":
         for char in data:
             if char not in telephone:
                 return False
     return True
+
+
+def form_validation(data):
+    if not data:
+        return ""
+    else:
+        return data

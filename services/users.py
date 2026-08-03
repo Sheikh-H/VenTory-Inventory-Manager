@@ -1,14 +1,7 @@
 from database.db import database
-from database.models import Business, User
-from services.auth import (
-    generate_password_hash,
-    generate_time,
-    generate_user_name,
-    login_user,
-    hasher,
-    verifier,
-)
-from services.log import generate_new_log
+from database.models import *
+from services.auth import *
+from services.log import *
 
 
 def add_new_user(data):
@@ -130,7 +123,7 @@ def update_details(data, method):
             return False
 
 
-def update_password(user, new_password, current_password):
+def password_update(user, new_password, current_password):
     user = User.query.filter_by(
         business_id=user.business_id, user_id=user.business_id
     ).first()
@@ -141,10 +134,9 @@ def update_password(user, new_password, current_password):
             if new_password:
                 user.password = hasher(new_password)
                 database.session.commit()
-                generate_new_log(
-                    user.user_id, user.business_id, f"{action}"
-                )
+                generate_new_log(user.user_id, user.business_id, f"{action}")
                 return True
+        database.session.rollback()
         return False
     except Exception as e:
         database.session.rollback()

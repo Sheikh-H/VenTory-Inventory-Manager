@@ -1,11 +1,13 @@
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
-from database.db import database
-from database.models import User
 
 from argon2 import PasswordHasher
 from flask import redirect, session, url_for
+
+from database.db import database
+from database.models import *
+from services.log import *
 
 hasher = PasswordHasher().hash
 verifier = PasswordHasher().verify
@@ -21,7 +23,7 @@ def login_required(f):
     return decorated_function
 
 
-def update_daily_password():
+def generate_daily_password():
     characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
     password = []
     for i in range(10):
@@ -61,9 +63,31 @@ def generate_time():
 
 def login_user(username, password):
     user = User.query.filter_by(username=username).first()
+    update_daily_password()
     try:
         verifier(password=password, hash=user.password)
+        generate_new_log(
+            user.user_id, user.business_id, f"{user.first_name} logged in!"
+        )
         return True, user.user_id
     except Exception as e:
         print(e)
         return False, None
+
+
+def update_daily_password():
+    business = Business.query.first()
+    if not business:
+        return
+    try:
+        today = str(datetime.now().replace(microsecond=0).date())
+        last_updated = business.last_updated
+        if today > last_updated[0:11]:
+            all_businesses = Business.query.all()
+            for item in all_businesses:
+                item.daily_password = generate_daily_password()
+                item.last_updated = generate_time()
+            database.session.commit()
+    except Exception as e:
+        print(e)
+        database.session.rollback()

@@ -1,6 +1,6 @@
 from database.db import database
-from database.models import Log
-from services.auth import generate_time
+from database.models import *
+from services.auth import *
 
 
 def generate_new_log(user_id, business_id, action):

@@ -1,12 +1,7 @@
 from database.db import database
-from database.models import Business, User
-from services.auth import (
-    generate_password_hash,
-    generate_time,
-    generate_user_name,
-    update_daily_password,
-)
-from services.log import generate_new_log
+from database.models import *
+from services.auth import *
+from services.log import *
 
 
 def new_business_registration(data):
@@ -29,7 +24,7 @@ def new_business_registration(data):
             telephone=data["telephone"],
             email=data["bemail"],
             created=generate_time(),
-            daily_password=update_daily_password(),
+            daily_password=generate_daily_password(),
         )
         database.session.add(new_business)
         database.session.commit()

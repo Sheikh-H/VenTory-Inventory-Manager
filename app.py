@@ -25,9 +25,9 @@ from database.db import database
 from flask_session import Session
 from services.auth import *
 from services.businesses import *
-from services.config import initialise_env
+from services.config import *
 from services.users import *
-from services.validators import input_validator
+from services.validators import *
 
 load_dotenv()
 
@@ -243,7 +243,7 @@ def dashboard():
 
 @app.route("/user/owner-settings", methods=["GET", "POST"])
 @login_required
-@limiter.limit("1 per day", methods=["POST"])
+@limiter.limit("3 per day", methods=["POST"])
 def owner_settings():
     title = "Update your details"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
@@ -351,7 +351,7 @@ def owner_settings():
 
 @app.route("/user/user-settings", methods=["GET", "POST"])
 @login_required
-@limiter.limit("1 per day", methods=["POST"])
+@limiter.limit("3 per day", methods=["POST"])
 def user_settings():
     title = "Update your details"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
@@ -411,6 +411,7 @@ def user_settings():
 
 @app.route("/user/update-password", methods=["POST"])
 @login_required
+@limiter.limit("3 per day", methods=["POST"])
 def update_password():
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     business = Business.query.filter_by(business_id=user.business_id).first()
@@ -441,17 +442,22 @@ def update_password():
     if confirm_new_password != new_password:
         new_password = ""
         confirm_new_password = ""
-    success = update_password(user, business, new_password, current_password)
+    success = password_update(user, new_password, current_password)
     if success:
         flash("Password updated successfully!", "success")
-        return redirect(url_for('dashboard'))
-    else:
-        flash("Unable to update password!", 'error')
+        return redirect(url_for("dashboard"))
+    flash("Unable to update password!", "error")
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    generate_new_log(
+        user.user_id, business.business_id, f"{user.first_name} logged out!"
+    )
     session.clear()
     return redirect(url_for("home_page"))
 
