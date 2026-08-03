@@ -76,7 +76,7 @@ def security_headers(response):
         "script-src 'self'; "
         "style-src 'self' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com;"
-        "img-src 'self' https://placehold.co;"
+        "img-src 'self' https://placehold.co https://res.cloudinary.com/dcnpmdfzl/image/upload/;"
     )
     return response
 
