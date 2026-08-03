@@ -409,6 +409,46 @@ def user_settings():
     )
 
 
+@app.route("/user/update-password", methods=["POST"])
+@login_required
+def update_password():
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    current_password = request.form.get("current-password", "").strip()
+    if not current_password:
+        current_password = ""
+    if len(current_password) < 10 or len(current_password) > 20:
+        current_password = ""
+    valid_password = input_validator(current_password, "text")
+    if not valid_password:
+        current_password = ""
+    new_password = request.form.get("new-password", "").strip()
+    if not new_password:
+        new_password = ""
+    if len(new_password) < 10 or len(new_password) > 20:
+        new_password = ""
+    valid_new_password = input_validator(new_password, "text")
+    if not valid_new_password:
+        new_password = ""
+    confirm_new_password = request.form.get("confirm-new-password", "").strip()
+    if not confirm_new_password:
+        confirm_new_password = ""
+    if len(confirm_new_password) < 10 or len(confirm_new_password) > 20:
+        confirm_new_password = ""
+    valid_confirm_password = input_validator(confirm_new_password, "text")
+    if not valid_confirm_password:
+        confirm_new_password = ""
+    if confirm_new_password != new_password:
+        new_password = ""
+        confirm_new_password = ""
+    success = update_password(user, business, new_password, current_password)
+    if success:
+        flash("Password updated successfully!", "success")
+        return redirect(url_for('dashboard'))
+    else:
+        flash("Unable to update password!", 'error')
+
+
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
