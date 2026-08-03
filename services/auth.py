@@ -66,4 +66,4 @@ def login_user(username, password):
         return True, user.user_id
     except Exception as e:
         print(e)
-        return False
+        return False, None

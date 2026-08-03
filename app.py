@@ -76,6 +76,7 @@ def security_headers(response):
         "script-src 'self'; "
         "style-src 'self' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com;"
+        "img-src 'self' https://placehold.co;"
     )
     return response
 
@@ -116,7 +117,7 @@ def login_page():
             session.permanent = True
             session["user_id"] = user_id
             return redirect(url_for("dashboard"))
-        return redirect(url_for("login"))
+        return redirect(url_for("login_page"))
     return render_template("pages/main/login.html", title=title)
 
 

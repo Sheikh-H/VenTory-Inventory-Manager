@@ -32,11 +32,13 @@
       </svg>
       <label for="business-name">Business Details:</label>
     </div>
+    <label for="image">Upload business logo:</label>
     <input
       type="file"
       accept="image/*"
       name="image"
-      placeholder="Upload an image for you business (Logo)"
+      placeholder="Upload an image for you business (Logo)" 
+      required
     />
     <input
       type="text"
@@ -45,7 +47,7 @@
       placeholder="Business Name"
       minlength="5"
       maxlength="255"
-      value="{{ business.business_name }}"
+      value="{{ business.business_name.title() }}"
     />
     <input
       type="text"
@@ -89,11 +91,11 @@
       <label for="title">Your Details:</label>
     </div>
     <select name="title" id="title">
-      <option value="mr">Mr</option>
-      <option value="mrs">Mrs</option>
-      <option value="dr">Dr</option>
-      <option value="miss">Miss</option>
-      <option value="ms">Ms</option>
+      <option value="mr" {% if user['title'] == "mr" %} selected {% endif %}>Mr</option>
+      <option value="mrs" {% if user['title'] == "mrs" %} selected {% endif %} >Mrs</option>
+      <option value="dr" {% if user['title'] == "dr" %} selected {% endif %} >Dr</option>
+      <option value="miss" {% if user['title'] == "miss" %} selected {% endif %} >Miss</option>
+      <option value="ms" {% if user['title'] == "mrs" %} selected {% endif %} >Ms</option>
     </select>
     <input
       type="text"
@@ -102,7 +104,7 @@
       minlength="5"
       maxlength="100"
       placeholder="First Name"
-      value="{{ user.first_name }}"
+      value="{{ user.first_name.capitalize() }}"
     />
     <input
       type="text"
@@ -111,7 +113,7 @@
       minlength="5"
       maxlength="100"
       placeholder="Last Name"
-      value="{{ user.last_name }}"
+      value="{{ user.last_name.capitalize() }}"
     />
     <input
       type="email"
