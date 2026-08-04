@@ -19,13 +19,13 @@ class Stock(database.Model):
     supplier: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     image_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    
+
     returned: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     damaged: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     total: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     available: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
-    
+
     updated: Mapped[str | None] = mapped_column(String(23), nullable=True)
     created: Mapped[str] = mapped_column(String(23), nullable=False)
-    
+
     business: Mapped["Business"] = relationship(back_populates="stock")

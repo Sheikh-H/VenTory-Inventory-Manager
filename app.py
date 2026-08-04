@@ -455,20 +455,20 @@ def update_password():
 @login_required
 def add_stock():
     title = "Add new stock"
-    user = User.query.filter_by(
-        user_id=session.get("user_id"), business_id=session.get("business_id")
-    ).first()
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
     business = Business.query.filter_by(business_id=user.business_id).first()
     if request.method == "POST":
         image = request.files.get("image", None)
-        if not image.filename:
-            image = None
-        image_url = ""
-        try:
-            upload = cloudinary.uploader.upload(image, folder=f"{business.business_name}/stock")
-            image_url = upload['secure_url']
-        except Exception as e:
-            print(e)
+        if image and image.filename:
+            try:
+                upload = cloudinary.uploader.upload(
+                    image, folder=f"{business.business_name}/stock"
+                )
+                image_url = upload["secure_url"]
+            except Exception as e:
+                print(e)
+        else:
+            image_url = ""
         description = request.form.get("description", "").strip().lower()
         if not description:
             description = ""
@@ -487,12 +487,15 @@ def add_stock():
         valid_supplier = input_validator(supplier, "text")
         if not valid_supplier:
             supplier = ""
-        price = request.form.get("price", 0.00)
-        if not price.isdecimal():
+            
+        try:
+            price = float(request.form.get('price', 0.00))
+            if price < 0:
+                price = 0.00
+        except ValueError:
             price = 0.00
-        valid_price = input_validator(price, "price")
-        if not valid_price:
-            price = 0.00
+            
+            
         stock = {
             "business_id": user.business_id,
             "image_url": image_url,
@@ -501,7 +504,7 @@ def add_stock():
             "supplier": supplier,
             "price": price,
         }
-        success = add_new_stock(stock)
+        success = add_new_stock(stock, user)
         if success:
             flash("Stock added successfully!", "success")
             return redirect(url_for("dashboard"))
