@@ -19,15 +19,14 @@ from flask import (
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_session import Session
 from flask_wtf.csrf import CSRFError, CSRFProtect
 
 from database.db import database
-from flask_session import Session
 from services.auth import *
 from services.businesses import *
 from services.config import *
 from services.users import *
-from services.utils import *
 from services.validators import *
 
 load_dotenv()
