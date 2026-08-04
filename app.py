@@ -19,13 +19,14 @@ from flask import (
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask_session import Session
 from flask_wtf.csrf import CSRFError, CSRFProtect
 
 from database.db import database
+from flask_session import Session
 from services.auth import *
 from services.businesses import *
 from services.config import *
+from services.stock import *
 from services.users import *
 from services.validators import *
 
@@ -311,9 +312,9 @@ def owner_settings():
             if not valid_password:
                 password = ""
         image = request.files.get("image")
+        image_url = None
         if not image:
             image = ""
-            image_url = None
         if image:
             try:
                 upload = cloudinary.uploader.upload(
@@ -448,6 +449,65 @@ def update_password():
         return redirect(url_for("dashboard"))
     flash("Unable to update password!", "error")
     return redirect(url_for("dashboard"))
+
+
+@app.route("/user/add-new-stock", methods=["GET", "POST"])
+@login_required
+def add_stock():
+    title = "Add new stock"
+    user = User.query.filter_by(
+        user_id=session.get("user_id"), business_id=session.get("business_id")
+    ).first()
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    if request.method == "POST":
+        image = request.files.get("image", None)
+        if not image.filename:
+            image = None
+        image_url = ""
+        try:
+            upload = cloudinary.uploader.upload(image, folder=f"{business.business_name}/stock")
+            image_url = upload['secure_url']
+        except Exception as e:
+            print(e)
+        description = request.form.get("description", "").strip().lower()
+        if not description:
+            description = ""
+        valid_description = input_validator(description, "text")
+        if not valid_description:
+            description = ""
+        quantity = request.form.get("quantity", 0)
+        if not quantity.isnumeric():
+            quantity = 0
+        valid_quantity = input_validator(quantity, "number")
+        if not valid_quantity:
+            quantity = 0
+        supplier = request.form.get("supplier", "").strip().lower()
+        if not supplier:
+            supplier = ""
+        valid_supplier = input_validator(supplier, "text")
+        if not valid_supplier:
+            supplier = ""
+        price = request.form.get("price", 0.00)
+        if not price.isdecimal():
+            price = 0.00
+        valid_price = input_validator(price, "price")
+        if not valid_price:
+            price = 0.00
+        stock = {
+            "business_id": user.business_id,
+            "image_url": image_url,
+            "description": description,
+            "quantity": int(quantity),
+            "supplier": supplier,
+            "price": price,
+        }
+        success = add_new_stock(stock)
+        if success:
+            flash("Stock added successfully!", "success")
+            return redirect(url_for("dashboard"))
+        flash("Unable to add stock!", "error")
+        return redirect(url_for("add_stock"))
+    return render_template("pages/user-pages/owner/add-new-stock.html", title=title)
 
 
 @app.route("/logout", methods=["GET", "POST"])

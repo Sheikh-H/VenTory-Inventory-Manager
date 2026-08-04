@@ -1,5 +1,4 @@
 {% extends 'layout.html' %} {% block content %}
-
 <section class="settings-page-intro">
   <h1>Account Settings</h1>
   <p>Manage and update your own details here</p>
@@ -12,8 +11,6 @@
     enctype="multipart/form-data"
   >
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <input type="hidden" name="user_id" value="{{ user.user_id }}" />
-    <input type="hidden" name="user_id" value="{{ user.business_id }}" />
     <input
       type="hidden"
       name="business_id"
@@ -138,8 +135,6 @@
 <section>
   <form action="/user/user-settings" method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <input type="hidden" name="user_id" value="{{ user.user_id }}" />
-    <input type="hidden" name="user_id" value="{{ user.business_id }}" />
     <div>
       <svg
         xmlns="http://www.w3.org/2000/svg"

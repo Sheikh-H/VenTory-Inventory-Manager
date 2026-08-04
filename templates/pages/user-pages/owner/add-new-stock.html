@@ -1,0 +1,35 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="space"></div>
+<section class="add-stock-page-intro">
+  <h1>Add New Stock</h1>
+  <p>This is to add stock that is considered new.</p>
+</section>
+<section class="add-stock-form">
+  <form
+    action="{{ url_for('add_stock') }}"
+    method="post"
+    enctype="multipart/form-data"
+    required
+  >
+    <label for="image">Upload image:</label>
+    <input type="file" accept="image/*" name="image" required />
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <label for="description">Stock Name</label>
+    <input type="text" name="description" id="description" required />
+    <label for="quantity">Quantity</label>
+    <input type="number" name="quantity" id="quantity" step="1" required />
+    <label for="supplier">Supplier Details</label>
+    <input type="text" name="supplier" id="supplier" required />
+    <label for="price">Price per unit (£)</label>
+    <input
+      type="number"
+      name="price"
+      id="price"
+      step="0.01"
+      required
+      placeholder="£"
+    />
+    <input type="submit" value="Add stock" />
+  </form>
+</section>
+{% endblock content %}

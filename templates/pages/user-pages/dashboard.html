@@ -32,7 +32,7 @@
 
 {% if user.role == 'owner' %}
 <section>
-  <p>Owner section</p>
+  <!-- This should have all the stats for the inventory (totals), for each stock it would have it's own stock page also -->
 </section>
 {% elif user.role=='manager'%}
 <section>
@@ -42,4 +42,11 @@
 <section>
   <p>if role is employee</p>
 </section>
-{% endif %} {% endblock content %}
+{% endif %}
+<section>
+  <h3>Options</h3>
+  <div class="options-grid">
+    <a class="option" href="{{ url_for('add_stock') }}"><p>Add new stock</p></a>
+  </div>
+</section>
+{% endblock content %}

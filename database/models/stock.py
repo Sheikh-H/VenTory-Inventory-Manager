@@ -16,12 +16,16 @@ class Stock(database.Model):
     price: Mapped[Decimal] = mapped_column(
         Numeric(10, 2), nullable=False, default=Decimal("0.00")
     )
+    supplier: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
     image_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    
     returned: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     damaged: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     total: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     available: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
-    supplier: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    
     updated: Mapped[str | None] = mapped_column(String(23), nullable=True)
     created: Mapped[str] = mapped_column(String(23), nullable=False)
+    
     business: Mapped["Business"] = relationship(back_populates="stock")

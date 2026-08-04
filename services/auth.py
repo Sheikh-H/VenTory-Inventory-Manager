@@ -24,6 +24,16 @@ def login_required(f):
     return decorated_function
 
 
+def owner_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("role") != "owner":
+            return redirect(url_for("dashboord"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 def generate_daily_password():
     characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
     password = []
