@@ -34,3 +34,12 @@ def initialise_env():
                         updated_contents += line + "\n"
                 with open(".env", "w") as f:
                     f.write(updated_contents)
+
+
+from datetime import datetime
+
+
+def generate_time():
+    date = datetime.now().replace(microsecond=0).date()
+    time = datetime.now().replace(microsecond=0).time()
+    return f"{date} {time}"

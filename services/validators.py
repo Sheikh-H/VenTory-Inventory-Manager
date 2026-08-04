@@ -1,5 +1,7 @@
 import re
 
+from services.config import *
+
 email_pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
 price_pattern = r"^\d+(\.\d{1,2})?$"
 date_pattern = r"^\d{4}-\d{2}-\d{2}$"

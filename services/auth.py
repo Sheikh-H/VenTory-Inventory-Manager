@@ -1,5 +1,5 @@
 import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from functools import wraps
 
 from argon2 import PasswordHasher
@@ -7,6 +7,7 @@ from flask import redirect, session, url_for
 
 from database.db import database
 from database.models import *
+from services.config import *
 from services.log import *
 
 hasher = PasswordHasher().hash
@@ -55,12 +56,6 @@ def generate_password_hash(password):
     return hashed
 
 
-def generate_time():
-    date = datetime.now().replace(microsecond=0).date()
-    time = datetime.now().replace(microsecond=0).time()
-    return f"{date} {time}"
-
-
 def login_user(username, password):
     user = User.query.filter_by(username=username).first()
     update_daily_password()
@@ -77,16 +72,17 @@ def login_user(username, password):
 
 def update_daily_password():
     business = Business.query.first()
+    date = generate_time()
     if not business:
         return
     try:
         today = str(datetime.now().replace(microsecond=0).date())
-        last_updated = business.last_updated
-        if today > last_updated[0:11]:
+        last_updated = business.updated
+        if today > last_updated[0:10]:
             all_businesses = Business.query.all()
             for item in all_businesses:
                 item.daily_password = generate_daily_password()
-                item.last_updated = generate_time()
+                item.updated = date
             database.session.commit()
     except Exception as e:
         print(e)

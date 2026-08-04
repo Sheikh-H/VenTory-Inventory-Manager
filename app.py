@@ -27,6 +27,7 @@ from services.auth import *
 from services.businesses import *
 from services.config import *
 from services.users import *
+from services.utils import *
 from services.validators import *
 
 load_dotenv()
@@ -415,7 +416,6 @@ def user_settings():
 @limiter.limit("3 per day", methods=["POST"])
 def update_password():
     user = User.query.filter_by(user_id=session.get("user_id")).first()
-    business = Business.query.filter_by(business_id=user.business_id).first()
     current_password = request.form.get("current-password", "").strip()
     if not current_password:
         current_password = ""

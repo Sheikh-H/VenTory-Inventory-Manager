@@ -1,6 +1,7 @@
 from database.db import database
 from database.models import *
 from services.auth import *
+from services.config import *
 from services.log import *
 
 
