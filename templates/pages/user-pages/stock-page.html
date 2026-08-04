@@ -1,0 +1,17 @@
+{% extends 'layout.html' %} {% block content %}
+<section>
+  <h1>{{stock.description}}</h1>
+  <p>Here you can update, modify, delete a stock record</p>
+</section>
+<section>
+  <form action="" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <label for="description">Stock description:</label>
+    <input type="text" name="description" id="description" />
+  </form>
+</section>
+<section>
+  <div>Delete Stock</div>
+  <div>Update Stock</div>
+</section>
+{% endblock content %}

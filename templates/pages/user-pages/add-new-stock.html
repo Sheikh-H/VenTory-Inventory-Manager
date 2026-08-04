@@ -11,15 +11,27 @@
     enctype="multipart/form-data"
     required
   >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
     <label for="image">Upload image:</label>
     <input type="file" accept="image/*" name="image" required />
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
     <label for="description">Stock Name</label>
     <input type="text" name="description" id="description" required />
+
     <label for="quantity">Quantity</label>
     <input type="number" name="quantity" id="quantity" step="1" required />
+
     <label for="supplier">Supplier Details</label>
     <input type="text" name="supplier" id="supplier" required />
+
+    <label for="notes">Additional Information</label>
+    <textarea
+      name="notes"
+      id="notes"
+      placeholder="Any additional information about stock (supplier details, stock details etc.)"
+    ></textarea>
+
     <label for="price">Price per unit (£)</label>
     <input
       type="number"
@@ -29,6 +41,7 @@
       required
       placeholder="£"
     />
+
     <input type="submit" value="Add stock" />
   </form>
 </section>

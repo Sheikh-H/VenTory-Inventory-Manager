@@ -487,15 +487,14 @@ def add_stock():
         valid_supplier = input_validator(supplier, "text")
         if not valid_supplier:
             supplier = ""
-            
+
         try:
-            price = float(request.form.get('price', 0.00))
+            price = float(request.form.get("price", 0.00))
             if price < 0:
                 price = 0.00
         except ValueError:
             price = 0.00
-            
-            
+
         stock = {
             "business_id": user.business_id,
             "image_url": image_url,
@@ -510,7 +509,31 @@ def add_stock():
             return redirect(url_for("dashboard"))
         flash("Unable to add stock!", "error")
         return redirect(url_for("add_stock"))
-    return render_template("pages/user-pages/owner/add-new-stock.html", title=title)
+    return render_template("pages/user-pages/add-new-stock.html", title=title)
+
+
+@app.route("/user/all-stock", methods=["GET", "POST"])
+@login_required
+def all_stock():
+    title = "All stock"
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    stocks = Stock.query.filter_by(business_id=user.business_id).all()
+    return render_template(
+        "pages/user-pages/all-stock.html", title=title, stocks=stocks
+    )
+
+
+@app.route("/user/stock/<int:stock_id>", methods=["GET", "POST"])
+@login_required
+def stock_page(stock_id):
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    stock = Stock.query.filter_by(
+        business_id=user.business_id, stock_id=stock_id
+    ).first()
+    title = f"{stock.description}"
+    
+    return render_template("pages/user-pages/stock-page.html", title=title, stock=stock)
 
 
 @app.route("/logout", methods=["GET", "POST"])
