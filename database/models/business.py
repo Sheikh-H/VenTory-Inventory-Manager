@@ -12,7 +12,7 @@ class Business(database.Model):
 
     address: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    telephone: Mapped[str] = mapped_column(String(15), nullable=False)
+    telephone: Mapped[str] = mapped_column(String(13), nullable=False)
 
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
 
@@ -24,10 +24,12 @@ class Business(database.Model):
         String(10), unique=False, nullable=False
     )
 
-    created: Mapped[str] = mapped_column(String(23), nullable=False)
+    created: Mapped[str] = mapped_column(String(19), nullable=False)
 
-    updated: Mapped[str | None] = mapped_column(String(23), nullable=True)
-
+    updated: Mapped[str | None] = mapped_column(String(19), nullable=True)
+    daily_password_updated: Mapped[str | None] = mapped_column(
+        String(19), nullable=True
+    )
     employees: Mapped[list["User"]] = relationship(back_populates="business")
     logs: Mapped[list["Log"]] = relationship(back_populates="business")
     stock: Mapped[list["Stock"]] = relationship(back_populates="business")

@@ -11,13 +11,18 @@ def add_new_stock(data, user):
     for key, value in data.items():
         if not value:
             print(f"{key} is empty")
-            generate_new_log(user.user_id, user.business_id, f"{user.first_name} attempted to add a product but had missing values")
+            generate_new_log(
+                user.user_id,
+                user.business_id,
+                f"{user.first_name} attempted to add a product but had missing values",
+            )
             return False
     action = ""
     try:
         new_stock = Stock(
             business_id=user.business_id,
             image_url=data["image_url"],
+            title=data["title"],
             description=data["description"],
             price=data["price"],
             supplier=data["supplier"],
@@ -33,3 +38,4 @@ def add_new_stock(data, user):
         database.session.rollback()
         print(e)
         return False
+

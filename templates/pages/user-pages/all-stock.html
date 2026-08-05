@@ -5,15 +5,17 @@
 </section>
 <section class="all-stock-grid">
   {% for stock in stocks %}
-  <div class="stock-item">
-    <img src="{{stock.image_url}}" alt="{{stock.description}}" />
+  <a href="{{ url_for('stock_page', stock_id=stock.stock_id ) }}">
+    <div class="stock-item">
+      <img src="{{stock.image_url}}" alt="{{stock.description}}" />
 
-    <div class="stock-item-info">
-      <p>ID:</p>
-      <p>{{stock.stock_id}}</p>
+      <div class="stock-item-info">
+        <p>ID:</p>
+        <p>{{stock.stock_id}}</p>
+      </div>
+      <p>{{stock.description.title()}}</p>
     </div>
-    <p>{{stock.description.title()}}</p>
-  </div>
+  </a>
   {% endfor %}
 </section>
 {% endblock content %}

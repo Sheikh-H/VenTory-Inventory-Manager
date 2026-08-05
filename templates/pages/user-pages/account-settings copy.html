@@ -1,0 +1,172 @@
+{% extends 'layout.html' %} {% block content %}
+<section class="settings-page-intro">
+  <h1>Account Settings</h1>
+  <p>Manage and update your own details here</p>
+</section>
+<section>
+  {% if user.role == 'owner' %}
+  <form
+    action="{{ url_for('update') }}"
+    method="post"
+    enctype="multipart/form-data"
+  >
+  {% else %}
+  <form
+    action="{{ url_for('update') }}"
+    method="post"
+  >
+  {% endif %}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    {% if user.role == 'owner' %}
+    <div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#ff4500"
+      >
+        <path
+          d="M80-120v-720h400v160h400v560H80Zm80-80h240v-80H160v80Zm0-160h240v-80H160v80Zm0-160h240v-80H160v80Zm0-160h240v-80H160v80Zm320 480h320v-400H480v400Zm80-240v-80h160v80H560Zm0 160v-80h160v80H560Z"
+        />
+      </svg>
+      <label for="business-name">Update business details:</label>
+    </div>
+    <label for="image">Upload business logo (required if none):</label>
+    {% if business.logo_url %}
+    <input
+      type="file"
+      accept="image/*"
+      name="image"
+      placeholder="Upload an image for you business (Logo)"
+    />
+    {% else %}
+    <input
+      type="file"
+      accept="image/*"
+      name="image"
+      placeholder="Upload an image for you business (Logo)"
+      required
+    />
+    {% endif %}
+    <!--  -->
+    <input
+      type="text"
+      name="business-name"
+      id="business-name"
+      minlength="5"
+      maxlength="255"
+      placeholder="{{ business.business_name.title() }}"
+    />
+    <input
+      type="text"
+      name="business-address"
+      id="business-address"
+      minlength="30"
+      maxlength="255"
+      placeholder="{{ business.address }}"
+    />
+    <input
+      type="telephone"
+      name="business-telephone"
+      id="business-telephone"
+      minlength="10"
+      maxlength="15"
+      placeholder="{{ business.telephone }}"
+    />
+    <input
+      type="email"
+      name="business-email"
+      id="business-email"
+      maxlength="255"
+      placeholder="{{ business.email }}"
+    />
+    <hr />
+    {% endif %}
+    <div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#ff4500"
+      >
+        <path
+          d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17-62.5t47-43.5q60-30 124.5-46T480-440q67 0 131.5 16T736-378q30 15 47 43.5t17 62.5v112H160Zm376.5-423.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM640-332v92h80v-32q0-11-5-20t-15-14q-14-8-29.5-14.5T640-332Zm-240-21v53h160v-53q-20-4-40-5.5t-40-1.5q-20 0-40 1.5t-40 5.5ZM240-240h80v-92q-15 5-30.5 11.5T260-306q-10 5-15 14t-5 20v32Zm400 0H320h320ZM480-640Z"
+        />
+      </svg>
+      <label for="title">Update your details:</label>
+    </div>
+
+    <select name="title" id="title">
+      {% if user['title'] == 'mr' %}
+      <option value="mr" selected>Mr</option>
+      {% else %}
+      <option value="mr">Mr</option>
+      {% endif %} {% if user['title'] == 'mrs' %}
+      <option value="mrs" selected>Mrs</option>
+      {% else %}
+      <option value="mrs">Mrs</option>
+      {% endif %} {% if user['title'] == 'ms' %}
+      <option value="ms" selected>Ms</option>
+      {% else %}
+      <option value="ms">Ms</option>
+      {% endif %} {% if user['title'] == 'miss' %}
+      <option value="miss" selected>Miss</option>
+      {% else %}
+      <option value="miss">Miss</option>
+      {% endif %} {% if user['title'] == 'dr' %}
+      <option value="dr" selected>Dr</option>
+      {% else %}
+      <option value="dr">Dr</option>
+      {% endif %} {% if user['title'] == 'miss' %}
+      <option value="miss" selected>Miss</option>
+      {% else %}
+      <option value="miss">Miss</option>
+      {% endif %}
+      <input
+        type="text"
+        name="fname"
+        id="fname"
+        minlength="5"
+        maxlength="100"
+        placeholder="{{ user.first_name.capitalize() }}"
+      />
+      <input
+        type="text"
+        name="sname"
+        id="sname"
+        minlength="5"
+        maxlength="100"
+        placeholder="{{ user.last_name.capitalize() }}"
+      />
+      <input
+        type="email"
+        name="email"
+        id="email"
+        maxlength="255"
+        placeholder="{{ user.email }}"
+      />
+
+      {% if user.role == 'owner' %}
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Your password"
+        required
+      />
+      {% else %}
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Daily password"
+        required
+      />
+      {% endif %}
+      <input type="submit" value="Save Changes" />
+    </select>
+  </form>
+</section>
+{% endblock content %}

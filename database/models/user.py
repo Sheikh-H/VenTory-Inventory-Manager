@@ -14,10 +14,12 @@ class User(database.Model):
     title: Mapped[str] = mapped_column(String(3), nullable=False)
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    role: Mapped[str] = mapped_column(String(10), nullable=False)
+    role: Mapped[str] = mapped_column(String(8), nullable=False)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    created: Mapped[str] = mapped_column(String(23), nullable=False)
-    updated: Mapped[str | None] = mapped_column(String(23), nullable=True)
+    created: Mapped[str] = mapped_column(String(19), nullable=False)
+    updated: Mapped[str | None] = mapped_column(String(19), nullable=True)
     business: Mapped["Business"] = relationship(back_populates="employees")
     logs: Mapped[list["Log"]] = relationship(back_populates="user")
+
+
