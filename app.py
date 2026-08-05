@@ -394,21 +394,22 @@ def add_employee():
     title = "Add new employee"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     generate_password = generate_daily_password()
+    username = generate_user_name()
     if request.method == "POST":
         business_id = user.business_id
         eTitle = request.form.get("title", "").strip().lower()
         fname = request.form.get("fname", "").strip().lower()
         sname = request.form.get("sname", "").strip().lower()
         email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "").strip()
         data = {
-            'creator_id': user.user_id,
-            'business_id': business_id,
-            'title': eTitle,
-            'fname': fname, 
-            'sname': sname,
-            'email': email,
-            'password': password,
+            "creator_id": user.user_id,
+            "business_id": business_id,
+            "username": username,
+            "title": eTitle,
+            "fname": fname,
+            "sname": sname,
+            "email": email,
+            "password": generate_password,
         }
         success = add_new_user(data)
         if success:
@@ -417,7 +418,12 @@ def add_employee():
         else:
             flash("Unable to add new user!", "error")
             return redirect(url_for("add_employee"))
-    return render_template("pages/user-pages/owner/add-employee.html", title=title, generate_password = generate_password)
+    return render_template(
+        "pages/user-pages/owner/add-employee.html",
+        title=title,
+        generate_password=generate_password,
+        username=username,
+    )
 
 
 @app.route("/user/all-stock", methods=["GET", "POST"])

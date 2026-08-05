@@ -26,12 +26,24 @@
       placeholder="Employee email address"
     />
     <label for="role">Employee Role:</label>
+    <small
+      >Please keep a copy of the username and password and ask employee to
+      change their password on login</small
+    >
+    <label for="username">Generated username:</label>
+    <input
+      type="text"
+      name="username"
+      id="username"
+      disabled
+      value="{{username}}"
+    />
     <select name="role" id="role">
       <option value="" selected>Select Role</option>
-      <option value="manager" selected>Manager</option>
+      <option value="manager">Manager</option>
       <option value="employee">Employee</option>
     </select>
-
+    <label for="password">Generated temporary password:</label>
     <input
       type="text"
       name="password"

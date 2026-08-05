@@ -16,21 +16,22 @@ def add_new_user(data):
     if existing:
         return False
     try:
-
-        title = input_validator(title, "title")
-        fname = input_validator(fname, "fname")
-        sname = input_validator(sname, "text")
-        email = input_validator(email, "email")
-        role = input_validator(role, "role")
-
+        title = input_validator(data.get("title"), "title")
+        username = input_validator(data.get("username"), "text", minimum=10, maximum=10)
+        fname = input_validator(data.get("fname"), "text", minimum=1, maximum=100)
+        sname = input_validator(data.get("sname"), "text", minimum=1, maximum=100)
+        email = input_validator(data.get("email"), "email")
+        role = input_validator(data.get("role"), "role")
+        if not all((title, username, fname, sname, email, role)):
+            return False
         new_user = User(
             business_id=data["business_id"],
-            username=generate_user_name(),
-            title=data["title"],
-            first_name=data["fname"],
-            last_name=data["sname"],
-            email=data["email"],
-            role=data["role"],
+            username=username,
+            title=title,
+            first_name=fname,
+            last_name=sname,
+            email=email,
+            role=role,
             password=generate_password_hash(data["password"]),
             created=generate_time(),
         )
