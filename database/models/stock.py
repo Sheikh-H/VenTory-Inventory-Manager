@@ -19,7 +19,6 @@ class Stock(database.Model):
     )
     
     supplier: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    supplier_id: Mapped[str | None] = mapped_column(String(100), nullable=False)
     image_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     returned: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)

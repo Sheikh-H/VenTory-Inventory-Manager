@@ -2,18 +2,26 @@
 <section class="all-stock-page-intro">
   <h1>All products</h1>
   <p>Here you can view all the products you have in the inventory</p>
+  <p><i>Click on the product to view more</i></p>
+</section>
+<section class="all-stock-search-bar">
+  <div class="stock-search-bar">
+    <form action="" method="post" class="search-stock-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="text" name="search" id="search" placeholder="Search stock" />
+    </form>
+  </div>
 </section>
 <section class="all-stock-grid">
   {% for stock in stocks %}
   <a href="{{ url_for('stock_page', stock_id=stock.stock_id ) }}">
     <div class="stock-item">
-      <img src="{{stock.image_url}}" alt="{{stock.description}}" />
-
+      <img src="{{stock.image_url}}" alt="{{stock.title}}" />
       <div class="stock-item-info">
         <p>ID:</p>
         <p>{{stock.stock_id}}</p>
       </div>
-      <p>{{stock.description.title()}}</p>
+      <p>{{stock.title.title()}}</p>
     </div>
   </a>
   {% endfor %}

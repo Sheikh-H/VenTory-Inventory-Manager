@@ -8,26 +8,32 @@ from services.config import *
 
 def add_new_stock(data, user):
     date = str(datetime.now().replace(microsecond=0))
-    for key, value in data.items():
-        if not value:
-            print(f"{key} is empty")
-            generate_new_log(
-                user.user_id,
-                user.business_id,
-                f"{user.first_name} attempted to add a product but had missing values",
-            )
-            return False
     action = ""
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    image = data.get("image")
+    title = data.get("title")
+    quantity = data.get("quantity")
+    supplier = data.get("supplier")
+    description = data.get("description")
+    price = data.get("price")
+    if not quantity or quantity == "" or quantity == None:
+        quantity = 0
+    if not price or price == "" or price == None:
+        price = 0.00
+    image_url = image_upload(image, f"stock-items/{title}", business.business_name)
+    valid_title = input_validator(title, "text", minimum=1, maximum=50)
+    valid_supplier = input_validator(supplier, "text", minimum=1, maximum=50)
+    valid_description = input_validator(description, "text", maximum=255)
     try:
         new_stock = Stock(
             business_id=user.business_id,
-            image_url=data["image_url"],
-            title=data["title"],
-            description=data["description"],
-            price=data["price"],
-            supplier=data["supplier"],
+            image_url=image_url,
+            title=valid_title,
+            description=valid_description,
+            price=price,
+            supplier=valid_supplier,
             created=date,
-            available=data["quantity"],
+            available=quantity,
         )
         database.session.add(new_stock)
         database.session.commit()
@@ -38,4 +44,3 @@ def add_new_stock(data, user):
         database.session.rollback()
         print(e)
         return False
-

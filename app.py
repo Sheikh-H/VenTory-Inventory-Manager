@@ -282,44 +282,30 @@ def update_password():
 def add_stock():
     title = "Add new stock"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
-    business = Business.query.filter_by(business_id=user.business_id).first()
     if request.method == "POST":
         image = request.files.get("image", None)
-        if image and image.filename:
-            try:
-                upload = cloudinary.uploader.upload(
-                    image, folder=f"{business.business_name}/stock"
-                )
-                image_url = upload["secure_url"]
-            except Exception as e:
-                print(e)
-        else:
-            image_url = ""
-        ptitle = request.form.get("title", "").strip().lower()
-        valid_title = input_validator(ptitle, "text", minimum=5, maximum=50)
-        description = request.form.get("description", "").strip().lower()
-        valid_description = input_validator(description, "text", maximum=255)
-        supplier = request.form.get("supplier", "").strip().lower()
-        valid_supplier = input_validator(supplier, "text", maximum=50)
+        product_title = request.form.get("title", "").strip().lower()
         quantity = int(request.form.get("quantity", 0))
-        valid_quantity = input_validator(quantity, "numerical")
+        supplier = request.form.get("supplier", "").strip().lower()
+        additional_info = request.form.get("description", "").strip().lower()
         price = float(request.form.get("price", 0.00))
-        valid_price = input_validator(price, "price")
         stock = {
+            "user_id": user.user_id,
             "business_id": user.business_id,
-            "title": valid_title,
-            "image_url": image_url,
-            "description": valid_description,
-            "quantity": valid_quantity,
-            "supplier": valid_supplier,
-            "price": valid_price,
+            "title": product_title,
+            "image": image,
+            "description": additional_info,
+            "quantity": quantity,
+            "supplier": supplier,
+            "price": price,
         }
         success = add_new_stock(stock, user)
         if success:
             flash("Stock added successfully!", "success")
             return redirect(url_for("dashboard"))
-        flash("Unable to add stock!", "error")
-        return redirect(url_for("add_stock"))
+        else:
+            flash("Unable to add stock!", "error")
+            return redirect(url_for("add_stock"))
     return render_template("pages/user-pages/add-new-stock.html", title=title)
 
 
@@ -369,6 +355,16 @@ def all_stock():
     title = "All stock"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     stocks = Stock.query.filter_by(business_id=user.business_id).all()
+    if request.method == "POST":
+        search = request.form.get("search", "").strip().lower()
+        valid_search = input_validator(search, "text")
+        stocks = Stock.query.filter(
+            Stock.business_id == user.business_id,
+            Stock.title.ilike(f"%{valid_search}%"),
+        ).all()
+        return render_template(
+            "pages/user-pages/all-stock.html", title=title, stocks=stocks
+        )
     return render_template(
         "pages/user-pages/all-stock.html", title=title, stocks=stocks
     )

@@ -16,6 +16,7 @@
 /* user pages */
 @import url('pages/user-pages/add-stock-page.css');
 @import url('pages/user-pages/all-stock-page.css');
+@import url('pages/user-pages/stock-page.css');
 
 /* sections */
 @import url('header.css');

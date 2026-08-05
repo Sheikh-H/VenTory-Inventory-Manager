@@ -1,18 +1,60 @@
-{% extends 'layout.html' %}
-{% block content %}
-<section>
-  <h1>{{stock.description}}</h1>
+{% extends 'layout.html' %} {% block content %}
+<section class="stock-page-header">
+  <h1>{{stock.title.title()}}</h1>
   <p>Here you can update, modify, delete a stock record</p>
 </section>
-<section>
+<section class="stock-page-info-section">
+  <img src="{{stock.image_url}}" alt="{{stock.title.title()}}" />
   <form action="" method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <label for="description">Stock description:</label>
-    <input type="text" name="description" id="description" />
+    <input
+      type="text"
+      name="description"
+      id="description"
+      placeholder="{{stock.description.title()}}"
+    />
+    <label for="supplier">Supplier:</label>
+    <input
+      type="text"
+      name="supplier"
+      id="supplier"
+      placeholder="{{stock.supplier.title()}}"
+    />
+    <label for="available">Total available:</label>
+    <input
+      type="number"
+      name="available"
+      id="available"
+      step="1"
+      placeholder="{{stock.available}}"
+    />
+    <label for="returned">Total returned:</label>
+    <input
+      type="number"
+      name="returned"
+      id="returned"
+      step="1"
+      placeholder="{{stock.returned}}"
+    />
+    <label for="damaged">Total damaged:</label>
+    <input
+      type="number"
+      name="damaged"
+      id="damaged"
+      step="1"
+      placeholder="{{stock.damaged}}"
+    />
+
+    <label for="price">Stock price:</label>
+    <input
+      type="number"
+      name="price"
+      id="price"
+      step="0.01"
+      placeholder="£{{stock.price}}"
+    />
+    <input type="submit" value="Update Stock" />
   </form>
-</section>
-<section>
-  <div>Delete Stock</div>
-  <div>Update Stock</div>
 </section>
 {% endblock content %}

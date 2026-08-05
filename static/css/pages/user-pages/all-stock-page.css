@@ -29,15 +29,32 @@
     align-items: center;
 }
 
+.stock-item:hover{
+    box-shadow: 0 0 1px black;
+}
+
+.search-stock-form{
+    display: flex;
+}
+
 
 /* Tablet */
 
 @media screen and (min-width: 700px) and (max-width: 999px) {
-
+    .all-stock-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
 }
 
 /* Desktop */
 
 @media screen and (min-width: 1000px) {
+    .all-stock-grid{
+        grid-template-columns: repeat(5, 1fr);
+    }
 
+    .stock-item{
+        flex-direction: column;
+        gap: 10px;
+    }
 }
