@@ -33,6 +33,18 @@
 {% if user.role == 'owner' %}
 <section>
   <!-- This should have all the stats for the inventory (totals), for each stock it would have it's own stock page also -->
+  <h3>Options</h3>
+  <div class="options-grid">
+    <a class="option" href="{{ url_for('add_stock') }}">
+      <p>Add new stock</p>
+    </a>
+    <a class="option" href="{{ url_for('all_stock') }}">
+      <p>All Stock</p>
+    </a>
+    <a class="option" href="{{ url_for('add_employee') }}">
+      <p>Add Employee</p>
+    </a>
+  </div>
 </section>
 {% elif user.role=='manager'%}
 <section>
@@ -43,11 +55,5 @@
   <p>if role is employee</p>
 </section>
 {% endif %}
-<section>
-  <h3>Options</h3>
-  <div class="options-grid">
-    <a class="option" href="{{ url_for('add_stock') }}"><p>Add new stock</p></a>
-    <a class="option" href="{{ url_for('all_stock') }}"><p>All stock</p></a>
-  </div>
-</section>
+<section></section>
 {% endblock content %}

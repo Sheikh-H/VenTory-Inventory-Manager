@@ -3,60 +3,86 @@
   <h1>Account Settings</h1>
   <p>Manage and update your own details here</p>
 </section>
-{% if user.role == 'owner' %}
 <section>
+  {% if user.role == 'owner' %}
   <form
-    action="/user/owner-settings"
+    action="{{ url_for('update') }}"
     method="post"
     enctype="multipart/form-data"
   >
-
-
-  
-
-
-
-
+  {% else %}
+  <form
+    action="{{ url_for('update') }}"
+    method="post"
+  >
+  {% endif %}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    {% if user.role == 'owner' %}
+    <div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#ff4500"
+      >
+        <path
+          d="M80-120v-720h400v160h400v560H80Zm80-80h240v-80H160v80Zm0-160h240v-80H160v80Zm0-160h240v-80H160v80Zm0-160h240v-80H160v80Zm320 480h320v-400H480v400Zm80-240v-80h160v80H560Zm0 160v-80h160v80H560Z"
+        />
+      </svg>
+      <label for="business-name">Update business details:</label>
+    </div>
+    <label for="image">Upload business logo (required if none):</label>
+    {% if business.logo_url %}
+    <input
+      type="file"
+      accept="image/*"
+      name="image"
+      placeholder="Upload an image for you business (Logo)"
+    />
+    {% else %}
+    <input
+      type="file"
+      accept="image/*"
+      name="image"
+      placeholder="Upload an image for you business (Logo)"
+      required
+    />
+    {% endif %}
+    <!--  -->
     <input
       type="text"
-      name="fname"
-      id="fname"
+      name="business-name"
+      id="business-name"
       minlength="5"
-      maxlength="100"
-      placeholder="First Name"
-      value="{{ user.first_name.capitalize() }}"
+      maxlength="255"
+      placeholder="{{ business.business_name.title() }}"
     />
     <input
       type="text"
-      name="sname"
-      id="sname"
-      minlength="5"
-      maxlength="100"
-      placeholder="Last Name"
-      value="{{ user.last_name.capitalize() }}"
+      name="business-address"
+      id="business-address"
+      minlength="30"
+      maxlength="255"
+      placeholder="{{ business.address }}"
+    />
+    <input
+      type="tel"
+      name="business-telephone"
+      id="business-telephone"
+      minlength="10"
+      maxlength="15"
+      placeholder="{{ business.telephone }}"
     />
     <input
       type="email"
-      name="email"
-      id="email"
+      name="business-email"
+      id="business-email"
       maxlength="255"
-      placeholder="Your Email"
-      value="{{ user.email }}"
+      placeholder="{{ business.email }}"
     />
-    <input
-      type="password"
-      name="password"
-      id="password"
-      placeholder="Your password"
-      required
-    />
-    <input type="submit" value="Save Changes" />
-  </form>
-</section>
-{% else %}
-<section>
-  <form action="/user/user-settings" method="post">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <hr />
+    {% endif %}
     <div>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -72,55 +98,81 @@
       <label for="title">Update your details:</label>
     </div>
     <select name="title" id="title">
-      <option value="mr" {% if user['title'] == "mr" %} selected {% endif %}>Mr</option>
-      <option value="mrs" {% if user['title'] == "mrs" %} selected {% endif %} >Mrs</option>
-      <option value="dr" {% if user['title'] == "dr" %} selected {% endif %} >Dr</option>
-      <option value="miss" {% if user['title'] == "miss" %} selected {% endif %} >Miss</option>
-      <option value="ms" {% if user['title'] == "mrs" %} selected {% endif %} >Ms</option>
+      {% if user['title'] == 'mr' %}
+      <option value="mr" selected>Mr</option>
+      {% else %}
+      <option value="mr">Mr</option>
+      {% endif %} {% if user['title'] == 'mrs' %}
+      <option value="mrs" selected>Mrs</option>
+      {% else %}
+      <option value="mrs">Mrs</option>
+      {% endif %} {% if user['title'] == 'ms' %}
+      <option value="ms" selected>Ms</option>
+      {% else %}
+      <option value="ms">Ms</option>
+      {% endif %} {% if user['title'] == 'miss' %}
+      <option value="miss" selected>Miss</option>
+      {% else %}
+      <option value="miss">Miss</option>
+      {% endif %} {% if user['title'] == 'dr' %}
+      <option value="dr" selected>Dr</option>
+      {% else %}
+      <option value="dr">Dr</option>
+      {% endif %} {% if user['title'] == 'miss' %}
+      <option value="miss" selected>Miss</option>
+      {% else %}
+      <option value="miss">Miss</option>
+      {% endif %}
     </select>
-    <input
-      type="text"
-      name="fname"
-      id="fname"
-      minlength="5"
-      maxlength="100"
-      placeholder="First Name"
-      value="{{ user.first_name }}"
-    />
-    <input
-      type="text"
-      name="sname"
-      id="sname"
-      minlength="5"
-      maxlength="100"
-      placeholder="Last Name"
-      value="{{ user.last_name }}"
-    />
-    <input
-      type="email"
-      name="email"
-      id="email"
-      maxlength="255"
-      placeholder="Your Email"
-      value="{{ user.email }}"
-    />
-    <input
-      type="password"
-      name="password"
-      id="password"
-      placeholder="Daily password - Retrieve from manager"
-      required
-    />
-    <input type="submit" value="Save Changes" />
+      <input
+        type="text"
+        name="fname"
+        id="fname"
+        minlength="5"
+        maxlength="100"
+        placeholder="{{ user.first_name.capitalize() }}"
+      />
+      <input
+        type="text"
+        name="sname"
+        id="sname"
+        minlength="5"
+        maxlength="100"
+        placeholder="{{ user.last_name.capitalize() }}"
+      />
+      <input
+        type="email"
+        name="email"
+        id="email"
+        maxlength="255"
+        placeholder="{{ user.email }}"
+      />
+    {% if user.role == 'owner' %}
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Your password"
+        required
+      />
+    {% else %}
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Daily password"
+        required
+      />
+    {% endif %}
+      <input type="submit" value="Save Changes" />
   </form>
 </section>
-{% endif %} 
 <div class="space"></div>
-  <form action="/user/update-password">
+<section>
+  <hr />
+  <form action="/user/update-password" method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <input type="hidden" name="user_id" value="{{ user.user_id }}" />
-    <input type="hidden" name="user_id" value="{{ user.business_id }}" />
-        <div>
+    <div>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="24px"
@@ -134,10 +186,25 @@
       </svg>
       <label for="title">Update your password:</label>
     </div>
-        <hr>
-        <input type="password" name="current-password" id="current-password" placeholder="Current password">
-        <input type="password" name="new-password" id="new-password" placeholder="New password">
-        <input type="password" name="confirm-new-password" id="confirm-new-password" placeholder="Confirm new password">
-        <input type="submit" value="Update password">
+    <input
+      type="password"
+      name="current-password"
+      id="current-password"
+      placeholder="Current password"
+    />
+    <input
+      type="password"
+      name="new-password"
+      id="new-password"
+      placeholder="New password"
+    />
+    <input
+      type="password"
+      name="confirm-new-password"
+      id="confirm-new-password"
+      placeholder="Confirm new password"
+    />
+    <input type="submit" value="Update password" />
   </form>
+</section>
 {% endblock content %}

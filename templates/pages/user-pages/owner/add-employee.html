@@ -1,0 +1,45 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="space"></div>
+<section class="add-employee-page-intro">
+  <h1>Add Employee</h1>
+  <p>Add a new employee</p>
+  <p>Must login and take a note of their username immediately</p>
+</section>
+<section class="add-employee-form">
+  <form action="{{url_for('add_employee')}}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <label for="title">Title:</label>
+    <select name="title" id="title">
+      <option value="" selected>Select Title:</option>
+      <option value="mr">Mr</option>
+      <option value="mrs">Mrs</option>
+      <option value="ms">Ms</option>
+      <option value="miss">Miss</option>
+      <option value="dr">Dr</option>
+    </select>
+    <input type="text" name="fname" id="fname" placeholder="First name" />
+    <input type="text" name="sname" id="sname" placeholder="Last name" />
+    <input
+      type="email"
+      name="email"
+      id="email"
+      placeholder="Employee email address"
+    />
+    <label for="role">Employee Role:</label>
+    <select name="role" id="role">
+      <option value="" selected>Select Role</option>
+      <option value="manager" selected>Manager</option>
+      <option value="employee">Employee</option>
+    </select>
+
+    <input
+      type="text"
+      name="password"
+      id="password"
+      placeholder="Password is generated on page refresh"
+      value="{{ generate_password }}"
+    />
+    <input type="submit" value="Add Employee" />
+  </form>
+</section>
+{% endblock content %}

@@ -67,7 +67,7 @@
       placeholder="{{ business.address }}"
     />
     <input
-      type="telephone"
+      type="tel"
       name="business-telephone"
       id="business-telephone"
       minlength="10"
@@ -97,7 +97,6 @@
       </svg>
       <label for="title">Update your details:</label>
     </div>
-
     <select name="title" id="title">
       {% if user['title'] == 'mr' %}
       <option value="mr" selected>Mr</option>
@@ -124,6 +123,7 @@
       {% else %}
       <option value="miss">Miss</option>
       {% endif %}
+    </select>
       <input
         type="text"
         name="fname"
@@ -147,8 +147,7 @@
         maxlength="255"
         placeholder="{{ user.email }}"
       />
-
-      {% if user.role == 'owner' %}
+    {% if user.role == 'owner' %}
       <input
         type="password"
         name="password"
@@ -156,7 +155,7 @@
         placeholder="Your password"
         required
       />
-      {% else %}
+    {% else %}
       <input
         type="password"
         name="password"
@@ -164,9 +163,48 @@
         placeholder="Daily password"
         required
       />
-      {% endif %}
+    {% endif %}
       <input type="submit" value="Save Changes" />
-    </select>
+  </form>
+</section>
+<div class="space"></div>
+<section>
+  <hr />
+  <form action="/user/update-password" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="#ff4500"
+      >
+        <path
+          d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17-62.5t47-43.5q60-30 124.5-46T480-440q67 0 131.5 16T736-378q30 15 47 43.5t17 62.5v112H160Zm376.5-423.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM640-332v92h80v-32q0-11-5-20t-15-14q-14-8-29.5-14.5T640-332Zm-240-21v53h160v-53q-20-4-40-5.5t-40-1.5q-20 0-40 1.5t-40 5.5ZM240-240h80v-92q-15 5-30.5 11.5T260-306q-10 5-15 14t-5 20v32Zm400 0H320h320ZM480-640Z"
+        />
+      </svg>
+      <label for="title">Update your password:</label>
+    </div>
+    <input
+      type="password"
+      name="current-password"
+      id="current-password"
+      placeholder="Current password"
+    />
+    <input
+      type="password"
+      name="new-password"
+      id="new-password"
+      placeholder="New password"
+    />
+    <input
+      type="password"
+      name="confirm-new-password"
+      id="confirm-new-password"
+      placeholder="Confirm new password"
+    />
+    <input type="submit" value="Update password" />
   </form>
 </section>
 {% endblock content %}

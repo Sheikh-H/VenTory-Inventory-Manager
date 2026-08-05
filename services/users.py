@@ -3,15 +3,26 @@ from database.models import *
 from services.auth import *
 from services.config import *
 from services.log import *
+from services.validators import input_validator
 
 
 def add_new_user(data):
     existing = User.query.filter_by(
         email=data["email"], business_id=data["business_id"]
     ).first()
+    admin = User.query.filter_by(
+        user_id=data.get("user_id"), business_id=data.get("business_id")
+    ).first()
     if existing:
-        return
+        return False
     try:
+
+        title = input_validator(title, "title")
+        fname = input_validator(fname, "fname")
+        sname = input_validator(sname, "text")
+        email = input_validator(email, "email")
+        role = input_validator(role, "role")
+
         new_user = User(
             business_id=data["business_id"],
             username=generate_user_name(),
@@ -25,12 +36,16 @@ def add_new_user(data):
         )
         database.session.add(new_user)
         database.session.commit()
-        generate_new_log(new_user.user_id, data["business_id"], "New account created!")
-        return
+        generate_new_log(
+            admin.user_id,
+            admin.business_id,
+            f"{admin.first_name} created a new account for {new_user.first_name}",
+        )
+        return True
     except Exception as e:
         print(e)
         database.session.rollback()
-        return
+        return False
 
 
 def update_details(data):
@@ -40,8 +55,10 @@ def update_details(data):
     user = User.query.filter_by(
         user_id=data["user_id"], business_id=data["business_id"]
     ).first()
+    if not user:
+        return False
     business = Business.query.filter_by(business_id=user.business_id).first()
-    if not user or not business:
+    if not business:
         return False
     verified = False
     action = f"{user.first_name} triggered and update: "
@@ -97,7 +114,7 @@ def update_details(data):
             user_updated = True
         if user_updated:
             user.updated = date
-        if not user_updated or not business_updated:
+        if not (user_updated or business_updated):
             return False
         database.session.commit()
         generate_new_log(user.user_id, business.business_id, f"{action}")

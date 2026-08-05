@@ -36,28 +36,27 @@ forbidden_characters = ["<", ">", "{", "}"]
 def input_validator(data, input_type, minimum=None, maximum=None):
     if data is None:
         return None
-    
+
     if maximum is not None and len(data) > maximum:
         return None
-    
+
     if minimum is not None and len(data) < minimum:
         return None
-    
-    
+
     if input_type == "text":
         for char in data:
             if char in forbidden_characters:
                 return None
 
     elif input_type == "email":
-        
+
         for char in data:
             if char in forbidden_characters:
                 return None
-            
+
         if len(data) > 255 or len(data) < 6:
             return None
-        
+
         if not re.fullmatch(email_pattern, data):
             return None
 
@@ -73,7 +72,7 @@ def input_validator(data, input_type, minimum=None, maximum=None):
             return None
         if data < 0:
             return 0.00
-        
+
     elif input_type == "date" and not (
         re.fullmatch(full_date_pattern, data)
         or re.fullmatch(time_pattern, data)
@@ -87,12 +86,15 @@ def input_validator(data, input_type, minimum=None, maximum=None):
                 return None
         if len(data) > 13 or len(data) < 11:
             return None
-        
-    elif input_type == 'title':
+
+    elif input_type == "title":
         if len(data) > 3 or len(data) < 2:
             return None
-        if data not in ['mr', 'mrs', 'miss', 'ms', 'dr']:
+        if data not in ["mr", "mrs", "miss", "ms", "dr"]:
             return None
-
+        
+    elif input_type == "role":
+        if data not in ["employee", "manager"]:
+            return None
+        
     return data
-

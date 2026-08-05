@@ -386,6 +386,40 @@ def add_stock():
     return render_template("pages/user-pages/add-new-stock.html", title=title)
 
 
+@app.route("/user/add-employee", methods=["GET", "POST"])
+@login_required
+@owner_required
+@limiter.limit("5 per day", methods=["POST"])
+def add_employee():
+    title = "Add new employee"
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    generate_password = generate_daily_password()
+    if request.method == "POST":
+        business_id = user.business_id
+        eTitle = request.form.get("title", "").strip().lower()
+        fname = request.form.get("fname", "").strip().lower()
+        sname = request.form.get("sname", "").strip().lower()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "").strip()
+        data = {
+            'creator_id': user.user_id,
+            'business_id': business_id,
+            'title': eTitle,
+            'fname': fname, 
+            'sname': sname,
+            'email': email,
+            'password': password,
+        }
+        success = add_new_user(data)
+        if success:
+            flash("New user added!", "success")
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Unable to add new user!", "error")
+            return redirect(url_for("add_employee"))
+    return render_template("pages/user-pages/owner/add-employee.html", title=title, generate_password = generate_password)
+
+
 @app.route("/user/all-stock", methods=["GET", "POST"])
 @login_required
 def all_stock():
