@@ -1,9 +1,18 @@
 {% extends 'layout.html' %} {% block content %}
+<div class="space"></div>
 <section class="settings-page-intro">
+    {% if business.logo_url %}
+    <img src="{{business.logo_url}}" alt="{{ business.business_name }}" />
+    {% else %}
+    <img
+      src="https://placehold.co/500x500?text=Please+upload+business+logo"
+      alt="Upload business logo"
+    />
+    {% endif %}
   <h1>Account Settings</h1>
   <p>Manage and update your own details here</p>
 </section>
-<section>
+<section class = "settings-page-form-section">
   {% if user.role == 'owner' %}
   <form
     action="{{ url_for('update') }}"
@@ -168,7 +177,7 @@
   </form>
 </section>
 <div class="space"></div>
-<section>
+<section class = "settings-page-form-section">
   <hr />
   <form action="/user/update-password" method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />

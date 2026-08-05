@@ -9,6 +9,7 @@ from database.db import database
 from database.models import *
 from services.config import *
 from services.log import *
+from services.validators import input_validator
 
 hasher = PasswordHasher().hash
 verifier = PasswordHasher().verify
@@ -67,10 +68,15 @@ def generate_password_hash(password):
 
 
 def login_user(username, password):
-    user = User.query.filter_by(username=username).first()
-    update_daily_password()
+    valid_username = input_validator(username, "username")
+    valid_password = input_validator(password, "password")
+    print(valid_username)
+    print(valid_password)
+    if not valid_password or not valid_username:
+        return False, None
+    user = User.query.filter_by(username=valid_username).first()
     try:
-        verifier(password=password, hash=user.password)
+        verifier(password=valid_password, hash=user.password)
         generate_new_log(
             user.user_id, user.business_id, f"{user.first_name} logged in!"
         )
@@ -87,12 +93,12 @@ def update_daily_password():
         return
     try:
         today = str(datetime.now().replace(microsecond=0).date())
-        last_updated = business.updated
+        last_updated = business.daily_password_updated
         if today > last_updated[0:10]:
             all_businesses = Business.query.all()
             for item in all_businesses:
                 item.daily_password = generate_daily_password()
-                item.updated = date
+                item.daily_password_updated = date
             database.session.commit()
     except Exception as e:
         print(e)

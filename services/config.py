@@ -1,7 +1,11 @@
 import os
 import secrets
+from datetime import datetime
 
+import cloudinary
+import cloudinary.uploader
 from dotenv import load_dotenv
+from flask import flash
 
 load_dotenv()
 
@@ -36,10 +40,24 @@ def initialise_env():
                     f.write(updated_contents)
 
 
-from datetime import datetime
-
-
 def generate_time():
     date = datetime.now().replace(microsecond=0).date()
     time = datetime.now().replace(microsecond=0).time()
     return f"{date} {time}"
+
+
+def image_upload(image, folder, business_name):
+    image_url = ""
+    if not image.filename:
+        return None
+    try:
+        upload = cloudinary.uploader.upload(
+            image,
+            folder=f"VenTory-portfolio-project/{business_name}/{folder}",
+        )
+        image_url = upload["secure_url"]
+        return image_url
+    except Exception as e:
+        print(e)
+        flash("Unable to upload image, try again!", "error")
+        return None

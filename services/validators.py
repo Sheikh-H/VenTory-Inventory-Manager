@@ -47,9 +47,20 @@ def input_validator(data, input_type, minimum=None, maximum=None):
         for char in data:
             if char in forbidden_characters:
                 return None
+    elif input_type == "username":
+        for char in data:
+            if char in forbidden_characters:
+                return None
+        if len(data) > 9 or len(data) < 9:
+            return None
+    elif input_type == "password":
+        for char in data:
+            if char in forbidden_characters:
+                return None
+        if len(data) > 20 or len(data) < 10:
+            return None
 
     elif input_type == "email":
-
         for char in data:
             if char in forbidden_characters:
                 return None
@@ -92,9 +103,18 @@ def input_validator(data, input_type, minimum=None, maximum=None):
             return None
         if data not in ["mr", "mrs", "miss", "ms", "dr"]:
             return None
-        
+
     elif input_type == "role":
-        if data not in ["employee", "manager"]:
+        if data not in ["employee", "manager", "owner"]:
             return None
-        
+
+    elif input_type == "address":
+
+        for char in data:
+            if char in forbidden_characters:
+                return None
+
+        if len(data) < 30 or len(data) > 255:
+            return None
+
     return data

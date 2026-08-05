@@ -1,6 +1,18 @@
 .settings-page-intro{
     text-align: center;
+    align-items: center;
 }
+
+.settings-page-intro img{
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+}
+
+.settings-page-form-section{
+    padding: 5px;
+}
+
 
 /* Tablet */
 
