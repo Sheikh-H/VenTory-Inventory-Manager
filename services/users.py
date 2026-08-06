@@ -75,7 +75,11 @@ def password_update(user, new_password, current_password):
     action = f"{user.first_name} updated their password!"
     valid_current = input_validator(current_password, "password")
     valid_new_password = input_validator(new_password, "password")
-    verified = verifier(user.password, valid_current)
+    verified = None
+    if user.password_reset == 0:
+        verified = verifier(user.password, valid_current)
+    if user.password_reset == 1:
+        verified = True
     if not verified:
         flash("Validation error, please try again!", "error")
         return False
@@ -83,6 +87,7 @@ def password_update(user, new_password, current_password):
         password = generate_password_hash(valid_new_password)
         user.password = password
         user.updated = date
+        user.password_reset = 0
         database.session.commit()
         generate_new_log(user.user_id, user.business_id, f"{action}")
         return True

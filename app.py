@@ -184,9 +184,7 @@ def register_page():
 def dashboard():
     title = "Welcome to your dashboard"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
-    if user.password_reset == 1:
-        flash("Your password was reset by an admin user, please reset your password!", 'error')
-        return redirect(url_for('account_settings'))
+
     new_user = bool(
         user.created[0:10] == str(datetime.now().replace(microsecond=0).date())
     )
@@ -194,6 +192,12 @@ def dashboard():
     session["role"] = user.role
     session["user_id"] = user.user_id
     session["business_id"] = business.business_id
+    if user.password_reset == 1:
+        flash(
+            "Your password was reset by an admin user, please reset your password!",
+            "error",
+        )
+        return redirect(url_for("account_settings"))
     return render_template(
         "pages/user-pages/dashboard.html",
         title=title,
@@ -421,7 +425,7 @@ def reset():
         generate_new_log(
             admin.user_id,
             admin.business_id,
-            f"Did a password reset for {user.username} : {user.first_name}",
+            f"{admin.first_name} Did a password reset for {user.username} : {user.first_name}",
         )
         flash("Password reset for user!", "success")
         return redirect(url_for("employee", emp_id=user_id))

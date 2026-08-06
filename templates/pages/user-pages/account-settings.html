@@ -198,12 +198,23 @@
       </svg>
       <label for="title">Update your password:</label>
     </div>
-    <input
+    
+    {% if user.password_reset == 1 %}
+      <input
       type="password"
       name="current-password"
       id="current-password"
       placeholder="Current password"
     />
+    {% else %}
+      <input
+      type="password"
+      name="current-password"
+      id="current-password"
+      placeholder="Current password"
+      required
+    />
+    {% endif %}
     <input
       type="password"
       name="new-password"

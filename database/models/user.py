@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.db import database
@@ -19,7 +19,6 @@ class User(database.Model):
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     created: Mapped[str] = mapped_column(String(19), nullable=False)
     updated: Mapped[str | None] = mapped_column(String(19), nullable=True)
+    password_reset: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     business: Mapped["Business"] = relationship(back_populates="employees")
     logs: Mapped[list["Log"]] = relationship(back_populates="user")
-
-
