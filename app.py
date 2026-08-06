@@ -374,7 +374,6 @@ def all_stock():
 @login_required
 def stock_page(stock_id):
     user = User.query.filter_by(user_id=session.get("user_id")).first()
-    business = Business.query.filter_by(business_id=user.business_id).first()
     stock = Stock.query.filter_by(
         business_id=user.business_id, stock_id=stock_id
     ).first()
@@ -422,6 +421,7 @@ def logout():
     generate_new_log(
         user.user_id, business.business_id, f"{user.first_name} logged out!"
     )
+    update_daily_password()
     session.clear()
     flash("Successfully logged out!", "success")
     return redirect(url_for("home_page"))

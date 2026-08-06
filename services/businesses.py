@@ -47,6 +47,7 @@ def new_business_registration(data):
             email=business_email,
             created=request_time,
             daily_password=new_daily_password,
+            daily_password_updated=request_time,
         )
         database.session.add(new_business)
         database.session.commit()

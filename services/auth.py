@@ -94,7 +94,7 @@ def update_daily_password():
     try:
         today = str(datetime.now().replace(microsecond=0).date())
         last_updated = business.daily_password_updated
-        if today > last_updated[0:10]:
+        if today > last_updated:
             all_businesses = Business.query.all()
             for item in all_businesses:
                 item.daily_password = generate_daily_password()
