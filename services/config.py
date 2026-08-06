@@ -47,16 +47,16 @@ def generate_time():
 
 
 def image_upload(image, folder, business_name):
-    image_url = ""
-    if not image.filename:
+    if not image or not image.filename:
         return None
+
     try:
         upload = cloudinary.uploader.upload(
             image,
             folder=f"VenTory-portfolio-project/{business_name}/{folder}",
         )
-        image_url = upload["secure_url"]
-        return image_url
+        return upload["secure_url"]
+
     except Exception as e:
         print(e)
         flash("Unable to upload image, try again!", "error")

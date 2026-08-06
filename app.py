@@ -378,8 +378,39 @@ def stock_page(stock_id):
     stock = Stock.query.filter_by(
         business_id=user.business_id, stock_id=stock_id
     ).first()
+    if not stock:
+        flash("Stock item not found.", "error")
+        return redirect(url_for("all_stock"))
     title = f"{stock.description}"
-
+    if request.method == "POST":
+        new_image = request.files.get("image")
+        new_title = request.form.get("title", "").strip().lower()
+        new_description = request.form.get("description", "").strip().lower()
+        new_supplier = request.form.get("supplier", "").strip().lower()
+        new_available = request.form.get("available", "").strip().lower()
+        new_returned = request.form.get("returned", "").strip().lower()
+        new_damaged = request.form.get("damaged", "").strip().lower()
+        new_price = request.form.get("price", "").strip().lower()
+        data = {
+            "stock_id": stock_id,
+            "business_id": user.business_id,
+            "user_id": user.user_id,
+            "image": new_image,
+            "title": new_title,
+            "description": new_description,
+            "supplier": new_supplier,
+            "available": new_available,
+            "returned": new_returned,
+            "damaged": new_damaged,
+            "price": new_price,
+        }
+        success = update_stock(data)
+        if success:
+            flash("Stock updated successfully!", "success")
+            return redirect(url_for("all_stock"))
+        else:
+            flash("Unable to update stock!", "error")
+            return redirect(url_for("stock_page", stock_id=stock_id))
     return render_template("pages/user-pages/stock-page.html", title=title, stock=stock)
 
 

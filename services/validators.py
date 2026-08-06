@@ -7,34 +7,15 @@ price_pattern = r"^\d+(\.\d{1,2})?$"
 date_pattern = r"^\d{4}-\d{2}-\d{2}$"
 time_pattern = r"^\d{2}:\d{2}:\d{2}$"
 full_date_pattern = r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"
-numbers = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    0,
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "0",
-]
 telephone = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-"]
 forbidden_characters = ["<", ">", "{", "}"]
 
 
 def input_validator(data, input_type, minimum=None, maximum=None):
     if data is None:
+        return None
+
+    if data == "":
         return None
 
     if maximum is not None and len(data) > maximum:
@@ -47,12 +28,14 @@ def input_validator(data, input_type, minimum=None, maximum=None):
         for char in data:
             if char in forbidden_characters:
                 return None
+
     elif input_type == "username":
         for char in data:
             if char in forbidden_characters:
                 return None
-        if len(data) > 9 or len(data) < 9:
+        if len(data) != 9:
             return None
+
     elif input_type == "password":
         for char in data:
             if char in forbidden_characters:
@@ -64,25 +47,26 @@ def input_validator(data, input_type, minimum=None, maximum=None):
         for char in data:
             if char in forbidden_characters:
                 return None
-
         if len(data) > 255 or len(data) < 6:
             return None
-
         if not re.fullmatch(email_pattern, data):
             return None
 
     elif input_type == "numerical":
-        for char in data:
-            if char not in numbers:
-                return None
-        if data < 0:
-            return 0
+        if not data.isdigit():
+            return None
+        value = int(data)
+        if value <= 0:
+            return None
+        return value
 
     elif input_type == "price":
         if not re.fullmatch(price_pattern, data):
             return None
-        if data < 0:
-            return 0.00
+        value = float(data)
+        if value <= 0:
+            return None
+        return value
 
     elif input_type == "date" and not (
         re.fullmatch(full_date_pattern, data)

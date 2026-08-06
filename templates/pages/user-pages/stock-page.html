@@ -2,19 +2,27 @@
 <section class="stock-page-header">
   <h1>{{stock.title.title()}}</h1>
   <p>Here you can update, modify, delete a stock record</p>
+  <img src="{{stock.image_url}}" alt="{{stock.title.title()}}" />
+  <p><i>Existing data will be replaced!</i></p>
 </section>
 <section class="stock-page-info-section">
-  <img src="{{stock.image_url}}" alt="{{stock.title.title()}}" />
-  <form action="" method="post">
+  <form
+    action="{{url_for('stock_page', stock_id=stock.stock_id)}}"
+    method="post"
+    enctype="multipart/form-data"
+  >
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <label for="description">Stock description:</label>
-    <input
-      type="text"
+    <label for="image">Update stock image:</label>
+    <input type="file" accept="image/*" name="image" />
+    <label for="supplier">Update stock title:</label>
+    <input type="text" name="title" id="title" placeholder="{{stock.title}}" />
+    <label for="description">Update stock description:</label>
+    <textarea
       name="description"
       id="description"
       placeholder="{{stock.description.title()}}"
-    />
-    <label for="supplier">Supplier:</label>
+    ></textarea>
+    <label for="supplier">Update Supplier:</label>
     <input
       type="text"
       name="supplier"
