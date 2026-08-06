@@ -18,11 +18,11 @@ from flask import (
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_session import Session
 from flask_wtf.csrf import CSRFError, CSRFProtect
 from sqlalchemy import or_
 
 from database.db import database
-from flask_session import Session
 from services.auth import *
 from services.businesses import *
 from services.config import *
@@ -521,7 +521,6 @@ def robots():
     return send_from_directory(current_app.static_folder, "robots.txt")
 
 
-## change these:
 @app.route("/sitemap.xml")
 def sitemap():
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
