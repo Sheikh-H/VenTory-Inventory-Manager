@@ -13,6 +13,9 @@
   <p>Manage and update your own details here</p>
 </section>
 <section class = "settings-page-form-section">
+    <!-- <div> -->
+    <!-- <p class="form-error"></p> -->
+  <!-- </div> -->
   {% if user.role == 'owner' %}
   <form
     action="{{ url_for('update') }}"

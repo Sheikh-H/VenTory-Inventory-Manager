@@ -6,10 +6,13 @@
   <p>Must login and take a note of their username immediately</p>
 </section>
 <section class="add-employee-form">
+  <!-- <div> -->
+  <!-- <p class="form-error"></p> -->
+  <!-- </div> -->
   <form action="{{url_for('add_employee')}}" method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <label for="title">Title:</label>
-    <select name="title" id="title">
+    <select name="title" id="title" required>
       <option value="" selected>Select Title:</option>
       <option value="mr">Mr</option>
       <option value="mrs">Mrs</option>
@@ -17,13 +20,32 @@
       <option value="miss">Miss</option>
       <option value="dr">Dr</option>
     </select>
-    <input type="text" name="fname" id="fname" placeholder="First name" />
-    <input type="text" name="sname" id="sname" placeholder="Last name" />
+    <input
+      type="text"
+      name="fname"
+      id="fname"
+      minlength="1"
+      maxlength="100"
+      placeholder="First name"
+      required
+    />
+    <input
+      type="text"
+      name="sname"
+      id="sname"
+      minlength="1"
+      maxlength="100"
+      placeholder="Last name"
+      required
+    />
     <input
       type="email"
       name="email"
       id="email"
+      minlength="6"
+      maxlength="255"
       placeholder="Employee email address"
+      required
     />
     <label for="role">Employee Role:</label>
     <small
@@ -33,13 +55,13 @@
     <label for="username">Generated username:</label>
     <input
       type="text"
-      name="username"
-      id="username"
+      name="display-username"
       disabled
-      value="{{username}}"
+      value="{{generated_username}}"
     />
+    <input hidden type="text" name="username" value="{{generated_username}}" />
     <label for="role">Employee Role:</label>
-    <select name="role" id="role">
+    <select name="role" id="role" required>
       <option value="" selected>Select Role</option>
       <option value="manager">Manager</option>
       <option value="employee">Employee</option>
@@ -47,11 +69,11 @@
     <label for="password">Generated temporary password:</label>
     <input
       type="text"
-      name="password"
-      id="password"
-      placeholder="Password is generated on page refresh"
-      value="{{ generate_password }}"
+      name="display-password"
+      disabled
+      value="{{generated_password}}"
     />
+    <input hidden type="text" name="password" value="{{generated_password}}" />
     <input type="submit" value="Add Employee" />
   </form>
 </section>

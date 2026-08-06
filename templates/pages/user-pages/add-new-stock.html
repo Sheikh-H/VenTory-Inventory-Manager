@@ -5,6 +5,9 @@
   <p>This is to add stock that is considered new.</p>
 </section>
 <section class="add-stock-form">
+  <!-- <div> -->
+  <!-- <p class="form-error"></p> -->
+  <!-- </div> -->
   <form
     action="{{ url_for('add_stock') }}"
     method="post"
@@ -12,26 +15,21 @@
     required
   >
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
     <label for="image">Upload image:</label>
     <input type="file" accept="image/*" name="image" required />
-
-    <label for="title">Stock Name</label> 
-    <input type="text" name="title" id="title" required />
-
+    <label for="title">Stock Name</label>
+    <input type="text" name="title" id="title" required maxlength="50" minlength="10"/>
     <label for="quantity">Quantity</label>
     <input type="number" name="quantity" id="quantity" step="1" required />
-
     <label for="supplier">Supplier Details</label>
-    <input type="text" name="supplier" id="supplier" required />
-
+    <input type="text" name="supplier" id="supplier" required maxlength="50" minlength="10"/>
     <label for="notes">Additional Information</label>
     <textarea
       name="description"
       id="description"
       placeholder="Any additional information about stock (supplier details, stock details etc.)"
+      maxlength="255"
     ></textarea>
-
     <label for="price">Price per unit (£)</label>
     <input
       type="number"
@@ -41,7 +39,6 @@
       required
       placeholder="£"
     />
-
     <input type="submit" value="Add stock" />
   </form>
 </section>

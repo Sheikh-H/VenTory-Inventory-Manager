@@ -315,37 +315,45 @@ def add_stock():
 @limiter.limit("5 per day", methods=["POST"])
 def add_employee():
     title = "Add new employee"
+
     user = User.query.filter_by(user_id=session.get("user_id")).first()
-    generate_password = generate_daily_password()
-    username = generate_user_name()
+
+    if "generated_password" not in session:
+        session["generated_password"] = generate_daily_password()
+
+    if "generated_username" not in session:
+        session["generated_username"] = generate_user_name()
+
     if request.method == "POST":
-        business_id = user.business_id
-        eTitle = request.form.get("title", "").strip().lower()
-        fname = request.form.get("fname", "").strip().lower()
-        sname = request.form.get("sname", "").strip().lower()
-        email = request.form.get("email", "").strip().lower()
         data = {
-            "creator_id": user.user_id,
-            "business_id": business_id,
-            "username": username,
-            "title": eTitle,
-            "fname": fname,
-            "sname": sname,
-            "email": email,
-            "password": generate_password,
+            "admin_id": user.user_id,
+            "business_id": user.business_id,
+            "username": session["generated_username"],
+            "title": request.form.get("title", "").strip().lower(),
+            "fname": request.form.get("fname", "").strip().lower(),
+            "sname": request.form.get("sname", "").strip().lower(),
+            "email": request.form.get("email", "").strip().lower(),
+            "role": request.form.get("role", "").strip().lower(),
+            "password": session["generated_password"],
         }
+
         success = add_new_user(data)
+
         if success:
+            session.pop("generated_password", None)
+            session.pop("generated_username", None)
+
             flash("New user added!", "success")
             return redirect(url_for("dashboard"))
-        else:
-            flash("Unable to add new user!", "error")
-            return redirect(url_for("add_employee"))
+
+        flash("Unable to add new user!", "error")
+        return redirect(url_for("add_employee"))
+
     return render_template(
         "pages/user-pages/owner/add-employee.html",
         title=title,
-        generate_password=generate_password,
-        username=username,
+        generated_password=session["generated_password"],
+        generated_username=session["generated_username"],
     )
 
 

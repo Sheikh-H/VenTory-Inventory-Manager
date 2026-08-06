@@ -1,5 +1,7 @@
 import re
 
+from database.db import *
+from database.models import *
 from services.config import *
 
 email_pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
@@ -44,13 +46,26 @@ def input_validator(data, input_type, minimum=None, maximum=None):
             return None
 
     elif input_type == "email":
+        businesses = Business.query.all()
+        employees = User.query.all()
+        
         for char in data:
             if char in forbidden_characters:
                 return None
+            
         if len(data) > 255 or len(data) < 6:
             return None
+        
         if not re.fullmatch(email_pattern, data):
             return None
+        
+        for business in businesses:
+            if business.email.lower() == data.lower():
+                return None
+            
+        for user in employees:
+            if user.email.lower() == data.lower():
+                return None
 
     elif input_type == "numerical":
         if not data.isdigit():
@@ -93,7 +108,6 @@ def input_validator(data, input_type, minimum=None, maximum=None):
             return None
 
     elif input_type == "address":
-
         for char in data:
             if char in forbidden_characters:
                 return None

@@ -106,6 +106,7 @@ def update_stock(data):
             updates = True
             action += f"Stock damaged: {stock.damaged} to {valid_damaged};"
             stock.damaged = valid_damaged
+            stock.available = valid_available - valid_damaged
         if valid_price:
             updates = True
             action += f"Stock price: £{stock.price} to {valid_price};"

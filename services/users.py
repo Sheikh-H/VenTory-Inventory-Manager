@@ -9,42 +9,70 @@ from services.validators import input_validator
 
 
 def add_new_user(data):
-    existing = User.query.filter_by(
-        email=data["email"], business_id=data["business_id"]
-    ).first()
+    date = generate_time()
+
     admin = User.query.filter_by(
-        user_id=data.get("user_id"), business_id=data.get("business_id")
+        user_id=data.get("admin_id"), business_id=data.get("business_id")
     ).first()
-    if existing:
+
+    if not admin:
         return False
+
+    existing_user_email = User.query.filter_by(email=data.get("email")).first()
+
+    existing_business_email = Business.query.filter_by(email=data.get("email")).first()
+
+    existing_username = User.query.filter_by(username=data.get("username")).first()
+
+    if existing_user_email or existing_business_email or existing_username:
+        return False
+
     try:
         title = input_validator(data.get("title"), "title")
-        username = input_validator(data.get("username"), "text", minimum=10, maximum=10)
+
+        username = input_validator(data.get("username"), "username")
+
         fname = input_validator(data.get("fname"), "text", minimum=1, maximum=100)
+
         sname = input_validator(data.get("sname"), "text", minimum=1, maximum=100)
+
         email = input_validator(data.get("email"), "email")
+
         role = input_validator(data.get("role"), "role")
-        if not all((title, username, fname, sname, email, role)):
+
+        password = input_validator(data.get("password"), "password")
+
+        if role not in ["employee", "manager"]:
             return False
+
+        if not all((title, username, fname, sname, email, role, password)):
+            return False
+
+        hashed_password = generate_password_hash(password)
+
         new_user = User(
-            business_id=data["business_id"],
+            business_id=data.get("business_id"),
             username=username,
             title=title,
             first_name=fname,
             last_name=sname,
             email=email,
             role=role,
-            password=generate_password_hash(data["password"]),
-            created=generate_time(),
+            password=hashed_password,
+            created=date,
         )
+
         database.session.add(new_user)
         database.session.commit()
+
         generate_new_log(
             admin.user_id,
             admin.business_id,
             f"{admin.first_name} created a new account for {new_user.first_name}",
         )
+
         return True
+
     except Exception as e:
         print(e)
         database.session.rollback()
