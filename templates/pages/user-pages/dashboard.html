@@ -1,6 +1,8 @@
 {% extends 'layout.html' %} {% block content %}
 <div class="space"></div>
 <section class="dashboard-page-intro">
+  <h2>Dashboard</h2>
+
   <div class="dashboard-image">
     {% if business.logo_url %}
     <img src="{{business.logo_url}}" alt="{{ business.business_name }}" />
@@ -11,49 +13,76 @@
     />
     {% endif %}
   </div>
-
-  <h1>Dashboard</h1>
-  {% if new_user %}
-  <h2>Username Generated, please keep it safe:</h2>
-  <p><strong>{{user.username}}</strong></p>
-  <p>
-    <i
-      >Please keep a copy of your username - this message will disappear
-      tomorrow.</i
-    >
-  </p>
-  {% else %}
-  <p>Welcome back {{user.first_name.capitalize() }}!</p>
-  {% endif %} {% if user.role in ['owner', 'manager'] %}
-  <h2>Daily Password:</h2>
-  <p><strong>{{ business.daily_password }}</strong></p>
-  <p><i>Daily password is reset everyday.</i></p>
-  {% endif %}
+  <div class="space"></div>
+  <div class="dashboard-intro">
+    {% if new_user %}
+    <div>
+      <h3>Username:</h3>
+      <p><strong>{{user.username}}</strong></p>
+      <p>
+        <i>Please keep a copy.</i>
+      </p>
+    </div>
+    {% else %}
+    <div>
+      <p>Welcome back {{user.first_name.capitalize()}}!</p>
+    </div>
+    {% endif %} {% if user.role in ['owner', 'manager'] %}
+    <div>
+      <h3>Daily Password:</h3>
+      <p><strong>{{ business.daily_password }}</strong></p>
+    </div>
+    {% endif %}
+  </div>
 </section>
-
+<hr />
+<div class="space"></div>
 {% if user.role == 'owner' %}
 <section>
   <!-- This should have all the stats for the inventory (totals), for each stock it would have it's own stock page also -->
-  <h3>Options</h3>
+</section>
+<section>
   <div class="options-grid">
     <a class="option" href="{{ url_for('add_stock') }}">
-      <p>Add new stock</p>
+      <p>New stock</p>
     </a>
     <a class="option" href="{{ url_for('all_stock') }}">
-      <p>All Stock</p>
+      <p>Manage Inventory</p>
     </a>
     <a class="option" href="{{ url_for('add_employee') }}">
-      <p>Add Employee</p>
+      <p>Add user</p>
+    </a>
+    <a class="option" href="{{ url_for('manage_employees') }}">
+      <p>Manager users</p>
     </a>
   </div>
 </section>
 {% elif user.role=='manager'%}
+<section></section>
 <section>
-  <p>if role is manager</p>
+  <div class="options-grid">
+    <a class="option" href="{{ url_for('add_stock') }}">
+      <p>New stock</p>
+    </a>
+    <a class="option" href="{{ url_for('all_stock') }}">
+      <p>Manage Inventory</p>
+    </a>
+    <a class="option" href="{{ url_for('manage_employees') }}">
+      <p>Manager users</p>
+    </a>
+  </div>
 </section>
 {% elif user.role == 'employee'%}
+<section></section>
 <section>
-  <p>if role is employee</p>
+  <div class="options-grid">
+    <a class="option" href="{{ url_for('add_stock') }}">
+      <p>New stock</p>
+    </a>
+    <a class="option" href="{{ url_for('all_stock') }}">
+      <p>Manage Inventory</p>
+    </a>
+  </div>
 </section>
 {% endif %}
 <section></section>

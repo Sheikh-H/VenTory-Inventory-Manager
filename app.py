@@ -2,7 +2,6 @@ import os
 from datetime import timedelta
 
 import cloudinary
-import cloudinary.uploader
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -20,6 +19,7 @@ from flask import (
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFError, CSRFProtect
+from sqlalchemy import or_
 
 from database.db import database
 from flask_session import Session
@@ -184,6 +184,9 @@ def register_page():
 def dashboard():
     title = "Welcome to your dashboard"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
+    if user.password_reset == 1:
+        flash("Your password was reset by an admin user, please reset your password!", 'error')
+        return redirect(url_for('account_settings'))
     new_user = bool(
         user.created[0:10] == str(datetime.now().replace(microsecond=0).date())
     )
@@ -315,15 +318,11 @@ def add_stock():
 @limiter.limit("5 per day", methods=["POST"])
 def add_employee():
     title = "Add new employee"
-
     user = User.query.filter_by(user_id=session.get("user_id")).first()
-
     if "generated_password" not in session:
         session["generated_password"] = generate_daily_password()
-
     if "generated_username" not in session:
         session["generated_username"] = generate_user_name()
-
     if request.method == "POST":
         data = {
             "admin_id": user.user_id,
@@ -336,25 +335,101 @@ def add_employee():
             "role": request.form.get("role", "").strip().lower(),
             "password": session["generated_password"],
         }
-
         success = add_new_user(data)
-
         if success:
             session.pop("generated_password", None)
             session.pop("generated_username", None)
-
             flash("New user added!", "success")
             return redirect(url_for("dashboard"))
-
-        flash("Unable to add new user!", "error")
-        return redirect(url_for("add_employee"))
-
+        else:
+            flash("Unable to add new user!", "error")
+            return redirect(url_for("add_employee"))
     return render_template(
         "pages/user-pages/owner/add-employee.html",
         title=title,
         generated_password=session["generated_password"],
         generated_username=session["generated_username"],
     )
+
+
+@app.route("/user/manage-employees", methods=["GET", "POST"])
+@login_required
+@owner_required
+def manage_employees():
+    title = "Manage Employees"
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    users = User.query.filter(
+        User.business_id == business.business_id, User.role.in_(["manager", "employee"])
+    ).all()
+    if request.method == "POST":
+        search = request.form.get("search", "").strip().lower()
+        valid_search = input_validator(search, "text", maximum=255)
+        if valid_search:
+            users = User.query.filter(
+                User.business_id == business.business_id,
+                User.role.in_(["manager", "employee"]),
+                or_(
+                    User.last_name.ilike(f"%{valid_search}%"),
+                    User.first_name.ilike(f"%{valid_search}%"),
+                    User.username.ilike(f"%{valid_search}%"),
+                ),
+            ).all()
+
+            return render_template(
+                "/pages/user-pages/manager/manage-employee.html",
+                title=title,
+                users=users,
+            )
+    return render_template(
+        "/pages/user-pages/manager/manage-employee.html", title=title, users=users
+    )
+
+
+@app.route("/user/employee/<int:emp_id>", methods=["GET", "POST"])
+@login_required
+@owner_required
+def employee(emp_id):
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    employee = User.query.filter(
+        User.user_id == emp_id, Business.business_id == business.business_id
+    ).first()
+    title = f"{employee.username}"
+    return render_template(
+        "/pages/user-pages/manager/employee-page.html", title=title, employee=employee
+    )
+
+
+@app.route("/user/password-reset", methods=["POST"])
+@login_required
+def reset():
+    date = generate_time()
+    user_id = int(request.form.get("user_id"))
+    business_id = int(session.get("business_id"))
+    user = User.query.filter_by(user_id=user_id, business_id=business_id).first()
+    admin = User.query.filter_by(
+        user_id=session.get("user_id"), business_id=business_id
+    ).first()
+    password = generate_daily_password()
+    hashed = generate_password_hash(password)
+    try:
+        user.password = hashed
+        user.updated = date
+        user.password_reset = 1
+        database.session.commit()
+        generate_new_log(
+            admin.user_id,
+            admin.business_id,
+            f"Did a password reset for {user.username} : {user.first_name}",
+        )
+        flash("Password reset for user!", "success")
+        return redirect(url_for("employee", emp_id=user_id))
+    except Exception as e:
+        print(e)
+        database.session.rollback()
+        flash("Unable to reset password for user!", "error")
+        return redirect(url_for("employee", emp_id=user_id))
 
 
 @app.route("/user/all-stock", methods=["GET", "POST"])

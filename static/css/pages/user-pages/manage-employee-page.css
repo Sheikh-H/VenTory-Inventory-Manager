@@ -1,0 +1,51 @@
+.manage-employee-page-intro{
+    text-align: center;
+}
+
+.manage-employee-grid{
+    padding: 10px;
+}
+
+.employee{
+    display: flex;
+    justify-content: space-between;
+}
+
+.employee-info{
+    display: flex;
+    gap: 5px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.employee-table{
+    width: 100%;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.employee-table thead{
+    font-weight: bold;
+}
+
+.employee-table tr{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.employee-table td{
+    flex:1;
+}
+/* Tablet */
+
+@media screen and (min-width: 700px) and (max-width: 999px) {
+
+}
+
+/* Desktop */
+
+@media screen and (min-width: 1000px) {
+
+}

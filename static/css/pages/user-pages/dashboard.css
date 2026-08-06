@@ -12,6 +12,34 @@
     height: 100%;
 }
 
+.dashboard-intro{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.dashboard-intro  *p{
+    color: red;
+}
+
+.options-grid{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+}
+
+.option{
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.option:hover{
+    box-shadow: 0 0 3px gray;
+}
 /* Tablet */
 
 @media screen and (min-width: 700px) and (max-width: 999px) {

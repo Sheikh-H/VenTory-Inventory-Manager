@@ -47,11 +47,7 @@
       placeholder="Employee email address"
       required
     />
-    <label for="role">Employee Role:</label>
-    <small
-      >Please keep a copy of the username and password and ask employee to
-      change their password on login</small
-    >
+
     <label for="username">Generated username:</label>
     <input
       type="text"
@@ -74,6 +70,10 @@
       value="{{generated_password}}"
     />
     <input hidden type="text" name="password" value="{{generated_password}}" />
+    <small
+      >Please keep a copy of the username and password and ask employee to
+      change their password on login</small
+    >
     <input type="submit" value="Add Employee" />
   </form>
 </section>

@@ -1,0 +1,24 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="space"></div>
+<section class="employee-view-intro">
+  <img src="https://placehold.co/500x500" alt="{{employee.first_name}}" />
+  <h1>{{employee.first_name.title()}} {{employee.last_name.title()}}</h1>
+  <p>
+    Employee details can only be modified by the user themselves on their
+    account settings page.
+  </p>
+  <p><i>Please ask the user to reset password on login!</i></p>
+</section>
+<section class="employee-details">
+  <form action="{{url_for('reset')}}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <input type="hidden" name="user_id" value="{{employee.user_id}}" />
+    <input type="submit" value="Reset password" />
+  </form>
+  <div class="space"></div>
+  <form action="" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <input type="submit" value="Delete Account" />
+  </form>
+</section>
+{% endblock content %}

@@ -1,0 +1,58 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="space"></div>
+<section class="manage-employee-page-intro">
+  <h1>Manage Employee's</h1>
+  <p>Here you can manage all employees</p>
+  <p><i>(Click on username to visit profile)</i></p>
+</section>
+<section class="manage-employee-grid">
+  <div>
+    <form action="{{url_for('manage_employees')}}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input
+        type="text"
+        name="search"
+        id="search"
+        placeholder="Search Employee"
+      />
+    </form>
+  </div>
+  <table class="employee-table">
+    <thead>
+      <tr>
+        <td>Username</td>
+        <td>Role</td>
+        <td class="show-on-table show-on-desktop">Title</td>
+        <td>Fname</td>
+        <td class="show-on-table show-on-desktop">Sname</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>
+          <a href="{{url_for('employee', emp_id=user.user_id)}}"
+            ><p>{{user.username}}</p></a
+          >
+        </td>
+        <td><p>{{user.role.title()}}</p></td>
+        <td class="show-on-table show-on-desktop">
+          <p>{{user.title.title()}}</p>
+        </td>
+        <td><p>{{user.first_name.title()}}</p></td>
+        <td class="show-on-table show-on-desktop">
+          <p>{{user.last_name.title()}}</p>
+        </td>
+        <td>
+          <form action="" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <input type="submit" value="X" />
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock content %}

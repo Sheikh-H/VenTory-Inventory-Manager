@@ -75,6 +75,10 @@ def login_user(username, password):
     if not valid_password or not valid_username:
         return False, None
     user = User.query.filter_by(username=valid_username).first()
+    
+    if user.password_reset == 1:
+        return True, user.user_id
+    
     try:
         verifier(password=valid_password, hash=user.password)
         generate_new_log(

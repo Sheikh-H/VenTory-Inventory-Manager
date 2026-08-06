@@ -17,31 +17,20 @@ def add_new_user(data):
 
     if not admin:
         return False
-
     existing_user_email = User.query.filter_by(email=data.get("email")).first()
-
     existing_business_email = Business.query.filter_by(email=data.get("email")).first()
-
     existing_username = User.query.filter_by(username=data.get("username")).first()
-
     if existing_user_email or existing_business_email or existing_username:
         return False
 
     try:
         title = input_validator(data.get("title"), "title")
-
         username = input_validator(data.get("username"), "username")
-
         fname = input_validator(data.get("fname"), "text", minimum=1, maximum=100)
-
         sname = input_validator(data.get("sname"), "text", minimum=1, maximum=100)
-
         email = input_validator(data.get("email"), "email")
-
         role = input_validator(data.get("role"), "role")
-
         password = input_validator(data.get("password"), "password")
-
         if role not in ["employee", "manager"]:
             return False
 
@@ -49,7 +38,6 @@ def add_new_user(data):
             return False
 
         hashed_password = generate_password_hash(password)
-
         new_user = User(
             business_id=data.get("business_id"),
             username=username,

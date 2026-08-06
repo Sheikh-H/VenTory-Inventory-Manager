@@ -1,0 +1,14 @@
+.add-employee-page-intro{
+    text-align: center;
+}
+/* Tablet */
+
+@media screen and (min-width: 700px) and (max-width: 999px) {
+
+}
+
+/* Desktop */
+
+@media screen and (min-width: 1000px) {
+
+}
