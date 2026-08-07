@@ -55,6 +55,9 @@
     <a class="option" href="{{ url_for('manage_employees') }}">
       <p>Manager users</p>
     </a>
+    <a class="option" href="{{ url_for('business_logs') }}">
+      <p>All Logs</p>
+    </a>
   </div>
 </section>
 {% elif user.role=='manager'%}

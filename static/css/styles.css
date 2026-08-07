@@ -20,6 +20,7 @@
 @import url('pages/user-pages/add-employee-page.css');
 @import url('pages/user-pages/manage-employee-page.css');
 @import url('pages/user-pages/employee-page.css');
+@import url('pages/user-pages/emp-log-page.css');
 
 /* sections */
 @import url('header.css');

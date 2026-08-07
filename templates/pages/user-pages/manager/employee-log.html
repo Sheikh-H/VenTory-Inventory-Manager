@@ -1,0 +1,20 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="space"></div>
+<section class="employee-log-intro">
+  <h1>All logs for user: {{emp.first_name.title()}} {{emp.username}}</h1>
+  <p>Here you'll find all the activities done by this user.</p>
+</section>
+<section class="log-section">
+  <div class="logs">
+    {% for log in logs %}
+    <div class="log">
+      <div class="log-timestamp">
+        <p>{{log.timestamp[0:10]}}</p>
+        <p>{{log.timestamp[10:]}}</p>
+      </div>
+      <p>{{log.comment.title()}}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock content %}

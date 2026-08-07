@@ -1,5 +1,6 @@
 import os
 from datetime import timedelta
+from sqlite3.dbapi2 import Timestamp
 
 import cloudinary
 from dotenv import load_dotenv
@@ -20,7 +21,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_session import Session
 from flask_wtf.csrf import CSRFError, CSRFProtect
-from sqlalchemy import delete, or_
+from sqlalchemy import delete, or_, func
 
 from database.db import database
 from services.auth import *
@@ -126,7 +127,6 @@ def register_page():
     if session.get("user_id"):
         return redirect(url_for("dashboard"))
     if request.method == "POST":
-
         bName = request.form.get("business-name", "").strip().lower()
         bAddress = request.form.get("business-address", "").strip().lower()
         bTelephone = request.form.get("business-telephone", "").strip().lower()
@@ -138,21 +138,17 @@ def register_page():
         role = request.form.get("role", "").strip().lower()
         password = request.form.get("password", "").strip()
         confirm_password = request.form.get("confirm-password", "").strip()
-
         if role not in ["owner", "employee", "manager"]:
             role = ""
         if role != "owner":
             flash("Please ask the owner of the business to register!", "error")
             return redirect(url_for("register_page"))
-
         if password != confirm_password:
             flash("Passwords don't match, try again!", "error")
             return redirect(url_for("register_page"))
-
         if uEmail == bEmail:
             flash("Please use different email address for business and user", "error")
             return redirect(url_for("register_page"))
-
         data = {
             "name": bName,
             "address": bAddress,
@@ -165,9 +161,7 @@ def register_page():
             "role": role,
             "password": confirm_password,
         }
-
         user_id = new_business_registration(data)
-
         if user_id:
             session.clear()
             session.permanent = True
@@ -177,6 +171,46 @@ def register_page():
         flash("Unable to register new account, try again!", "error")
         return redirect(url_for("register_page"))
     return render_template("pages/main/register.html", title=title)
+
+
+@app.route("/user/log/<int:emp_id>", methods=["GET"])
+@login_required
+@owner_required
+def employee_logs(emp_id):
+    emp = User.query.filter_by(
+        user_id=emp_id, business_id=session.get("business_id")
+    ).first()
+    title = f"All logs for {emp.username}"
+    logs = Log.query.filter_by(user_id=emp.user_id, business_id=emp.business_id).all()
+    return render_template(
+        "pages/user-pages/manager/employee-log.html", logs=logs, title=title, emp=emp
+    )
+
+
+@app.route("/user/business-activity", methods=["GET", "POST"])
+@login_required
+@owner_required
+def business_logs():
+    title = "Business Activity"
+    logs = Log.query.filter_by(business_id=session.get("business_id")).all()
+    now = str(datetime.now().replace(microsecond=0).date())
+    if request.method == "POST":
+        date = request.form.get("date", "").strip()
+        valid_date = input_validator(date, "date")
+        logs = Log.query.filter(
+            Log.business_id == session.get("business_id"),
+            Log.timestamp >= f"{valid_date} 00:00:00",
+            Log.timestamp <= f"{valid_date} 23:59:59",
+        ).all()
+        return render_template(
+            "pages/user-pages/owner/all-logs.html",
+            title=title,
+            logs=logs,
+            now=now,
+        )
+    return render_template(
+        "pages/user-pages/owner/all-logs.html", title=title, logs=logs, now=now
+    )
 
 
 @app.route("/user/dashboard", methods=["GET", "POST"])

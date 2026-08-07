@@ -45,9 +45,7 @@
           <p>{{user.last_name.title()}}</p>
         </td>
         <td>
-          <form action="" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-            <input type="submit" value="X" />
+            <a href="{{url_for('employee_logs', emp_id = user.user_id)}}"><input type="submit" value="View Logs" /></a>
           </form>
         </td>
       </tr>

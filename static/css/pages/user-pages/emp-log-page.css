@@ -1,0 +1,36 @@
+.employee-log-intro{
+    text-align:center;
+}
+
+
+.log-section{
+    padding: 5px;
+}
+
+.logs{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.log{
+    border: 1px dotted grey;
+    padding: 5px;
+}
+
+.log-timestamp{
+    display: flex;
+    justify-content: space-between;
+}
+/* Tablet */
+
+@media screen and (min-width: 700px) and (max-width: 999px) {
+
+}
+
+/* Desktop */
+
+@media screen and (min-width: 1000px) {
+
+}
