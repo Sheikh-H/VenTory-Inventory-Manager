@@ -38,8 +38,29 @@
 <hr />
 <div class="space"></div>
 {% if user.role == 'owner' %}
-<section>
-  <!-- This should have all the stats for the inventory (totals), for each stock it would have it's own stock page also -->
+<section class="inventory-details">
+  <table>
+    <thead>
+      <tr>
+        <td>Total Stock</td>
+        <td>£</td>
+        <td>Total Returned</td>
+        <td>£</td>
+        <td>Total Damaged</td>
+        <td>£</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{total_stock + total_returned - total_damaged}}</td>
+        <td>£{{total_price or '0.00'}}</td>
+        <td>{{total_returned}}</td>
+        <td>£{{total_return_price or '0.00'}}</td>
+        <td>{{total_damaged}}</td>
+        <td>£{{total_damaged_price or '0.00'}}</td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 <section>
   <div class="options-grid">

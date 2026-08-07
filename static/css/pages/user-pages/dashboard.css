@@ -40,6 +40,24 @@
 .option:hover{
     box-shadow: 0 0 3px gray;
 }
+
+.inventory-details{
+    width: 100%;
+}
+
+.inventory-details table{
+    width: 100%;
+    margin: 0 auto;
+}
+
+.inventory-details table thead tr td{
+    text-align: center;
+    font-weight: bold;
+}
+
+.inventory-details table tbody tr td{
+    text-align: center;
+}
 /* Tablet */
 
 @media screen and (min-width: 700px) and (max-width: 999px) {

@@ -218,7 +218,6 @@ def business_logs():
 def dashboard():
     title = "Welcome to your dashboard"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
-
     new_user = bool(
         user.created[0:10] == str(datetime.now().replace(microsecond=0).date())
     )
@@ -226,6 +225,25 @@ def dashboard():
     session["role"] = user.role
     session["user_id"] = user.user_id
     session["business_id"] = business.business_id
+    user = User.query.filter_by(
+        user_id=session.get("user_id"), business_id=session.get("business_id")
+    ).first()
+    total_stock = 0
+    total_price = 0.00
+    total_returned = 0
+    total_return_price = 0.00
+    total_damaged = 0
+    total_damage_price = 0.00
+    if user.role in ["manager", "owner"]:
+        all_stocks = Stock.query.filter_by(business_id=user.business_id).all()
+        for stock in all_stocks:
+            total_stock += stock.available
+            total_stock += stock.returned
+            total_price += float(stock.price * total_stock)
+            total_returned += stock.returned
+            total_return_price += float((stock.price * total_returned) / 2)
+            total_damaged += stock.damaged
+            total_damage_price += float(stock.price * total_damaged)
     if user.password_reset == 1:
         flash(
             "Your password was reset by an admin user, please reset your password!",
@@ -238,6 +256,12 @@ def dashboard():
         user=user,
         new_user=new_user,
         business=business,
+        total_stock=total_stock,
+        total_price=total_price,
+        total_returned=total_returned,
+        total_damaged=total_damaged,
+        total_return_price=total_return_price,
+        total_damage_price=total_damage_price,
     )
 
 
