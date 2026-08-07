@@ -43,25 +43,29 @@
     <thead>
       <tr>
         <td>Total Stock</td>
-        <td>£</td>
-        <td>Total Returned</td>
-        <td>£</td>
-        <td>Total Damaged</td>
-        <td>£</td>
+        <td>Returned</td>
+        <td>Damaged</td>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>{{total_stock + total_returned - total_damaged}}</td>
-        <td>£{{total_price or '0.00'}}</td>
+        <td>{{total_stock}}</td>
         <td>{{total_returned}}</td>
-        <td>£{{total_return_price or '0.00'}}</td>
         <td>{{total_damaged}}</td>
-        <td>£{{total_damaged_price or '0.00'}}</td>
+      </tr>
+      <tr>
+        <td class="available">£{{"%.2f"|format(total_price) or '0.00'}}</td>
+        <td class="returned">
+          £{{"%.2f"|format(total_return_price) or '0.00'}}
+        </td>
+        <td class="damaged">
+          £{{"%.2f"|format(total_damage_price) or '0.00'}}
+        </td>
       </tr>
     </tbody>
   </table>
 </section>
+<div class="space"></div>
 <section>
   <div class="options-grid">
     <a class="option" href="{{ url_for('add_stock') }}">
@@ -82,7 +86,30 @@
   </div>
 </section>
 {% elif user.role=='manager'%}
-<section></section>
+<section class="inventory-details">
+  <table>
+    <thead>
+      <tr>
+        <td>Returned</td>
+        <td>Damaged</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{total_returned}}</td>
+        <td>{{total_damaged}}</td>
+      </tr>
+      <tr>
+        <td class="returned">
+          £{{"%.2f"|format(total_return_price) or '0.00'}}
+        </td>
+        <td class="damaged">
+          £{{"%.2f"|format(total_damage_price) or '0.00'}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 <section>
   <div class="options-grid">
     <a class="option" href="{{ url_for('add_stock') }}">
@@ -97,7 +124,6 @@
   </div>
 </section>
 {% elif user.role == 'employee'%}
-<section></section>
 <section>
   <div class="options-grid">
     <a class="option" href="{{ url_for('add_stock') }}">
@@ -108,6 +134,4 @@
     </a>
   </div>
 </section>
-{% endif %}
-<section></section>
-{% endblock content %}
+{% endif %} {% endblock content %}

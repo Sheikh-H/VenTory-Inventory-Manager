@@ -239,11 +239,12 @@ def dashboard():
         for stock in all_stocks:
             total_stock += stock.available
             total_stock += stock.returned
-            total_price += float(stock.price * total_stock)
+            total_price += float(stock.price * stock.available)
             total_returned += stock.returned
-            total_return_price += float((stock.price * total_returned) / 2)
+            total_return_price += float((stock.price / 2) * stock.returned)
             total_damaged += stock.damaged
-            total_damage_price += float(stock.price * total_damaged)
+            total_damage_price += float(stock.price * stock.damaged)
+        total_price += total_return_price
     if user.password_reset == 1:
         flash(
             "Your password was reset by an admin user, please reset your password!",
@@ -548,7 +549,7 @@ def stock_page(stock_id):
     if not stock:
         flash("Stock item not found.", "error")
         return redirect(url_for("all_stock"))
-    title = f"{stock.description}"
+    title = f"{stock.title.title()}"
     if request.method == "POST":
         new_image = request.files.get("image")
         new_title = request.form.get("title", "").strip().lower()

@@ -58,6 +58,19 @@
 .inventory-details table tbody tr td{
     text-align: center;
 }
+
+.available{
+    color: green;
+}
+
+.returned{
+    color: orange;
+}
+
+.damaged{
+    color: red;
+}
+
 /* Tablet */
 
 @media screen and (min-width: 700px) and (max-width: 999px) {

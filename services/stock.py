@@ -37,7 +37,7 @@ def add_new_stock(data, user):
         )
         database.session.add(new_stock)
         database.session.commit()
-        action += f"{user.first_name} added new stock: {data['description']} - {data['quantity']} - £{data['price']} from {data['supplier']}"
+        action += f"{user.first_name} added new stock: {data['description']} {data['quantity']} £{data['price']} from {data['supplier']}"
         generate_new_log(user.user_id, user.business_id, f"{action}")
         return True
     except Exception as e:
@@ -106,7 +106,6 @@ def update_stock(data):
             updates = True
             action += f"Stock damaged: {stock.damaged} to {valid_damaged};"
             stock.damaged = valid_damaged
-            stock.available = valid_available - valid_damaged
         if valid_price:
             updates = True
             action += f"Stock price: £{stock.price} to {valid_price};"
