@@ -18,10 +18,15 @@
     <div class="stock-item">
       <img src="{{stock.image_url}}" alt="{{stock.title}}" />
       <div class="stock-item-info">
-        <p>ID:</p>
+        <p>SKU</p>
         <p>{{stock.stock_id}}</p>
       </div>
       <p>{{stock.title.title()}}</p>
+      <div class="stock-item-qty">
+        <p class="available">{{stock.available}}</p>
+        <p class="returned">{{stock.returned}}</p>
+        <p class="damaged">{{stock.damaged}}</p>
+      </div>
     </div>
   </a>
   {% endfor %}

@@ -17,7 +17,7 @@
     <label for="title">Stock Name</label>
     <input type="text" name="title" id="title" required maxlength="50" minlength="1"/>
     <label for="quantity">Quantity</label>
-    <input type="number" name="quantity" id="quantity" step="1" required />
+    <input type="number" name="quantity" id="quantity" step="1" required min="1"/>
     <label for="supplier">Supplier Details</label>
     <input type="text" name="supplier" id="supplier" required maxlength="50" minlength="1"/>
     <label for="notes">Additional Information</label>
@@ -34,7 +34,8 @@
       id="price"
       step="0.01"
       required
-      placeholder="£"
+      placeholder="£0.01"
+      min="0.01"
     />
     <input type="submit" value="Add stock" />
   </form>

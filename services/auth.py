@@ -29,7 +29,7 @@ def owner_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get("role") != "owner":
-            return redirect(url_for("dashboord"))
+            return redirect(url_for("dashboard"))
         return f(*args, **kwargs)
 
     return decorated_function
@@ -75,10 +75,10 @@ def login_user(username, password):
     user = User.query.filter_by(username=valid_username).first()
     if not user:
         return False, None
-    
+
     if user.password_reset == 1:
         return True, user.user_id
-    
+
     try:
         verifier(password=valid_password, hash=user.password)
         generate_new_log(

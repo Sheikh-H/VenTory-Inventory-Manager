@@ -25,7 +25,7 @@
     </div>
     {% else %}
     <div>
-      <p>Welcome back {{user.first_name.capitalize()}}!</p>
+      <h3>Welcome back {{user.first_name.capitalize()}}!</h3>
     </div>
     {% endif %} {% if user.role in ['owner', 'manager'] %}
     <div>

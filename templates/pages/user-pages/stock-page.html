@@ -20,12 +20,14 @@
       name="title"
       id="title"
       placeholder="{{stock.title.title()}}"
+      maxlength="50"
+      minlength="1"
     />
     <label for="description">Update stock description:</label>
     <textarea
       name="description"
       id="description"
-      placeholder="{{stock.description.title()}}"
+      placeholder="{{stock.description.title() if stock.description else ''}}"
     ></textarea>
     <label for="supplier">Update Supplier:</label>
     <input
@@ -33,6 +35,8 @@
       name="supplier"
       id="supplier"
       placeholder="{{stock.supplier.title()}}"
+      maxlength="50"
+      minlength="1"
     />
     <label for="available">Total available:</label>
     <input
@@ -41,6 +45,7 @@
       id="available"
       step="1"
       placeholder="{{stock.available}}"
+      min="0"
     />
     <label for="returned">Total returned:</label>
     <input
@@ -49,6 +54,7 @@
       id="returned"
       step="1"
       placeholder="{{stock.returned}}"
+      min="0"
     />
     <label for="damaged">Total damaged:</label>
     <input
@@ -57,6 +63,7 @@
       id="damaged"
       step="1"
       placeholder="{{stock.damaged}}"
+      min="0"
     />
 
     <label for="price">Stock price:</label>
@@ -66,6 +73,7 @@
       id="price"
       step="0.01"
       placeholder="£{{stock.price}}"
+      min="0.00"
     />
     <input type="submit" value="Update Stock" />
   </form>
