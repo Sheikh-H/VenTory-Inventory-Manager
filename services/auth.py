@@ -70,11 +70,11 @@ def generate_password_hash(password):
 def login_user(username, password):
     valid_username = input_validator(username, "username")
     valid_password = input_validator(password, "password")
-    print(valid_username)
-    print(valid_password)
     if not valid_password or not valid_username:
         return False, None
     user = User.query.filter_by(username=valid_username).first()
+    if not user:
+        return False, None
     
     if user.password_reset == 1:
         return True, user.user_id
