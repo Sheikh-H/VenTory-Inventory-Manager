@@ -20,7 +20,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_session import Session
 from flask_wtf.csrf import CSRFError, CSRFProtect
-from sqlalchemy import or_
+from sqlalchemy import delete, or_
 
 from database.db import database
 from services.auth import *
@@ -172,7 +172,7 @@ def register_page():
             session.clear()
             session.permanent = True
             session["user_id"] = user_id
-            flash("Login successful!", "success")
+            flash("Username generated, please keep a copy of this to login!", "success")
             return redirect(url_for("dashboard"))
         flash("Unable to register new account, try again!", "error")
         return redirect(url_for("register_page"))
@@ -379,7 +379,6 @@ def manage_employees():
                     User.username.ilike(f"%{valid_search}%"),
                 ),
             ).all()
-
             return render_template(
                 "/pages/user-pages/manager/manage-employee.html",
                 title=title,
@@ -405,16 +404,40 @@ def employee(emp_id):
     )
 
 
-@app.route("/user/password-reset", methods=["POST"])
+@app.route("/user/delete-employee/<int:emp_id>", methods=["POST"])
 @login_required
-def reset():
-    date = generate_time()
-    user_id = int(request.form.get("user_id"))
-    business_id = int(session.get("business_id"))
-    user = User.query.filter_by(user_id=user_id, business_id=business_id).first()
-    admin = User.query.filter_by(
-        user_id=session.get("user_id"), business_id=business_id
+@owner_required
+def delete_employee(emp_id):
+    user = User.query.filter_by(
+        user_id=session.get("user_id"), business_id=session.get("business_id")
     ).first()
+    delete_user = User.query.filter_by(
+        user_id=emp_id, business_id=user.business_id
+    ).first()
+    data = {
+        "user_id": user.user_id,
+        "business_id": user.business_id,
+        "delete_id": emp_id,
+    }
+    success = remove_user(data)
+    if success:
+        flash("Employee has been deleted!", "success")
+        return redirect(url_for("manage_employees"))
+
+    else:
+        flash("Unable to delete employee, try again!", "error")
+        return redirect(url_for("employee", emp_id=emp_id))
+
+
+@app.route("/user/password-reset/<int:emp_id>", methods=["POST"])
+@login_required
+def reset(emp_id):
+    date = generate_time()
+    admin = User.query.filter_by(
+        user_id=session.get("user_id"), business_id=session.get("business_id")
+    ).first()
+    user = User.query.filter_by(user_id=emp_id, business_id=admin.business_id).first()
+
     password = generate_daily_password()
     hashed = generate_password_hash(password)
     try:
@@ -428,12 +451,12 @@ def reset():
             f"{admin.first_name} Did a password reset for {user.username} : {user.first_name}",
         )
         flash("Password reset for user!", "success")
-        return redirect(url_for("employee", emp_id=user_id))
+        return redirect(url_for("employee", emp_id=emp_id))
     except Exception as e:
         print(e)
         database.session.rollback()
         flash("Unable to reset password for user!", "error")
-        return redirect(url_for("employee", emp_id=user_id))
+        return redirect(url_for("employee", emp_id=emp_id))
 
 
 @app.route("/user/all-stock", methods=["GET", "POST"])
@@ -512,6 +535,28 @@ def logout():
     session.clear()
     flash("Successfully logged out!", "success")
     return redirect(url_for("home_page"))
+
+
+@app.route("/user/delete-stock/<int:stock_id>", methods=["POST"])
+@login_required
+def delete_stock(stock_id):
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    stock = Stock.query.filter_by(
+        business_id=business.business_id, stock_id=stock_id
+    ).first()
+    data = {
+        "stock_id": stock.stock_id,
+        "business_id": business.business_id,
+        "user_id": user.user_id,
+    }
+    success = delete_item(data)
+    if success:
+        flash("Item has been deleted!", "success")
+        return redirect(url_for("all_stock"))
+    else:
+        flash("Unable to delete stock item, try again!", "error")
+        return redirect(url_for("stock_page", stock_id=stock_id))
 
 
 @app.route("/robots.txt")

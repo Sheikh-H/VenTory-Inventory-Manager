@@ -125,3 +125,36 @@ def update_stock(data):
         print(e)
         database.session.rollback()
         return False
+
+
+def delete_item(data):
+    if not data.get("stock_id"):
+        return False
+    if not data.get("business_id"):
+        return False
+    if not data.get("user_id"):
+        return False
+    user = User.query.filter_by(
+        user_id=data.get("user_id"), business_id=data.get("user_id")
+    ).first()
+    if user.role not in ["owner", "manager"]:
+        flash("Only manager and owner accounts are able to delete stock!", "error")
+        return False
+    if not user:
+        return False
+    action = f"{user.first_name} deleted stock: "
+    try:
+        stock = Stock.query.filter_by(
+            business_id=data.get("business_id"), stock_id=data.get("stock_id")
+        ).first()
+        if stock is None:
+            return False
+        database.session.delete(stock)
+        database.session.commit()
+        action += f"{stock.title.title()} {stock.description.title()} availabe: {stock.available} returned:{stock.returned} damaged:{stock.damaged} price: {stock.price}"
+        generate_new_log(data.get("user_id"), data.get("business_id"), action)
+        return True
+    except Exception as e:
+        print(e)
+        database.session.rollback()
+        return False

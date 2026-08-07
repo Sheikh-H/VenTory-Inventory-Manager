@@ -21,4 +21,3 @@ class User(database.Model):
     updated: Mapped[str | None] = mapped_column(String(19), nullable=True)
     password_reset: Mapped[int] = mapped_column(Integer(), nullable=False, default=0)
     business: Mapped["Business"] = relationship(back_populates="employees")
-    logs: Mapped[list["Log"]] = relationship(back_populates="user")

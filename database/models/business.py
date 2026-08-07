@@ -7,25 +7,17 @@ from database.db import database
 class Business(database.Model):
     __tablename__ = "business_table"
     business_id: Mapped[int] = mapped_column(primary_key=True)
-
     business_name: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
-
     address: Mapped[str] = mapped_column(String(255), nullable=False)
-
     telephone: Mapped[str] = mapped_column(String(13), nullable=False)
-
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
-
     logo_url: Mapped[str | None] = mapped_column(
         String(255), unique=False, nullable=True
     )
-
     daily_password: Mapped[str] = mapped_column(
         String(10), unique=False, nullable=False
     )
-
     created: Mapped[str] = mapped_column(String(19), nullable=False)
-
     updated: Mapped[str | None] = mapped_column(String(19), nullable=True)
     daily_password_updated: Mapped[str | None] = mapped_column(
         String(19), nullable=True

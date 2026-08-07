@@ -10,13 +10,12 @@
   <p><i>Please ask the user to reset password on login!</i></p>
 </section>
 <section class="employee-details">
-  <form action="{{url_for('reset')}}" method="post">
+  <form action="{{url_for('reset', emp_id=employee.user_id)}}" method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <input type="hidden" name="user_id" value="{{employee.user_id}}" />
     <input type="submit" value="Reset password" />
   </form>
   <div class="space"></div>
-  <form action="" method="post">
+  <form action="{{url_for('delete_employee', emp_id=employee.user_id)}}" method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <input type="submit" value="Delete Account" />
   </form>

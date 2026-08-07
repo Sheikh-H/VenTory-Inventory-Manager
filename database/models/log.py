@@ -16,4 +16,3 @@ class Log(database.Model):
     timestamp: Mapped[str] = mapped_column(String(19), nullable=False)
     comment: Mapped[str] = mapped_column(String(), nullable=False)
     business: Mapped["Business"] = relationship(back_populates="logs")
-    user: Mapped["User"] = relationship(back_populates="logs")

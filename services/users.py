@@ -183,3 +183,39 @@ def update_details(data):
         print(e)
         database.session.rollback()
         return False
+
+
+def remove_user(data):
+    if not data.get("user_id"):
+        return False
+    if not data.get("business_id"):
+        return False
+    if not data.get("delete_id"):
+        return False
+    admin = User.query.filter_by(
+        user_id=data.get("user_id"), business_id=data.get("business_id")
+    ).first()
+    if not admin:
+        return False
+    if admin.role not in ["owner"]:
+        return False
+    action = f"{admin.first_name} deleted user: "
+    try:
+        delete_user = User.query.filter_by(
+            user_id=data.get("delete_id"), business_id=data.get("business_id")
+        ).first()
+        if not delete_user:
+            return False
+        action += f"{delete_user.username} {delete_user.first_name} {delete_user.role}"
+        if delete_user.role == "owner":
+            return False
+        if delete_user.username == admin.username:
+            return False
+        database.session.delete(delete_user)
+        database.session.commit()
+        generate_new_log(admin.user_id, admin.business_id, action)
+        return True
+    except Exception as e:
+        print(e)
+        database.session.rollback()
+        return False
