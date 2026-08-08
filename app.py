@@ -88,7 +88,7 @@ def security_headers(response):
 
 
 @app.route("/", methods=["GET", "POST"])
-@limiter.limit("2 per hour; 10 per day", methods=["POST"])
+@limiter.limit("2 per hour; 20 per day", methods=["POST"])
 def home_page():
     title = "Online Stock Management System"
     update_daily_password()
@@ -104,7 +104,7 @@ def about_page():
 
 
 @app.route("/login", methods=["GET", "POST"])
-@limiter.limit("5 per minute; 50 per day", methods=["POST"])
+@limiter.limit("5 per minute; 20 per hour", methods=["POST"])
 def login_page():
     if session.get("user_id"):
         return redirect(url_for("dashboard"))
@@ -125,7 +125,7 @@ def login_page():
 
 
 @app.route("/register", methods=["GET", "POST"])
-@limiter.limit("3 per minute; 10 per day", methods=["POST"])
+@limiter.limit("3 per hour; 10 per day", methods=["POST"])
 def register_page():
     title = "Sign up to use VenTory"
     if session.get("user_id"):
@@ -232,7 +232,7 @@ def business_logs():
 
 
 @app.route("/forgotten-password", methods=["GET", "POST"])
-@limiter.limit("3 per minute; 6 per day", methods=["POST"])
+@limiter.limit("3 per hour; 10 per day", methods=["POST"])
 def forgotten_password():
     title = "Forgot Password"
     if request.method == "POST":
@@ -320,7 +320,7 @@ def account_settings():
 
 @app.route("/user/update-details", methods=["POST"])
 @login_required
-@limiter.limit("2 per day")
+@limiter.limit("10 per day")
 def update():
     user = User.query.filter_by(
         user_id=session.get("user_id"), business_id=session.get("business_id")
@@ -359,7 +359,7 @@ def update():
 
 @app.route("/user/update-password", methods=["POST"])
 @login_required
-@limiter.limit("2 per day", methods=["POST"])
+@limiter.limit("5 per hour, 10 per day", methods=["POST"])
 def update_password():
     user = User.query.filter_by(
         user_id=session.get("user_id"), business_id=session.get("business_id")
@@ -381,7 +381,7 @@ def update_password():
 
 @app.route("/user/add-new-stock", methods=["GET", "POST"])
 @login_required
-@limiter.limit("100 per hour", methods=["POST"])
+@limiter.limit("30 per hour, 200 per day", methods=["POST"])
 def add_stock():
     title = "Add new stock"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
@@ -415,7 +415,7 @@ def add_stock():
 @app.route("/user/add-employee", methods=["GET", "POST"])
 @login_required
 @owner_required
-@limiter.limit("5 per day", methods=["POST"])
+@limiter.limit("10 per day", methods=["POST"])
 def add_employee():
     title = "Add new employee"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
@@ -455,6 +455,7 @@ def add_employee():
 @app.route("/user/manage-employees", methods=["GET", "POST"])
 @login_required
 @owner_required
+@limiter.limit("30 per minute", methods=["POST"])
 def manage_employees():
     title = "Manage Employees"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
@@ -526,7 +527,7 @@ def delete_employee(emp_id):
 @app.route("/user/password-reset/<int:emp_id>", methods=["POST"])
 @login_required
 @manager_required
-@limiter.limit("5 per day", methods=["POST"])
+@limiter.limit("10 per day", methods=["POST"])
 def reset(emp_id):
     date = generate_time()
     admin = User.query.filter_by(
@@ -557,6 +558,7 @@ def reset(emp_id):
 
 @app.route("/user/all-stock", methods=["GET", "POST"])
 @login_required
+@limiter.limit("50 per day", methods=["POST"])
 def all_stock():
     title = "All stock"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
@@ -578,6 +580,7 @@ def all_stock():
 
 @app.route("/user/stock/<int:stock_id>", methods=["GET", "POST"])
 @login_required
+@limiter.limit("40 per hour, 200 per day", methods=["POST"])
 def stock_page(stock_id):
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     stock = Stock.query.filter_by(
@@ -636,7 +639,7 @@ def logout():
 @app.route("/user/delete-stock/<int:stock_id>", methods=["POST"])
 @login_required
 @manager_required
-@limiter.limit("10 per day", methods=["POST"])
+@limiter.limit("20 per day", methods=["POST"])
 def delete_stock(stock_id):
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     business = Business.query.filter_by(business_id=user.business_id).first()
