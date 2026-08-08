@@ -6,15 +6,17 @@
 
 # 📘 Project Overview
 
-VenTory is a full-stack inventory management application developed to demonstrate my progression from creating websites into building complete web applications with a backend, database, authentication system, user roles, and structured application logic.
+VenTory is a full-stack inventory management application developed to demonstrate my progression from creating websites into building complete web applications with a backend, database, authentication system, user roles, validation, security controls, and structured application logic.
 
 The purpose of the project is to provide a simple inventory management system for small businesses, allowing business owners and employees to manage stock, maintain user accounts, and keep track of important business activity.
 
-The application allows users to register a business, create employee accounts, manage stock items, update account information, and maintain an activity log of important actions.
+The application allows users to register a business, create employee accounts, manage stock items, update account information, and maintain activity logs of important actions.
 
-This project is built for **portfolio and educational purposes only**. It is a demonstration application and **is not intended to be used for a real business or with genuine business, employee, customer, financial, or other sensitive information**.
+**VenTory is a demonstration and portfolio project only. It is not a production-ready business management system and must not be used with real business, employee, customer, financial, personal, confidential, or otherwise sensitive information.**
 
-The main purpose behind VenTory was to gain experience building a larger Flask application and to understand how authentication, databases, user permissions, validation, security, file uploads, and application services work together.
+The application may be deployed using temporary hosting and storage for demonstration purposes. Data stored in a deployed demonstration environment should therefore be considered temporary and should never be treated as persistent or secure business storage.
+
+The main purpose behind VenTory was to gain experience building a larger Flask application and to understand how authentication, databases, user permissions, validation, security, file uploads, logging, and application services work together.
 
 ---
 
@@ -30,7 +32,7 @@ While building VenTory, I worked with concepts including:
 * Connecting database models through relationships.
 * Building authentication and user sessions.
 * Creating different user roles and permissions.
-* Hashing and verifying passwords.
+* Hashing and verifying passwords using Argon2.
 * Validating user input.
 * Managing stock and inventory information.
 * Recording business activity.
@@ -38,6 +40,9 @@ While building VenTory, I worked with concepts including:
 * Protecting forms against CSRF attacks.
 * Adding request rate limiting.
 * Structuring backend logic into separate service modules.
+* Handling database transactions and rollbacks.
+* Implementing role-based access controls.
+* Working with environment variables and application configuration.
 
 The project also gave me experience working with a larger codebase where different parts of the application need to communicate with one another.
 
@@ -61,9 +66,13 @@ A new business owner can create a VenTory account by providing:
 * Owner email address.
 * Password.
 
+The supplied information is validated before the registration process continues.
+
 When registration is completed, a business and owner account are created in the database.
 
 A username is automatically generated for the new owner.
+
+The registration process explicitly creates the initial account with the **owner** role rather than relying on the submitted role value.
 
 The application also creates an initial daily password for the business.
 
@@ -83,6 +92,8 @@ VenTory includes an authentication system allowing users to:
 
 Passwords are hashed before being stored in the database rather than being stored as plain text.
 
+Users who have been given a temporary or reset password can be required to change their password through the application's password-reset process.
+
 ---
 
 ## 👥 User Roles
@@ -100,13 +111,15 @@ Different roles have different responsibilities within the application.
 Owners can:
 
 * Manage their business details.
-* Add employees and managers.
+* Add managers and employees.
 * View employees.
 * View individual employee information.
 * View employee activity logs.
-* Remove employees.
+* Remove non-owner users.
 * Reset employee passwords.
 * Manage stock.
+* View business activity logs.
+* View business inventory information.
 
 ### Manager
 
@@ -115,7 +128,8 @@ Managers can:
 * View stock.
 * Add stock.
 * Update stock.
-* Delete stock.
+* Manage inventory within the permissions provided by the application.
+* Manage employee-related functions where authorised by the application.
 
 ### Employee
 
@@ -124,8 +138,9 @@ Employees can:
 * View stock.
 * Add stock.
 * Update stock.
+* Manage inventory within the permissions provided by the application.
 
-The intention is for stock management to be available to all employees, while more sensitive administrative actions remain restricted to appropriate roles.
+The intention is for more sensitive administrative actions, such as managing users and business-level information, to remain restricted to appropriate roles.
 
 ---
 
@@ -155,13 +170,15 @@ Stock information can also be updated, including:
 * Price.
 * Product image.
 
-Stock items can also be removed by authorised users.
+Authorised users can also remove stock items.
+
+Stock-related actions are recorded in the business activity logs.
 
 ---
 
 ## 🔎 Stock Search
 
-The inventory section includes a basic search function allowing users to search stock by product title.
+The inventory section includes a basic search function allowing users to search stock by product information.
 
 This makes it easier to locate individual stock items when a business has multiple products stored in the system.
 
@@ -171,7 +188,7 @@ This makes it easier to locate individual stock items when a business has multip
 
 The dashboard provides an overview of the business inventory.
 
-Depending on the user's role, the dashboard calculates information including:
+Depending on the user's role, the dashboard displays information including:
 
 * Total stock.
 * Total stock value.
@@ -192,7 +209,7 @@ Examples include:
 
 * User logins.
 * User logouts.
-* New account creation.
+* New business and owner account creation.
 * Employee creation.
 * Employee deletion.
 * Password resets.
@@ -200,6 +217,7 @@ Examples include:
 * Stock updates.
 * Stock deletion.
 * Profile changes.
+* Business detail changes.
 
 Owners can view the overall business activity and can also view logs associated with individual employees.
 
@@ -209,13 +227,17 @@ The logs include information such as the user responsible for the action, the bu
 
 ## 🔐 Password Management
 
-VenTory uses Argon2 password hashing to protect user passwords.
+VenTory uses **Argon2** password hashing to protect user passwords.
 
 Users can change their password through their account settings.
 
-The application also includes a daily password system which can be used to reset an account when required.
+The application also includes a daily password system which can be used to authenticate a password-reset request.
 
-When an administrator resets a user's password, the account is marked as requiring a password change when the user next logs in.
+Daily passwords are generated for each business and periodically regenerated by the application.
+
+When a password is reset, the relevant account is marked as requiring a password reset. The user can then use the appropriate reset process to establish a new password.
+
+The daily password system is intended as a demonstration feature and should not be treated as a replacement for a production-grade password recovery system.
 
 ---
 
@@ -229,6 +251,8 @@ VenTory supports image uploads for:
 Images are uploaded to Cloudinary rather than being stored directly inside the application's local filesystem.
 
 The returned secure image URL is then stored in the database.
+
+Cloudinary images are not automatically deleted when a corresponding stock item is removed, meaning unused images may need to be removed manually from the Cloudinary account.
 
 ---
 
@@ -280,39 +304,47 @@ VenTory/
 │   └── media/                     # Images and other media
 │
 ├── instance/
-│   └── ventory.db                 # SQLite database
+│   └── ventory.db                 # SQLite database used locally
 │
-└── .env                           # Environment variables (not included; see below)
+└── .env                           # Environment variables (not included)
 ```
 
 ---
 
-## 🔐 Creating the `.env` File
+# 🔐 Creating the `.env` File
 
-VenTory requires a `.env` file in the root directory when running locally.
+VenTory requires environment variables for configuration when running locally or in a deployment environment.
 
-### ☁️ Cloudinary
+A `.env` file can be created in the root directory for local development.
+
+**Do not commit your `.env` file or any credentials to GitHub.**
+
+## ☁️ Cloudinary
 
 Cloudinary is used to upload business logos and stock images.
 
-Create a Cloudinary account or sign in to an existing one and obtain your API credentials.
+Create a Cloudinary account or sign in to an existing one and obtain the required API credentials.
 
 Add the following to `.env`:
 
 ```env
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_URL=cloudinary://
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_URL=your_cloudinary_url
 ```
 
-Cloudinary images are not currently deleted when a stock item is removed from VenTory, so unused images may need to be removed manually from your Cloudinary account.
+Only include `CLOUDINARY_URL` if it is required by your local configuration.
 
-### 🔑 Secret Key
+Cloudinary images are not currently deleted automatically when a stock item is removed from VenTory, so unused images may need to be removed manually from your Cloudinary account.
 
-Flask requires a secret key for session management.
+---
 
-Generate one using Python:
+## 🔑 Secret Key
+
+Flask requires a secret key for secure session management.
+
+A secret key can be generated using Python:
 
 ```python
 import secrets
@@ -328,19 +360,22 @@ Then add the generated value to `.env`:
 SECRET_KEY=your_generated_secret_key
 ```
 
-Your `.env` file should therefore contain:
+Your local `.env` file should therefore contain the required configuration values:
 
 ```env
 SECRET_KEY=your_generated_secret_key
 
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_URL=cloudinary://
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_URL=your_cloudinary_url
 ```
 
-**Do not commit your `.env` file or its credentials to GitHub.**
+**Never commit these values to GitHub.**
 
+For a hosted deployment, configure these values through the hosting provider's environment-variable settings rather than uploading the `.env` file.
+
+---
 
 # ⚙️ How The Application Works
 
@@ -352,7 +387,7 @@ It is responsible for:
 
 * Creating the Flask application.
 * Configuring the application.
-* Registering sessions.
+* Configuring sessions.
 * Initialising the database.
 * Enabling CSRF protection.
 * Enabling request rate limiting.
@@ -370,15 +405,15 @@ For example:
 
 handles requests for adding new stock.
 
-The route receives the form information and passes the stock information to the stock service.
+The route receives the form information and passes the stock information to the appropriate stock service.
 
 ---
 
 # 🗄️ Database
 
-VenTory uses SQLite with SQLAlchemy as its ORM.
+VenTory uses **SQLite with SQLAlchemy** as its ORM.
 
-The database contains four main models:
+The main database models are:
 
 ```text
 Business
@@ -492,6 +527,8 @@ Handles business registration.
 
 The registration process validates the supplied information before creating the business and its initial owner account.
 
+Business and user creation are handled within the same database transaction so that a failure during the process can be rolled back.
+
 ---
 
 ## `users.py`
@@ -502,7 +539,9 @@ Handles user-related operations including:
 * Updating passwords.
 * Updating account information.
 * Removing users.
-* Forgotten password functionality.
+* Forgotten-password functionality.
+
+User operations also include validation and role-based restrictions.
 
 ---
 
@@ -515,6 +554,7 @@ Handles stock-related operations including:
 * Deleting stock.
 * Uploading stock images.
 * Recording stock activity.
+* Managing inventory quantities.
 
 ---
 
@@ -523,6 +563,8 @@ Handles stock-related operations including:
 Contains the functionality used to create business activity records.
 
 Keeping logging in its own service means different parts of the application can record activity without duplicating the database logic.
+
+Important operations check whether log creation succeeds before committing the associated database changes where appropriate.
 
 ---
 
@@ -542,6 +584,7 @@ Different validation rules are used for information such as:
 * User roles.
 * Titles.
 * Addresses.
+* General text fields.
 
 The intention is to validate information before it is used by the application's services or database.
 
@@ -551,7 +594,7 @@ The intention is to validate information before it is used by the application's 
 
 Security was an important part of the project because VenTory handles user accounts, passwords, business information, and inventory data.
 
-Although this application is intended only for demonstration purposes, I wanted to gain experience implementing some of the security practices used in web applications.
+Although this application is intended only for demonstration purposes, I wanted to gain experience implementing security practices commonly used in web applications.
 
 ## Password Protection
 
@@ -572,7 +615,7 @@ This helps prevent stored passwords from being directly readable if database inf
 
 The application uses Flask-Session for managing authenticated user sessions.
 
-Session configuration includes:
+Session configuration includes security-related cookie settings such as:
 
 * HTTP-only cookies.
 * Secure cookies.
@@ -644,6 +687,8 @@ This includes checking:
 * Telephone numbers.
 * Password requirements.
 * User roles.
+
+Validation is performed on the server side rather than relying solely on browser-side HTML validation.
 
 ---
 
@@ -752,14 +797,14 @@ Select the registration option.
 
 Enter the requested business and owner information.
 
-The registration process creates:
+The registration process validates the supplied information before creating:
 
 * A new business.
 * An owner account.
 * A generated username.
 * A business daily password.
 
-The generated username should be kept somewhere safe for the demonstration.
+The generated username should be kept somewhere safe for the purposes of the demonstration.
 
 ---
 
@@ -790,7 +835,7 @@ Enter the product information, including:
 * Supplier.
 * Description.
 * Price.
-* Optional image.
+* Image.
 
 Once submitted, the stock will be added to the business inventory.
 
@@ -800,7 +845,7 @@ Once submitted, the stock will be added to the business inventory.
 
 Users with access to stock management can view the inventory and search for products.
 
-Selecting a stock item allows its information to be updated.
+Selecting a stock item allows its information to be updated according to the user's permissions.
 
 Changes to stock are recorded in the business activity logs.
 
@@ -817,7 +862,7 @@ When creating an account, VenTory generates:
 
 The generated login details should be provided to the new user for the purposes of the demonstration.
 
-Owners can also view employee information, review employee activity, reset passwords, and remove employee accounts.
+Owners can also view employee information, review employee activity, reset passwords, and remove non-owner accounts.
 
 ---
 
@@ -837,7 +882,9 @@ VenTory is **not a real business management system**.
 
 The application has been created for **portfolio, learning, and demonstration purposes only**.
 
-Please **do not enter real information**, including:
+### **DO NOT USE REAL DATA.**
+
+Please **do not enter real or sensitive information**, including:
 
 * Real business details.
 * Real employee information.
@@ -845,7 +892,11 @@ Please **do not enter real information**, including:
 * Real passwords.
 * Real financial information.
 * Confidential stock information.
+* Personal information.
+* API keys or other credentials.
 * Any other sensitive information.
+
+Any deployed demonstration environment should be treated as temporary and unsuitable for storing important or persistent data.
 
 The application should be treated as a demonstration of development skills rather than a production-ready business management platform.
 
@@ -856,7 +907,7 @@ The application should be treated as a demonstration of development skills rathe
 * Python 3.10+
 * pip
 * Virtual environment
-* Cloudinary account for image uploads
+* Cloudinary account for image uploads if image functionality is being tested
 
 ---
 
@@ -900,16 +951,19 @@ Install the required packages:
 pip install -r requirements.txt
 ```
 
-Create the environment variables required by the application:
+Create the environment variables required by the application.
+
+For local development, these can be stored in a `.env` file:
 
 ```text
 SECRET_KEY=your_secret_key
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_URL=your_cloudinary_url
 ```
 
-The application also contains configuration which can generate the `SECRET_KEY` environment variable when required.
+Only include `CLOUDINARY_URL` if it is required by your configuration.
 
 Start the application:
 
@@ -941,6 +995,25 @@ VenTory-portfolio-project/
 
 The secure URL returned by Cloudinary is then stored in the database.
 
+Cloudinary-hosted images are separate from the local SQLite database. Removing a stock item from VenTory does not currently remove its corresponding Cloudinary image automatically.
+
+---
+
+# ☁️ Deployment
+
+VenTory can be deployed as a demonstration application using a hosting service such as Render.
+
+When deploying the application:
+
+* Configure environment variables through the hosting provider.
+* Do not upload the `.env` file.
+* Do not expose API credentials.
+* Configure the required Cloudinary credentials.
+* Treat the deployed SQLite database as temporary unless persistent storage has specifically been configured.
+* Do not use the deployed application to store real or sensitive information.
+
+The deployed version exists primarily to allow the application to be demonstrated as part of a portfolio.
+
 ---
 
 # 🔮 Future Improvements
@@ -965,7 +1038,9 @@ Possible future improvements include:
 * Improving accessibility.
 * Improving the frontend experience.
 * Adding a proper production deployment configuration.
-* Refactoring some application services as the project grows.
+* Improving image lifecycle management by automatically removing unused Cloudinary images.
+* Adding stronger password recovery mechanisms suitable for production applications.
+* Further separating route handling from application and service logic as the project grows.
 
 These improvements would help move the application from a learning and portfolio project towards a more production-oriented application.
 
