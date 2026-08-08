@@ -871,7 +871,7 @@ git clone <repository-url>
 Navigate into the project:
 
 ```bash
-cd inventory-manager
+cd ventory-inventory-manager
 ```
 
 Create a virtual environment:
