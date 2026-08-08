@@ -1,175 +1,297 @@
-**PLEASE DO NOT USE REAL DATA, DEMO PURPOSES ONLY**
----
-# ✅ Priora: Full-Stack Task Management Application
+## **PLEASE DO NOT USE REAL DATA, DEMO PURPOSES ONLY**
 
-<p align="center">
-  <b>A full-stack task management application built with Flask, SQLite, JavaScript, and modern web development practices.</b><br>
-  Designed as a portfolio project to demonstrate backend development, database design, security implementation, and structured application architecture. This project is actively maintained and will continue to receive improvements as I expand my understanding of full-stack development.
-</p>
+# ✅ VenTory: Full-Stack Inventory Management Application
 
 ---
 
 # 📘 Project Overview
 
-Priora is a full-stack task management application developed to demonstrate my progression from creating simple websites into building complete web applications with a backend, database, authentication system, and structured code architecture.
+VenTory is a full-stack inventory management application developed to demonstrate my progression from creating websites into building complete web applications with a backend, database, authentication system, user roles, and structured application logic.
 
-The purpose of this project is to create a realistic productivity application where users can create accounts, manage personal tasks, track progress, and maintain a history of task activity.
+The purpose of the project is to provide a simple inventory management system for small businesses, allowing business owners and employees to manage stock, maintain user accounts, and keep track of important business activity.
 
-This project is built for **portfolio and educational purposes only**. It demonstrates my understanding of full-stack development concepts and is not intended to be used as a commercial productivity platform.
+The application allows users to register a business, create employee accounts, manage stock items, update account information, and maintain an activity log of important actions.
 
-The main goal behind Priora was not only to create a functional application, but to understand how real-world applications are structured, maintained, and secured.
+This project is built for **portfolio and educational purposes only**. It is a demonstration application and **is not intended to be used for a real business or with genuine business, employee, customer, financial, or other sensitive information**.
+
+The main purpose behind VenTory was to gain experience building a larger Flask application and to understand how authentication, databases, user permissions, validation, security, file uploads, and application services work together.
 
 ---
 
 # 🚀 Development Journey
 
-Priora represents an important stage in my development journey because it combines the frontend skills I previously developed with new backend and software engineering concepts.
+VenTory represents another stage in my development journey because it moves beyond a simple website and into a more complete application with multiple connected systems.
 
-Earlier projects focused mainly on creating visually appealing websites using HTML, CSS, and JavaScript. While those projects helped me understand layouts, styling, responsiveness, and user interaction, I wanted to move towards building applications that could store data, manage users, and perform real operations.
+The project was designed around a realistic business scenario where different users have different responsibilities.
 
-This project allowed me to learn:
+While building VenTory, I worked with concepts including:
 
-- How frontend and backend systems communicate.
-- How databases store and organise application data.
-- How authentication systems work.
-- How user data can be protected.
-- How larger projects should be structured for maintainability.
+* Creating and managing a relational database.
+* Connecting database models through relationships.
+* Building authentication and user sessions.
+* Creating different user roles and permissions.
+* Hashing and verifying passwords.
+* Validating user input.
+* Managing stock and inventory information.
+* Recording business activity.
+* Uploading images using an external service.
+* Protecting forms against CSRF attacks.
+* Adding request rate limiting.
+* Structuring backend logic into separate service modules.
 
-One of the biggest improvements I made during this project was how I organise my CSS.
+The project also gave me experience working with a larger codebase where different parts of the application need to communicate with one another.
 
-Instead of keeping all styling inside one large stylesheet, I began separating CSS into sections based on purpose and page requirements. This made development much easier because:
+Rather than keeping all of the application logic inside `app.py`, functionality is separated into different services for areas such as authentication, users, stock, businesses, logging, configuration, and validation.
 
-- Individual pages are easier to maintain.
-- Changes are easier to locate.
-- Styling conflicts are reduced.
-- The project structure becomes clearer as the application grows.
-
-This approach reflects how larger applications are often organised, where different components and features have their own responsibilities.
+This makes the project easier to understand and provides a better foundation for continuing to develop it.
 
 ---
 
 # ✨ Features
 
+## 🏢 Business Registration
+
+A new business owner can create a VenTory account by providing:
+
+* Business name.
+* Business address.
+* Business telephone number.
+* Business email address.
+* Owner details.
+* Owner email address.
+* Password.
+
+When registration is completed, a business and owner account are created in the database.
+
+A username is automatically generated for the new owner.
+
+The application also creates an initial daily password for the business.
+
+---
+
 ## 👤 User Accounts
 
-Priora includes a complete authentication system allowing users to:
+VenTory includes an authentication system allowing users to:
 
-- Create an account.
-- Securely log in.
-- Reset their password.
-- Change their password.
-- Log out securely.
-- Access only their own tasks.
+* Log in.
+* Log out.
+* Change their password.
+* Reset their password using the business daily password.
+* Update their personal details.
+* Update business details where permitted.
+* Access pages according to their role.
 
-Each user has their own private task data which is separated through database relationships.
-
----
-
-## ✅ Task Management
-
-Users can:
-
-- Create new tasks.
-- View upcoming tasks.
-- View overdue tasks.
-- View today's tasks.
-- Update task information.
-- Delete tasks.
-- Mark tasks as complete or incomplete.
-- Search and filter tasks.
-
-The application tracks task information including:
-
-- Title.
-- Description.
-- Due date.
-- Due time.
-- Completion date.
-- Completion status.
+Passwords are hashed before being stored in the database rather than being stored as plain text.
 
 ---
 
-## 📋 Task History
+## 👥 User Roles
 
-A major feature of Priora is task logging.
+VenTory uses three user roles:
 
-The application records important task events, including:
+* **Owner**
+* **Manager**
+* **Employee**
 
-- Task creation.
-- Task completion.
-- Task reopening.
-- Task updates.
-- User-added notes.
+Different roles have different responsibilities within the application.
 
-This creates an activity history, allowing users to understand how tasks have changed over time.
+### Owner
+
+Owners can:
+
+* Manage their business details.
+* Add employees and managers.
+* View employees.
+* View individual employee information.
+* View employee activity logs.
+* Remove employees.
+* Reset employee passwords.
+* Manage stock.
+
+### Manager
+
+Managers can:
+
+* View stock.
+* Add stock.
+* Update stock.
+* Delete stock.
+
+### Employee
+
+Employees can:
+
+* View stock.
+* Add stock.
+* Update stock.
+
+The intention is for stock management to be available to all employees, while more sensitive administrative actions remain restricted to appropriate roles.
 
 ---
 
-## 🌙 User Interface
+## 📦 Stock Management
 
-The frontend includes:
+VenTory provides functionality for managing business inventory.
 
-- Responsive design.
-- Dark mode support.
-- Animated page elements.
-- Client-side form validation.
-- Dynamic interface updates.
-- Mobile-friendly layouts.
+Users can add stock containing information such as:
 
-JavaScript is used to improve user experience without replacing server-side validation.
+* Product title.
+* Description.
+* Quantity.
+* Supplier.
+* Price.
+* Product image.
+
+Stock can then be viewed and searched through the inventory section.
+
+Stock information can also be updated, including:
+
+* Product title.
+* Description.
+* Supplier.
+* Available quantity.
+* Returned quantity.
+* Damaged quantity.
+* Price.
+* Product image.
+
+Stock items can also be removed by authorised users.
+
+---
+
+## 🔎 Stock Search
+
+The inventory section includes a basic search function allowing users to search stock by product title.
+
+This makes it easier to locate individual stock items when a business has multiple products stored in the system.
+
+---
+
+## 📊 Dashboard
+
+The dashboard provides an overview of the business inventory.
+
+Depending on the user's role, the dashboard calculates information including:
+
+* Total stock.
+* Total stock value.
+* Returned stock.
+* Returned stock value.
+* Damaged stock.
+* Damaged stock value.
+
+This gives users a quick overview of the current inventory information.
+
+---
+
+## 📝 Business Activity Logs
+
+VenTory records important actions performed within the application.
+
+Examples include:
+
+* User logins.
+* User logouts.
+* New account creation.
+* Employee creation.
+* Employee deletion.
+* Password resets.
+* Stock creation.
+* Stock updates.
+* Stock deletion.
+* Profile changes.
+
+Owners can view the overall business activity and can also view logs associated with individual employees.
+
+The logs include information such as the user responsible for the action, the business, timestamp, and description of the activity.
+
+---
+
+## 🔐 Password Management
+
+VenTory uses Argon2 password hashing to protect user passwords.
+
+Users can change their password through their account settings.
+
+The application also includes a daily password system which can be used to reset an account when required.
+
+When an administrator resets a user's password, the account is marked as requiring a password change when the user next logs in.
+
+---
+
+## 🖼️ Image Uploads
+
+VenTory supports image uploads for:
+
+* Business logos.
+* Stock item images.
+
+Images are uploaded to Cloudinary rather than being stored directly inside the application's local filesystem.
+
+The returned secure image URL is then stored in the database.
 
 ---
 
 # 🏗️ Application Architecture
 
-Priora follows a structured Flask application design by separating responsibilities into different files.
+VenTory follows a structured Flask application design where different parts of the backend have separate responsibilities.
 
-```
-Priora/
+```text
+VenTory/
 │
 ├── app.py                         # Main Flask application and route handling
-├── requirements.txt               # Project dependencies
 ├── README.md                      # Project documentation
-├── LICENSE                        # MIT Licence
+├── LICENSE                        # Project licence
+│
+├── database/
+│   ├── __init__.py
+│   ├── db.py                      # Database configuration
+│   │
+│   └── models/
+│       ├── __init__.py
+│       ├── business.py            # Business database model
+│       ├── log.py                 # Activity log database model
+│       ├── stock.py               # Stock database model
+│       └── user.py                # User database model
+│
+├── services/
+│   ├── __init__.py
+│   ├── auth.py                    # Authentication and password functions
+│   ├── businesses.py              # Business registration logic
+│   ├── config.py                  # Configuration and image uploads
+│   ├── log.py                     # Activity logging
+│   ├── stock.py                   # Stock management logic
+│   ├── users.py                   # User management logic
+│   └── validators.py              # Input validation
+│
+├── templates/
+│   ├── layout.html                # Base application layout
+│   │
+│   └── pages/
+│       ├── admin/                 # Administrative pages
+│       ├── error/                 # Error pages
+│       ├── header-footer/         # Shared page components
+│       ├── main/                  # Public pages
+│       └── user-pages/            # Authenticated user pages
+│
+├── static/
+│   ├── css/                       # Application styling
+│   ├── js/                        # Client-side JavaScript
+│   └── media/                     # Images and other media
 │
 ├── instance/
-│   └── task-manager.db            # SQLite database (auto generated)
+│   └── ventory.db                 # SQLite database
 │
-├── services/                      # Backend application services
-│   ├── auth.py                    # Authentication and password security
-│   ├── config.py                  # Application initialisation
-│   ├── database.py                # Database connections and CRUD operations
-│   └── tasks.py                   # Task management logic
-│
-├── templates/                     # Jinja HTML templates
-│   ├── layout.html                # Base application layout
-│   ├── main/                      # Public pages
-│   ├── user/                      # User account pages
-│   ├── tasks/                     # Task management pages
-│   └── error/                     # Error handling pages
-│
-├── static/                        # Frontend assets
-│   │
-│   ├── css/
-│   │   ├── base.css               # Global styling and variables
-│   │   ├── animations.css         # Page animations
-│   │   ├── responsive.css         # Responsive layouts
-│   │   ├── components/            # Reusable component styles
-│   │   └── pages/                 # Page-specific styling
-│   │
-│   ├── js/
-│   │   └── script.js              # Client-side functionality
-│   │
-│   └── media/                     # Images, icons and backgrounds
-│
-└── .env                           # Environment variables (not included; see setup instructions)
+└── .env                           # Environment variables (not included; see below)
 ```
+
+---
 
 ## 🔐 Creating the `.env` File
 
 VenTory requires a `.env` file in the root directory when running locally.
 
-## ☁️ Cloudinary
+### ☁️ Cloudinary
 
 Cloudinary is used to upload business logos and stock images.
 
@@ -177,7 +299,7 @@ Create a Cloudinary account or sign in to an existing one and obtain your API cr
 
 Add the following to `.env`:
 
-```
+```env
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 CLOUDINARY_CLOUD_NAME=
@@ -186,13 +308,13 @@ CLOUDINARY_URL=cloudinary://
 
 Cloudinary images are not currently deleted when a stock item is removed from VenTory, so unused images may need to be removed manually from your Cloudinary account.
 
-## 🔑 Secret Key
+### 🔑 Secret Key
 
 Flask requires a secret key for session management.
 
 Generate one using Python:
 
-```
+```python
 import secrets
 
 secret = secrets.token_hex(32)
@@ -202,252 +324,650 @@ print(secret)
 
 Then add the generated value to `.env`:
 
-```
+```env
 SECRET_KEY=your_generated_secret_key
 ```
 
-Your `.env` file should contain:
+Your `.env` file should therefore contain:
 
-```
+```env
 SECRET_KEY=your_generated_secret_key
+
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_URL=cloudinary://
 ```
 
----
+**Do not commit your `.env` file or its credentials to GitHub.**
 
-## ⚙️ How The Application Works
 
-### Flask Routes (`app.py`)
+# ⚙️ How The Application Works
 
-The Flask application acts as the connection between the user interface and backend services.
+## Flask Application (`app.py`)
 
-Routes handle requests such as:
+`app.py` acts as the main entry point for the application.
 
-- Loading pages.
-- Processing forms.
-- Creating tasks.
-- Updating tasks.
-- Authenticating users.
+It is responsible for:
+
+* Creating the Flask application.
+* Configuring the application.
+* Registering sessions.
+* Initialising the database.
+* Enabling CSRF protection.
+* Enabling request rate limiting.
+* Defining application routes.
+* Handling application errors.
+* Adding security headers.
+
+Routes receive requests from the frontend and then communicate with the appropriate service functions.
 
 For example:
 
 ```python
-@app.route("/user/tasks/add-task")
+@app.route("/user/add-new-stock", methods=["GET", "POST"])
 ```
-handles requests for creating new tasks.
 
-The route receives user input, validates the information, then communicates with the database service.
+handles requests for adding new stock.
 
-### 🗄️ Database Layer (database.py)
+The route receives the form information and passes the stock information to the stock service.
 
-The database service manages communication with SQLite.
+---
 
-It contains functions responsible for:
+# 🗄️ Database
 
-- Creating database tables.
-- Adding users.
-- Searching users.
-- Creating tasks.
-- Updating tasks.
-- Removing tasks.
-- Retrieving task history.
+VenTory uses SQLite with SQLAlchemy as its ORM.
 
-Using a separate database layer keeps SQL operations away from application routes, making the project easier to maintain.
+The database contains four main models:
 
-### 📝 Task Service (tasks.py)
+```text
+Business
+   │
+   ├── Users
+   │
+   ├── Stock
+   │
+   └── Logs
+```
 
-The task service sits between the Flask routes and database.
+The relationships between these models allow information to be associated with the correct business and users.
 
-Its purpose is to handle task-related logic.
+---
 
-Examples:
+## 🏢 Business Model
 
-### Loading Tasks
+The business table stores information including:
 
-Retrieves active tasks belonging to the logged-in user.
+* Business ID.
+* Business name.
+* Address.
+* Telephone number.
+* Email address.
+* Logo URL.
+* Daily password.
+* Creation date.
+* Update date.
+* Daily password update date.
 
-### Searching Tasks
+---
 
-Allows tasks to be filtered by:
+## 👤 User Model
 
-- Date.
-- Completion status.
-- Task ID.
-- Completing Tasks
+The user table stores:
 
-Updates the task status and creates a log entry recording the change.
+* User ID.
+* Business ID.
+* Username.
+* Title.
+* First name.
+* Last name.
+* Role.
+* Email address.
+* Password hash.
+* Creation date.
+* Update date.
+* Password reset status.
 
-Separating this logic prevents app.py from becoming too large and difficult to manage.
+Each user belongs to a business.
 
-## 🛡️ Security Implementation
+---
 
-Security was an important learning area during this project.
+## 📦 Stock Model
 
-Although Priora is a portfolio project, I wanted to implement practices used in professional applications.
+The stock table stores:
 
-### Password Protection
+* Stock ID.
+* Business ID.
+* Product title.
+* Description.
+* Price.
+* Supplier.
+* Image URL.
+* Available quantity.
+* Returned quantity.
+* Damaged quantity.
+* Total quantity.
+* Creation date.
+* Update date.
 
-Passwords are never stored as plain text.
+Each stock item belongs to a business.
 
-Priora uses:
+---
 
-- Argon2 password hashing.
-- Secure password verification.
-- Password reset protection.
+## 📝 Log Model
 
-Argon2 is designed specifically for password security and helps protect user credentials if database information is exposed.
+The log table stores:
 
-### Session Security
+* Log ID.
+* User ID.
+* Business ID.
+* Timestamp.
+* Action description.
 
-User sessions are protected using Flask session management.
+This allows important actions within a business to be recorded.
 
-Implemented security features include:
+---
 
-- HTTP-only cookies.
-- Secure cookies.
-- SameSite cookie restrictions.
-- Session expiration.
-- Protected routes.
-- CSRF Protection
+# 🧩 Services
 
-Priora uses Flask-WTF CSRF protection.
+VenTory separates much of its backend logic into service files.
 
-Sensitive actions require valid CSRF tokens, including:
+## `auth.py`
 
-- Logging out.
-- Creating tasks.
-- Updating tasks.
-- Deleting tasks.
-- Changing task completion status.
+Handles authentication-related functionality such as:
 
-This helps prevent malicious websites from submitting unwanted requests on behalf of users.
+* Login authentication.
+* Password hashing.
+* Password verification.
+* Session protection decorators.
+* Username generation.
+* Daily password generation.
+* Daily password updates.
 
-### Database Security
+---
 
-Database security measures include:
+## `businesses.py`
 
-- Parameterised SQL queries.
-- Foreign key relationships.
-- User ownership checks.
-- SQLite foreign key enforcement.
+Handles business registration.
 
-Users can only access and modify their own tasks.
+The registration process validates the supplied information before creating the business and its initial owner account.
 
-### Content Security Policy
+---
 
-The application includes security headers using Content Security Policy (CSP).
+## `users.py`
 
-This restricts where scripts, styles, and resources can be loaded from, helping reduce certain browser-based attacks.
+Handles user-related operations including:
+
+* Creating employees.
+* Updating passwords.
+* Updating account information.
+* Removing users.
+* Forgotten password functionality.
+
+---
+
+## `stock.py`
+
+Handles stock-related operations including:
+
+* Adding stock.
+* Updating stock.
+* Deleting stock.
+* Uploading stock images.
+* Recording stock activity.
+
+---
+
+## `log.py`
+
+Contains the functionality used to create business activity records.
+
+Keeping logging in its own service means different parts of the application can record activity without duplicating the database logic.
+
+---
+
+## `validators.py`
+
+Contains the application's input validation functions.
+
+Different validation rules are used for information such as:
+
+* Email addresses.
+* Telephone numbers.
+* Passwords.
+* Usernames.
+* Prices.
+* Numerical values.
+* Dates.
+* User roles.
+* Titles.
+* Addresses.
+
+The intention is to validate information before it is used by the application's services or database.
+
+---
+
+# 🛡️ Security Implementation
+
+Security was an important part of the project because VenTory handles user accounts, passwords, business information, and inventory data.
+
+Although this application is intended only for demonstration purposes, I wanted to gain experience implementing some of the security practices used in web applications.
+
+## Password Protection
+
+Passwords are not stored as plain text.
+
+VenTory uses:
+
+* Argon2 password hashing.
+* Password verification.
+* Password reset handling.
+* Password change functionality.
+
+This helps prevent stored passwords from being directly readable if database information is exposed.
+
+---
+
+## Session Security
+
+The application uses Flask-Session for managing authenticated user sessions.
+
+Session configuration includes:
+
+* HTTP-only cookies.
+* Secure cookies.
+* SameSite cookie restrictions.
+* Session lifetime limits.
+* Session clearing during authentication changes.
+
+Protected routes also use authentication decorators to prevent unauthorised access.
+
+---
+
+## CSRF Protection
+
+VenTory uses Flask-WTF's CSRF protection.
+
+This helps protect form submissions against Cross-Site Request Forgery attacks.
+
+CSRF protection is particularly relevant for actions which change application data, such as:
+
+* Updating account details.
+* Adding stock.
+* Updating stock.
+* Deleting stock.
+* Adding employees.
+* Removing employees.
+* Changing passwords.
+
+---
+
+## Rate Limiting
+
+Flask-Limiter is used to limit certain requests.
+
+For example, limits are applied to areas such as:
+
+* Login attempts.
+* Registration attempts.
+* Password-related actions.
+* Employee creation.
+* Other sensitive POST requests.
+
+This helps reduce the risk of excessive automated requests against sensitive endpoints.
+
+---
+
+## Security Headers
+
+The application also sets a Content Security Policy through an `after_request` handler.
+
+The policy restricts where scripts, styles, fonts, and images can be loaded from.
+
+This provides an additional layer of browser-side security.
+
+---
+
+## Input Validation
+
+User input is passed through validation functions before being used by the application's services.
+
+The validation system checks different types of information depending on the field.
+
+This includes checking:
+
+* Length.
+* Format.
+* Allowed characters.
+* Numerical values.
+* Email addresses.
+* Telephone numbers.
+* Password requirements.
+* User roles.
+
+---
 
 # 🧩 Technology Stack
 
-| Technology | Purpose |
-|---|---|
-| **Python** | Backend programming language powering the application logic. |
-| **Flask** | Lightweight web framework handling routing, requests, templates, and application structure. |
-| **SQLite** | Database engine used to store users, tasks, and task history. |
-| **Jinja** | Server-side templating engine used to dynamically generate HTML pages. |
-| **HTML5** | Provides the structure and semantic layout of the website. |
-| **CSS3** | Handles styling, responsive layouts, animations, and theme support. |
-| **JavaScript** | Provides client-side functionality, validation, animations, and interactive features. |
-| **Argon2** | Secure password hashing algorithm used to protect user credentials. |
-| **Flask-WTF** | Provides CSRF protection for secure form submissions. |
-| **Gunicorn** | Production WSGI server used for deploying the Flask application. |
+| Technology        | Purpose                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------- |
+| **Python**        | Backend programming language used to build the application logic.                        |
+| **Flask**         | Web framework handling routes, requests, templates, sessions, and application structure. |
+| **SQLite**        | Database engine used to store businesses, users, stock, and activity logs.               |
+| **SQLAlchemy**    | ORM used to define database models and interact with the database.                       |
+| **Jinja**         | Server-side templating engine used to generate HTML pages dynamically.                   |
+| **HTML5**         | Provides the structure and content of the application pages.                             |
+| **CSS3**          | Handles application styling, layouts, and responsive presentation.                       |
+| **JavaScript**    | Provides client-side functionality and interaction.                                      |
+| **Argon2**        | Password hashing algorithm used to protect user credentials.                             |
+| **Flask-Session** | Handles server-side session management.                                                  |
+| **Flask-WTF**     | Provides CSRF protection.                                                                |
+| **Flask-Limiter** | Provides request rate limiting.                                                          |
+| **Cloudinary**    | External image hosting service used for business and stock images.                       |
+| **python-dotenv** | Loads environment variables from the `.env` file.                                        |
 
-## 🗄️ Database Design
+---
 
-Priora uses three main database tables.
+# 🗄️ Database Design
+
+VenTory uses four main database tables.
+
+### Businesses Table
+
+Stores business information.
+
+* business_id
+* business_name
+* address
+* telephone
+* email
+* logo_url
+* daily_password
+* created
+* updated
+* daily_password_updated
 
 ### Users Table
 
-Stores account information.
+Stores user account information.
 
-- user_id
-- first_name
-- last_name
-- email
-- password
-- date_created
+* user_id
+* business_id
+* username
+* title
+* first_name
+* last_name
+* role
+* email
+* password
+* created
+* updated
+* password_reset
 
-### Tasks Table
+### Stock Table
 
-Stores user tasks.
+Stores inventory information.
 
-- task_id
-- user_id
-- title
-- description
-- due_date
-- due_time
-- completed
-- completion_date
-- completion_time
+* stock_id
+* business_id
+* title
+* description
+* price
+* supplier
+* image_url
+* returned
+* damaged
+* total
+* available
+* updated
+* created
 
-## Requirements
+### Logs Table
 
-- Python 3.10+
-- pip
-- Virtual environment
+Stores business activity.
 
-## Installation
+* log_id
+* user_id
+* business_id
+* timestamp
+* comment
+
+---
+
+# 🖥️ How To Use The Application
+
+VenTory is designed to be relatively straightforward to use.
+
+## 1. Start The Application
+
+Once the application has been installed and started, open it in a web browser.
+
+The home page provides access to the main public sections of the application.
+
+---
+
+## 2. Register A Business
+
+Select the registration option.
+
+Enter the requested business and owner information.
+
+The registration process creates:
+
+* A new business.
+* An owner account.
+* A generated username.
+* A business daily password.
+
+The generated username should be kept somewhere safe for the demonstration.
+
+---
+
+## 3. Log In
+
+Use the generated username and the password entered during registration.
+
+After successful authentication, you will be taken to the dashboard.
+
+---
+
+## 4. Use The Dashboard
+
+The dashboard provides an overview of the business and its stock.
+
+Depending on the account role, additional management options will be available.
+
+---
+
+## 5. Add Stock
+
+Navigate to the stock section and select the option to add new stock.
+
+Enter the product information, including:
+
+* Title.
+* Quantity.
+* Supplier.
+* Description.
+* Price.
+* Optional image.
+
+Once submitted, the stock will be added to the business inventory.
+
+---
+
+## 6. Manage Stock
+
+Users with access to stock management can view the inventory and search for products.
+
+Selecting a stock item allows its information to be updated.
+
+Changes to stock are recorded in the business activity logs.
+
+---
+
+## 7. Manage Employees
+
+Business owners can create new employee or manager accounts.
+
+When creating an account, VenTory generates:
+
+* A username.
+* A temporary password.
+
+The generated login details should be provided to the new user for the purposes of the demonstration.
+
+Owners can also view employee information, review employee activity, reset passwords, and remove employee accounts.
+
+---
+
+## 8. View Business Activity
+
+Owners can access the business activity section to view actions recorded by the application.
+
+The activity page can also be filtered by date.
+
+This provides a basic history of activity taking place within the business.
+
+---
+
+# ⚠️ Demo Application Notice
+
+VenTory is **not a real business management system**.
+
+The application has been created for **portfolio, learning, and demonstration purposes only**.
+
+Please **do not enter real information**, including:
+
+* Real business details.
+* Real employee information.
+* Real customer information.
+* Real passwords.
+* Real financial information.
+* Confidential stock information.
+* Any other sensitive information.
+
+The application should be treated as a demonstration of development skills rather than a production-ready business management platform.
+
+---
+
+# 📋 Requirements
+
+* Python 3.10+
+* pip
+* Virtual environment
+* Cloudinary account for image uploads
+
+---
+
+# ⚙️ Installation
 
 Clone the repository:
 
-`git clone <repository-url>`
+```bash
+git clone <repository-url>
+```
 
 Navigate into the project:
 
-`cd Priora`
+```bash
+cd inventory-manager
+```
 
 Create a virtual environment:
 
-`python -m venv venv`
+```bash
+python -m venv venv
+```
 
-Activate the environment:
+Activate the virtual environment.
 
-`source venv/bin/activate`
+### Linux / macOS
 
-Install dependencies:
+```bash
+source venv/bin/activate
+```
 
-`pip install -r requirements.txt`
+### Windows
 
-Create your environment variables:
+```bash
+venv\Scripts\activate
+```
 
-`SECRET_KEY=your_secret_key`
+Install the required packages:
 
-Run Flask:
+```bash
+pip install -r requirements.txt
+```
 
-`flask run`
+Create the environment variables required by the application:
 
-## ☁️ Deployment
+```text
+SECRET_KEY=your_secret_key
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
 
-Priora is designed to be deployed using platforms such as Render.
+The application also contains configuration which can generate the `SECRET_KEY` environment variable when required.
 
-Production deployments can use Gunicorn:
+Start the application:
 
-`gunicorn app:app`
+```bash
+flask run
+```
 
-Environment variables should be stored securely through the hosting provider.
+The application can then be opened in a web browser using the local Flask address.
 
-## 🔮 Future Improvements
+---
+
+# ☁️ Image Uploads
+
+VenTory uses Cloudinary to store uploaded images.
+
+A Cloudinary account is therefore required if you want to test the image upload functionality.
+
+The application uploads images into folders associated with the business and the type of image being uploaded.
+
+For example:
+
+```text
+VenTory-portfolio-project/
+│
+└── Business Name/
+    ├── logo/
+    └── stock-items/
+```
+
+The secure URL returned by Cloudinary is then stored in the database.
+
+---
+
+# 🔮 Future Improvements
+
+There are several areas that could be improved as the project continues to develop.
 
 Possible future improvements include:
 
-- Migrating from SQLite to PostgreSQL.
-- Adding task categories.
-- Adding task priority levels.
-- Adding email notifications.
-- Adding automated testing.
-- Adding database migrations.
-- Creating a mobile application.
-- Improving accessibility features.
-- Adding user profile management.
-- Improving task sorting options.
-- Adding API endpoints.
-- Adding automated deployment pipelines.
+* Adding automated tests.
+* Improving database transactions.
+* Adding database migrations.
+* Further improving session security.
+* Improving role and permission handling.
+* Adding more detailed stock reporting.
+* Adding stock categories.
+* Adding stock thresholds and low-stock notifications.
+* Improving inventory calculations.
+* Adding pagination for larger inventories.
+* Improving search and filtering.
+* Adding better error handling and logging.
+* Migrating from SQLite to PostgreSQL for larger deployments.
+* Improving accessibility.
+* Improving the frontend experience.
+* Adding a proper production deployment configuration.
+* Refactoring some application services as the project grows.
+
+These improvements would help move the application from a learning and portfolio project towards a more production-oriented application.
 
 ---
 
@@ -496,3 +1016,6 @@ SOFTWARE.
 <div align="center">
   <a href="https://sheikh-hussain.onrender.com/" target="_blank">By Sheikh Hussain 💚</a>
 </div>
+
+
+**Please do not use real data. Demo purposes only.**
