@@ -59,18 +59,12 @@ def generate_daily_password():
 def generate_user_name():
     characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
     new_username = []
-    usernames = [
-        username for (username,) in database.session.query(User.username).all()
-    ]
-
     for i in range(9):
         new_username.append(random.choice(characters))
-
     new_username = "".join(new_username)
-
-    for users in usernames:
-        if new_username == users:
-            return generate_user_name()
+    existing_username = User.query.filter_by(username=new_username).first()
+    if existing_username:
+        return generate_user_name()
     return str(new_username)
 
 
@@ -89,14 +83,30 @@ def login_user(username, password):
         return False, None
 
     if user.password_reset == 1:
-        return True, user.user_id
-
-    try:
-        verifier(password=valid_password, hash=user.password)
-        generate_new_log(
-            user.user_id, user.business_id, f"{user.first_name} logged in!"
+        business = Business.query.filter_by(business_id=user.business_id).first()
+        if not business:
+            return False, None
+        
+        if valid_password != business.daily_password:
+            return False, None
+        
+        log_created = generate_new_log(
+            user.user_id,
+            user.business_id,
+            f"{user.username} bypassed normal login using daily password to reset password!",
         )
+        if not log_created:
+            return False, None
         return True, user.user_id
+    try:
+        verified = verifier(password=valid_password, hash=user.password)
+        if verified:
+            log_created = generate_new_log(
+                user.user_id, user.business_id, f"{user.first_name} logged in!"
+            )
+            if log_created:
+                return True, user.user_id
+        return False, None
     except Exception as e:
         print(e)
         return False, None

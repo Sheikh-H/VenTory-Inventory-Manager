@@ -46,42 +46,27 @@ def input_validator(data, input_type, minimum=None, maximum=None):
             return None
 
     elif input_type == "email":
-        businesses = Business.query.all()
-        employees = User.query.all()
-        
+        businesses = Business.query.filter_by(email=data.lower()).first()
+        employees = User.query.filter_by(email=data.lower()).first()
+        if businesses:
+            return None
+        if employees:
+            return None
         for char in data:
             if char in forbidden_characters:
                 return None
-            
         if len(data) > 255 or len(data) < 6:
             return None
-        
         if not re.fullmatch(email_pattern, data):
             return None
-        
-        for business in businesses:
-            if business.email.lower() == data.lower():
-                return None
-            
-        for user in employees:
-            if user.email.lower() == data.lower():
-                return None
 
     elif input_type == "numerical":
         if not data.isdigit():
             return None
-        value = int(data)
-        if value <= 0:
-            return None
-        return value
 
     elif input_type == "price":
         if not re.fullmatch(price_pattern, data):
             return None
-        value = float(data)
-        if value <= 0:
-            return None
-        return value
 
     elif input_type == "date" and not (
         re.fullmatch(full_date_pattern, data)
@@ -111,7 +96,6 @@ def input_validator(data, input_type, minimum=None, maximum=None):
         for char in data:
             if char in forbidden_characters:
                 return None
-
         if len(data) < 30 or len(data) > 255:
             return None
 

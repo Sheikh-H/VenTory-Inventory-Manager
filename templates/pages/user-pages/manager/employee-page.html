@@ -7,7 +7,12 @@
     Employee details can only be modified by the user themselves on their
     account settings page.
   </p>
-  <p><i>Please ask the user to reset password on login!</i></p>
+  <p>
+    <i
+      >The user will need to change their temporary password after logging
+      in.</i
+    >
+  </p>
 </section>
 <section class="employee-details">
   <form action="{{url_for('reset', emp_id=employee.user_id)}}" method="post">
@@ -15,7 +20,10 @@
     <input type="submit" value="Reset password" />
   </form>
   <div class="space"></div>
-  <form action="{{url_for('delete_employee', emp_id=employee.user_id)}}" method="post">
+  <form
+    action="{{url_for('delete_employee', emp_id=employee.user_id)}}"
+    method="post"
+  >
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <input type="submit" value="Delete Account" />
   </form>

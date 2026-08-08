@@ -2,6 +2,7 @@ from database.db import database
 from database.models import *
 from services.config import *
 
+
 def generate_new_log(user_id, business_id, action):
     date = generate_time()
     try:

@@ -1,7 +1,7 @@
 {% extends 'layout.html' %} {% block content %}
 <div class="space"></div>
 <section class="manage-employee-page-intro">
-  <h1>Manage Employee's</h1>
+  <h1>Manage Employees</h1>
   <p>Here you can manage all employees</p>
   <p><i>(Click on username to visit profile)</i></p>
 </section>
@@ -45,8 +45,9 @@
           <p>{{user.last_name.title()}}</p>
         </td>
         <td>
-            <a href="{{url_for('employee_logs', emp_id = user.user_id)}}"><input type="submit" value="View Logs" /></a>
-          </form>
+          <a href="{{url_for('employee_logs', emp_id = user.user_id)}}"
+            ><input type="submit" value="View Logs"
+          /></a>
         </td>
       </tr>
       {% endfor %}

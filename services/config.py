@@ -47,6 +47,15 @@ def generate_time():
 
 
 def image_upload(image, folder, business_name):
+    allowed_types = {"image/jpeg", "image/png", "image/webp"}
+
+    if image.content_size != "5 * 1024 * 1024":
+        flash("Images must be no larger than 5MB", "error")
+        return None
+
+    if image.content_type not in allowed_types:
+        return None
+
     if not image or not image.filename:
         return None
 

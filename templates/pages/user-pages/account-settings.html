@@ -140,7 +140,7 @@
         type="text"
         name="fname"
         id="fname"
-        minlength="5"
+        minlength="1"
         maxlength="100"
         placeholder="{{ user.first_name.capitalize() }}"
       />
@@ -148,7 +148,7 @@
         type="text"
         name="sname"
         id="sname"
-        minlength="5"
+        minlength="1"
         maxlength="100"
         placeholder="{{ user.last_name.capitalize() }}"
       />
@@ -166,6 +166,8 @@
         id="password"
         placeholder="Your password"
         required
+        minlength="10"
+        maxlength="20"
       />
     {% else %}
       <input
@@ -173,6 +175,8 @@
         name="password"
         id="password"
         placeholder="Daily password"
+        minlength="10"
+        maxlength="20"
         required
       />
     {% endif %}
@@ -205,6 +209,8 @@
       name="current-password"
       id="current-password"
       placeholder="Current password"
+      minlength="10"
+      maxlength="20"
     />
     {% else %}
       <input
@@ -213,18 +219,26 @@
       id="current-password"
       placeholder="Current password"
       required
+      minlength="10"
+      maxlength="20"
     />
     {% endif %}
     <input
       type="password"
       name="new-password"
       id="new-password"
+      required
+      minlength="10"
+      maxlength="20"
       placeholder="New password"
     />
     <input
       type="password"
       name="confirm-new-password"
       id="confirm-new-password"
+      required
+      minlength="10"
+      maxlength="20"
       placeholder="Confirm new password"
     />
     <input type="submit" value="Update password" />

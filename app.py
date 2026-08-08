@@ -18,11 +18,11 @@ from flask import (
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_session import Session
 from flask_wtf.csrf import CSRFError, CSRFProtect
 from sqlalchemy import or_
 
 from database.db import database
-from flask_session import Session
 from services.auth import *
 from services.businesses import *
 from services.config import *
@@ -30,9 +30,10 @@ from services.stock import *
 from services.users import *
 from services.validators import *
 
-load_dotenv()
+# If using this locally, enable these variables, it loads the environment, then initialises the .env and then loads the environment again.
+# load_dotenv()
 
-initialise_env()
+# initialise_env()
 
 load_dotenv()
 
@@ -48,6 +49,7 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="LAX",
     PERMANENT_SESSION_LIFETIME=timedelta(hours=1),
     TEMPLATES_AUTO_RELOAD=True,
+    MAX_CONTENT_LENGTH=5 * 1024 * 1024,  # Max upload size = 5mb
 )
 
 
@@ -323,7 +325,6 @@ def update():
     user = User.query.filter_by(
         user_id=session.get("user_id"), business_id=session.get("business_id")
     ).first()
-    business = Business.query.filter_by(business_id=user.business_id).first()
     business_name = request.form.get("business-name", "").strip().lower()
     business_address = request.form.get("business-address", "").strip().lower()
     business_telephone = request.form.get("business-telephone", "").strip()
@@ -334,14 +335,13 @@ def update():
     user_email = request.form.get("email", "").strip().lower()
     user_password = request.form.get("password", "").strip()
     image = request.files.get("image")
-    image_url = image_upload(image, "logo", business.business_name)
     data = {
         "user_id": user.user_id,
         "business_id": user.business_id,
         "bname": business_name,
         "address": business_address,
         "telephone": business_telephone,
-        "image_url": image_url,
+        "image": image,
         "bemail": business_email,
         "title": user_title,
         "fname": user_first_name,
@@ -381,6 +381,7 @@ def update_password():
 
 @app.route("/user/add-new-stock", methods=["GET", "POST"])
 @login_required
+@limiter.limit("100 per hour", methods=["POST"])
 def add_stock():
     title = "Add new stock"
     user = User.query.filter_by(user_id=session.get("user_id")).first()
