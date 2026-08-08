@@ -219,3 +219,34 @@ def remove_user(data):
         print(e)
         database.session.rollback()
         return False
+
+
+def forgot_password(data):
+    if not data.get("username"):
+        return False, None
+    if not data.get("password"):
+        return False, None
+    valid_username = input_validator(data.get("username"), "username")
+    valid_password = input_validator(data.get("password"), "password")
+    user = User.query.filter_by(username=valid_username).first()
+    if not user:
+        return False, None
+    business = Business.query.filter_by(business_id=user.business_id).first()
+    if not business:
+        return False, None
+    if valid_password == business.daily_password:
+        try:
+            user.password = generate_password_hash(generate_daily_password())
+            user.password_reset = 1
+            database.session.commit()
+            generate_new_log(
+                user.user_id,
+                user.business_id,
+                f"{user.first_name} reset their own password with the daily password",
+            )
+            return True, user.user_id
+        except Exception as e:
+            print(e)
+            database.session.rollback()
+            return False, None
+    return False, None

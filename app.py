@@ -192,16 +192,24 @@ def employee_logs(emp_id):
 @owner_required
 def business_logs():
     title = "Business Activity"
-    logs = Log.query.filter_by(business_id=session.get("business_id")).all()
+    logs = (
+        Log.query.filter_by(business_id=session.get("business_id"))
+        .order_by(Log.timestamp.desc())
+        .all()
+    )
     now = str(datetime.now().replace(microsecond=0).date())
     if request.method == "POST":
         date = request.form.get("date", "").strip()
         valid_date = input_validator(date, "date")
-        logs = Log.query.filter(
-            Log.business_id == session.get("business_id"),
-            Log.timestamp >= f"{valid_date} 00:00:00",
-            Log.timestamp <= f"{valid_date} 23:59:59",
-        ).all()
+        logs = (
+            Log.query.filter(
+                Log.business_id == session.get("business_id"),
+                Log.timestamp >= f"{valid_date} 00:00:00",
+                Log.timestamp <= f"{valid_date} 23:59:59",
+            )
+            .order_by(Log.timestamp.desc())
+            .all()
+        )
         return render_template(
             "pages/user-pages/owner/all-logs.html",
             title=title,
@@ -211,6 +219,24 @@ def business_logs():
     return render_template(
         "pages/user-pages/owner/all-logs.html", title=title, logs=logs, now=now
     )
+
+
+@app.route("/forgotten-password", methods=["GET", "POST"])
+def forgotten_password():
+    title = "Forgot Password"
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        daily_password = request.form.get("password", "").strip()
+        data = {"username": username, "password": daily_password}
+        success, user_id = forgot_password(data)
+        if success:
+            flash("Password reset, please change your password on login!", "success")
+            session["user_id"] = user_id
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Unable to reset, please contact your manager!", "error")
+            return redirect(url_for("forgotten_password"))
+    return render_template("pages/main/forgotten_password.html", title=title)
 
 
 @app.route("/user/dashboard", methods=["GET", "POST"])
