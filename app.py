@@ -1,6 +1,5 @@
 import os
 from datetime import timedelta
-from sqlite3.dbapi2 import Timestamp
 
 import cloudinary
 from dotenv import load_dotenv
@@ -19,11 +18,11 @@ from flask import (
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask_session import Session
 from flask_wtf.csrf import CSRFError, CSRFProtect
-from sqlalchemy import delete, or_, func
+from sqlalchemy import or_
 
 from database.db import database
+from flask_session import Session
 from services.auth import *
 from services.businesses import *
 from services.config import *
@@ -34,6 +33,8 @@ from services.validators import *
 load_dotenv()
 
 initialise_env()
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -78,7 +79,8 @@ def security_headers(response):
         "script-src 'self'; "
         "style-src 'self' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com;"
-        "img-src 'self' https://placehold.co https://res.cloudinary.com/dcnpmdfzl/image/upload/;"
+        "img-src 'self' https://placehold.co "
+        "https://res.cloudinary.com/dcnpmdfzl/image/upload/;"
     )
     return response
 
@@ -180,6 +182,9 @@ def employee_logs(emp_id):
     emp = User.query.filter_by(
         user_id=emp_id, business_id=session.get("business_id")
     ).first()
+    if not emp:
+        flash("Employee not found!", "error")
+        return redirect(url_for("manage_employees"))
     title = f"All logs for {emp.username}"
     logs = Log.query.filter_by(user_id=emp.user_id, business_id=emp.business_id).all()
     return render_template(
@@ -201,6 +206,9 @@ def business_logs():
     if request.method == "POST":
         date = request.form.get("date", "").strip()
         valid_date = input_validator(date, "date")
+        if not valid_date:
+            flash("Incorrect date format!", "error")
+            return redirect(url_for("business_logs"))
         logs = (
             Log.query.filter(
                 Log.business_id == session.get("business_id"),
@@ -222,6 +230,7 @@ def business_logs():
 
 
 @app.route("/forgotten-password", methods=["GET", "POST"])
+@limiter.limit("3 per minute; 10 per day", methods=["POST"])
 def forgotten_password():
     title = "Forgot Password"
     if request.method == "POST":
@@ -249,7 +258,6 @@ def dashboard():
     )
     business = Business.query.filter_by(business_id=user.business_id).first()
     session["role"] = user.role
-    session["user_id"] = user.user_id
     session["business_id"] = business.business_id
     user = User.query.filter_by(
         user_id=session.get("user_id"), business_id=session.get("business_id")
@@ -265,11 +273,11 @@ def dashboard():
         for stock in all_stocks:
             total_stock += stock.available
             total_stock += stock.returned
-            total_price += float(stock.price * stock.available)
+            total_price += stock.price * stock.available
             total_returned += stock.returned
-            total_return_price += float((stock.price / 2) * stock.returned)
+            total_return_price += (stock.price / 2) * stock.returned
             total_damaged += stock.damaged
-            total_damage_price += float(stock.price * stock.damaged)
+            total_damage_price += stock.price * stock.damaged
         total_price += total_return_price
     if user.password_reset == 1:
         flash(
@@ -353,7 +361,9 @@ def update():
 @login_required
 @limiter.limit("3 per day", methods=["POST"])
 def update_password():
-    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    user = User.query.filter_by(
+        user_id=session.get("user_id"), business_id=session.get("business_id")
+    ).first()
     current_password = request.form.get("current-password", "").strip()
     new_password = request.form.get("new-password", "").strip()
     confirm_new_password = request.form.get("confirm-new-password", "").strip()
@@ -377,10 +387,10 @@ def add_stock():
     if request.method == "POST":
         image = request.files.get("image", None)
         product_title = request.form.get("title", "").strip().lower()
-        quantity = int(request.form.get("quantity", 0))
+        quantity = request.form.get("quantity", "")
         supplier = request.form.get("supplier", "").strip().lower()
         additional_info = request.form.get("description", "").strip().lower()
-        price = float(request.form.get("price", 0.00))
+        price = request.form.get("price", "")
         stock = {
             "user_id": user.user_id,
             "business_id": user.business_id,
@@ -479,10 +489,10 @@ def manage_employees():
 @owner_required
 def employee(emp_id):
     user = User.query.filter_by(user_id=session.get("user_id")).first()
-    business = Business.query.filter_by(business_id=user.business_id).first()
-    employee = User.query.filter(
-        User.user_id == emp_id, Business.business_id == business.business_id
-    ).first()
+    employee = User.query.filter(user_id=emp_id, business_id=user.business_id).first()
+    if not employee:
+        flash("Employee not found!", "error")
+        return redirect(url_for("manage_employees"))
     title = f"{employee.username}"
     return render_template(
         "/pages/user-pages/manager/employee-page.html", title=title, employee=employee
@@ -495,9 +505,6 @@ def employee(emp_id):
 def delete_employee(emp_id):
     user = User.query.filter_by(
         user_id=session.get("user_id"), business_id=session.get("business_id")
-    ).first()
-    delete_user = User.query.filter_by(
-        user_id=emp_id, business_id=user.business_id
     ).first()
     data = {
         "user_id": user.user_id,
@@ -516,6 +523,7 @@ def delete_employee(emp_id):
 
 @app.route("/user/password-reset/<int:emp_id>", methods=["POST"])
 @login_required
+@manager_required
 def reset(emp_id):
     date = generate_time()
     admin = User.query.filter_by(
@@ -624,12 +632,16 @@ def logout():
 
 @app.route("/user/delete-stock/<int:stock_id>", methods=["POST"])
 @login_required
+@manager_required
 def delete_stock(stock_id):
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     business = Business.query.filter_by(business_id=user.business_id).first()
     stock = Stock.query.filter_by(
         business_id=business.business_id, stock_id=stock_id
     ).first()
+    if not stock:
+        flash("Stock not found!", "error")
+        return redirect(url_for("all_stock"))
     data = {
         "stock_id": stock.stock_id,
         "business_id": business.business_id,
@@ -659,7 +671,7 @@ def sitemap():
         <loc>{request.url_root}</loc>
     </url>
     <url>
-        <loc>{request.url_root}about</loc>
+        <loc>{request.url_root}about-ventory</loc>
     </url>
     <url>
         <loc>{request.url_root}login</loc>
@@ -709,4 +721,4 @@ def max_requests(error):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host="0.0.0.0", port=port)
+    app.run(debug=False, host="0.0.0.0", port=port)

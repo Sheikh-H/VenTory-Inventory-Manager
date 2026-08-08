@@ -29,6 +29,18 @@ def owner_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get("role") != "owner":
+            flash("Owner access only!", "error")
+            return redirect(url_for("dashboard"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def manager_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("role") not in ["manager", "owner"]:
+            flash("Admin access only!", "error")
             return redirect(url_for("dashboard"))
         return f(*args, **kwargs)
 
