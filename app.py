@@ -123,7 +123,7 @@ def login_page():
 
 
 @app.route("/register", methods=["GET", "POST"])
-@limiter.limit("3 per minute; 2 per day", methods=["POST"])
+@limiter.limit("3 per minute; 10 per day", methods=["POST"])
 def register_page():
     title = "Sign up to use VenTory"
     if session.get("user_id"):
@@ -230,7 +230,7 @@ def business_logs():
 
 
 @app.route("/forgotten-password", methods=["GET", "POST"])
-@limiter.limit("3 per minute; 10 per day", methods=["POST"])
+@limiter.limit("3 per minute; 6 per day", methods=["POST"])
 def forgotten_password():
     title = "Forgot Password"
     if request.method == "POST":
@@ -318,7 +318,7 @@ def account_settings():
 
 @app.route("/user/update-details", methods=["POST"])
 @login_required
-@limiter.limit("3 per day")
+@limiter.limit("2 per day")
 def update():
     user = User.query.filter_by(
         user_id=session.get("user_id"), business_id=session.get("business_id")
@@ -359,7 +359,7 @@ def update():
 
 @app.route("/user/update-password", methods=["POST"])
 @login_required
-@limiter.limit("3 per day", methods=["POST"])
+@limiter.limit("2 per day", methods=["POST"])
 def update_password():
     user = User.query.filter_by(
         user_id=session.get("user_id"), business_id=session.get("business_id")
@@ -502,6 +502,7 @@ def employee(emp_id):
 @app.route("/user/delete-employee/<int:emp_id>", methods=["POST"])
 @login_required
 @owner_required
+@limiter.limit("10 per day", methods=["POST"])
 def delete_employee(emp_id):
     user = User.query.filter_by(
         user_id=session.get("user_id"), business_id=session.get("business_id")
@@ -524,6 +525,7 @@ def delete_employee(emp_id):
 @app.route("/user/password-reset/<int:emp_id>", methods=["POST"])
 @login_required
 @manager_required
+@limiter.limit("5 per day", methods=["POST"])
 def reset(emp_id):
     date = generate_time()
     admin = User.query.filter_by(
@@ -633,6 +635,7 @@ def logout():
 @app.route("/user/delete-stock/<int:stock_id>", methods=["POST"])
 @login_required
 @manager_required
+@limiter.limit("10 per day", methods=["POST"])
 def delete_stock(stock_id):
     user = User.query.filter_by(user_id=session.get("user_id")).first()
     business = Business.query.filter_by(business_id=user.business_id).first()
