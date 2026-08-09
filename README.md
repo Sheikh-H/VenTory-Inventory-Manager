@@ -1,7 +1,7 @@
 ## **PLEASE DO NOT USE REAL DATA, DEMO PURPOSES ONLY**
 
 # ✅ VenTory: Full-Stack Inventory Management Application
-
+**Priora is an educational portfolio project created for learning and development purposes. It is not a commercial product or service.**
 ---
 
 # 📘 Project Overview
