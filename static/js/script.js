@@ -7,13 +7,17 @@ setTimeout(() => {
 
 const menuButton = document.querySelector(".mobile-nav-button");
 const menuMobile = document.querySelector(".navigation-bar");
+
 menuButton.addEventListener("click", () => {
   const menuOpen = menuButton.classList.toggle("active");
   menuMobile.classList.toggle("active");
+
   if (menuOpen) {
-    document.body.style.overflowY = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
   } else {
-    document.body.style.overflowY = "";
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
   }
 });
 
