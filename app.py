@@ -727,7 +727,7 @@ def server_error(error):
 def max_requests(error):
     return render_template("pages/error/429.html"), 429
 
-
+# set to port default at 10,000 as this is what render prefers, development use 5000 and then in env 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(debug=False, host="0.0.0.0", port=port)
